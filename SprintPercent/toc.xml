@@ -1,0 +1,5 @@
+<Addon Author="Aust3n" APIVersion="3" Name="SprintPercent" Description="SprintPercent turns your sprint bar into a number percentage">
+    <Script Name="SprintPercent.lua"/>
+    <Form Name="SprintPercent.xml"/>
+	<ReplaceAddon Name="SprintMeter"/>
+</Addon>

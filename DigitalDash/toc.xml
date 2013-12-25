@@ -1,0 +1,4 @@
+<Addon Author="Aust3n" APIVersion="3" Name="DigitalDash" Description="DigitalDash">
+    <Script Name="DigitalDash.lua"/>
+    <Form Name="DigitalDash.xml"/>
+</Addon>
