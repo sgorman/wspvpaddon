@@ -1,0 +1,5 @@
+<Addon Author="Aust3n" APIVersion="3" Name="PvP_SprintMeter" Description="PvP_SprintMeter turns your sprint bar into a number percentage">
+    <Script Name="PvP_SprintMeter.lua"/>
+    <Form Name="PvP_SprintMeter.xml"/>
+	<ReplaceAddon Name="SprintMeter"/>
+</Addon>
