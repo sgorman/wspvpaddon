@@ -21,6 +21,7 @@
                     <Event Name="ButtonUncheck" Function="OnDisableDashToggle"/>
                 </Control>
             </Control>
+            <Control Class="Window" LAnchorPoint="0" LAnchorOffset="-20" TAnchorPoint="0" TAnchorOffset="140" RAnchorPoint="0" RAnchorOffset="56" BAnchorPoint="0" BAnchorOffset="195" RelativeToClient="1" Font="Default" Text="" Template="Default" TooltipType="OnCursor" Name="RollsLeft" BGColor="ffffffff" TextColor="ffffffff" TooltipColor="" TextId="" Picture="0" IgnoreMouse="1" Moveable="0" Sizable="0" Border="0" NoClip="1"/>
         </Control>
     </Form>
 </Forms>

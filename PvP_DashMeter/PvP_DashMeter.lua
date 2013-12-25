@@ -99,17 +99,30 @@ function DashMeter:OnFrameUpdate()
 		Apollo.StartTimer("EnduranceDisplayTimer")
 		self.bEnduranceFadeTimer = true
 	end
+	
+		if nEvadeCurr >= 200 then
+			self.wndEndurance:FindChild("RollsLeft"):SetText("2")
+		elseif nEvadeCurr >= 100 then
+			self.wndEndurance:FindChild("RollsLeft"):SetText("1")
+			
+		elseif nEvadeCurr >= 0 then
+			self.wndEndurance:FindChild("RollsLeft"):SetText("0")
+		end
+		
+		
 end
 
 function DashMeter:UpdateEvades(nEvadeValue, nEvadeMax)
 	if nEvadeValue >= nEvadeMax then -- all full
 		self.wndEndurance:FindChild("EvadeProgressContainer"):Show(false)
 		self.wndEndurance:FindChild("EvadeFullSprite"):SetSprite("sprResourceBar_DodgeFull")
-
+		
+		
 		if self.nEnduranceState ~= eEnduranceFlash.EnuduranceFlashTwo then
 			self.nEnduranceState = eEnduranceFlash.EnduranceFlashTwo
 			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashFull")
 		end
+		
 	elseif nEvadeValue >= nEvadeMax / 2 then -- one ready, one filling
 		self:HelperDrawProgressAsTicks(nEvadeValue - nEvadeMax/2)
 		self.wndEndurance:FindChild("EvadeFullSprite"):SetSprite("sprResourceBar_DodgeHalf")
@@ -132,6 +145,8 @@ function DashMeter:UpdateEvades(nEvadeValue, nEvadeMax)
 			self.nEnduranceState = eEnduranceFlash.EnduranceFlashZero
 			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashFull")
 		end
+		
+	
 	end
 
 	local strEvadeTooltop = Apollo.GetString(Apollo.GetConsoleVariable("player.doubleTapToDash") and "HealthBar_EvadeDoubleTapTooltip" or "HealthBar_EvadeKeyTooltip")
