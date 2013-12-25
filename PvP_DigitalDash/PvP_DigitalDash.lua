@@ -55,7 +55,7 @@ function HealthShieldBar:OnLoad()
 	--Apollo.CreateTimer("EnduranceDisplayTimer", 30, false) --TODO: Fix(?) This is perma-killing the display when DT dashing is disabled via the toggle
 	Apollo.CreateTimer("CCArmorBrokenDisplayTimer", 3, false)
 
-    self.wndMain = Apollo.LoadForm("DigitalDash.xml", "HealthShieldBarForm", "FixedHudStratum", self)
+    self.wndMain = Apollo.LoadForm("PvP_DigitalDash.xml", "HealthShieldBarForm", "FixedHudStratum", self)
 
 	self.wndHealth = self.wndMain:FindChild("HealthBar")
 	self.wndMaxAbsorb = self.wndMain:FindChild("MaxAbsorbBar")
@@ -90,7 +90,7 @@ function HealthShieldBar:OnLoad()
 	self.wndEndurance:Show(false, true)
 
 	-- Mount health
-	self.wndMountHealth = Apollo.LoadForm("DigitalDash.xml", "MountHealthFrame", "FixedHudStratum", self)
+	self.wndMountHealth = Apollo.LoadForm("PvP_DigitalDash.xml", "MountHealthFrame", "FixedHudStratum", self)
 	self.wndMountHealth:Show(false)
 end
 

@@ -37,7 +37,7 @@ function SpellslingerResource:OnCharacterCreated()
 	Apollo.RegisterEventHandler("VarChange_FrameCount", "OnFrame", self)
 	Apollo.RegisterEventHandler("UnitEnteredCombat", "OnEnteredCombat", self)
 
-    self.wndMain = Apollo.LoadForm("SpellslingerResource2.xml", "SpellslingerResourceForm", "FixedHudStratum", self)
+    self.wndMain = Apollo.LoadForm("PvP_SSR.xml", "SpellslingerResourceForm", "FixedHudStratum", self)
 
 	self.wndMain:FindChild("SurgeBacker"):SetTooltip(string.format("<T Font=\"CRB_InterfaceSmall\">%s</T>", Apollo.GetString("CRB_SpellslingerResource")))
 	
@@ -77,9 +77,10 @@ function SpellslingerResource:OnFrame()
 		self.wndMain:FindChild("SurgeBacker"):SetSprite(bSurgeReady and "sprSpellslinger_TEMP_BackerAnim" or "sprSpellslinger_TEMP_BackerArt")
 	end
 	
-	local bSurgeNotReady = nResourceCurrent < 50
-	if bSurgeNotReady ~= self.wndMain:FindChild("SurgeBacker"):GetData() then 
+	
+	if nResourceCurrent < 50 then 
 		self.wndMain:FindChild("SurgeProgressBar"):SetTextColor(bSurgeNotReady and "red")
+	end
 
 	-- Glow
 	local bSurgeActive = GameLib.IsSpellSurgeActive() or false

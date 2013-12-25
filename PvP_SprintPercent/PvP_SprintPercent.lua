@@ -24,7 +24,7 @@ function SprintMeter:OnLoad()
 	Apollo.RegisterEventHandler("VarChange_FrameCount", "OnFrame", self)
 	Apollo.RegisterEventHandler("Tutorial_RequestUIAnchor", 	"OnTutorial_RequestUIAnchor", self)	
 
-	self.wndMain = Apollo.LoadForm("SprintPercent.xml", "SprintMeterFormVert", "InWorldHudStratum", self)
+	self.wndMain = Apollo.LoadForm("PvP_SprintPercent.xml", "SprintMeterFormVert", "InWorldHudStratum", self)
 	self.wndMain:Show(false, true)
 	--self.wndMain:SetUnit(GameLib.GetPlayerUnit(), 40) -- 1 or 9 are also good
 

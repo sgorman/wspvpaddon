@@ -1,5 +1,5 @@
-<Addon Author="Aust3n, okaygo" APIVersion="3" Name="PvP_Nameplates" Description="Nameplates">
-    <Script Name="Nameplates.lua"/>
-    <Form Name="Nameplates.xml"/>
+<Addon Author="Aust3n, okaygo" APIVersion="3" Name="PvP_Nameplates" Description="PvP_Nameplates is a cleaner more functional nameplate addon">
+    <Script Name="PvP_Nameplates.lua"/>
+    <Form Name="PvP_Nameplates.xml"/>
 	<ReplaceAddon Name="Nameplates"/>
 </Addon>
