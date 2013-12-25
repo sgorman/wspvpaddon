@@ -1,0 +1,26 @@
+Aust3n's list -
+
+General
+Find artist
+Rename projects
+Learn Git
+Settings for each addon.
+
+PvP_SurgeBar
+Locations savable.
+Movable.
+Below 50% make text turn red.
+New Art
+
+PvP_DashMeter -
+Color threshold
+New Art
+
+PvP_Nameplates -
+Fix shields (blue, yellow)
+New Art
+
+PvP_HealthShieldBar (Scott will work on this) -
+Make everything movable - or hideable.
+Save and load config.
+New Art
