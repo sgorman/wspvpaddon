@@ -1,0 +1,4 @@
+<Addon Name="PvP_CCArmor" Version="0.01" Author="okaygo" APIVersion="3" Description="CCArmorContainer">
+    <Script Name="PvP_CCArmor.lua"/>
+    <Form Name="PvP_CCArmor.xml"/>
+</Addon>

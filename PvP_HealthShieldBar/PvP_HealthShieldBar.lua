@@ -57,7 +57,6 @@ function PvP_HealthShieldBar:OnLoad()
 	self.wndFlashShield = self.wndMain:FindChild("CurrShieldFlash")
 	self.wndFlashAbsorb = self.wndMain:FindChild("CurrAbsorbFlash")
 	self.wndFlashHealth = self.wndMain:FindChild("HealthBarFlash")
-	self.wndCCArmor = self.wndMain:FindChild("CCArmorContainer")
 
 	self.nBarWidth = self.wndHealth:GetWidth()
 	self.bInCombat = false
@@ -65,8 +64,7 @@ function PvP_HealthShieldBar:OnLoad()
 	self.fHealthWarn2 = 0.6
 	self.eHealthState = eHealthColor.HealthInGreen
 	self.bBrokenCCArmorFadeTimer = false
-	self.nLastCCArmorValue = 0
-
+	
 	-- For flashes
 	self.bHealthBarFlashes = g_InterfaceOptions and g_InterfaceOptions.Carbine.bHealthBarFlashes or true
 	self.bFlashThrottle = false
@@ -225,8 +223,6 @@ function PvP_HealthShieldBar:OnFrameUpdate()
 		self.wndMountHealth:FindChild("MountHealthText"):SetText(String_GetWeaselString(Apollo.GetString("HealthBar_MountHealth"),  unitPlayer:GetMountHealth(), unitPlayer:GetMountMaxHealth()))
 	end
 
-	--Interrupt Armor
-	self:UpdateCCArmor(unitPlayer:GetInterruptArmorValue(), unitPlayer:GetInterruptArmorMax())
 end
 
 function PvP_HealthShieldBar:HelperDrawProgressAsTicks(nProgress)
@@ -237,42 +233,6 @@ function PvP_HealthShieldBar:HelperDrawProgressAsTicks(nProgress)
 		self.wndEndurance:FindChild("EvadeDodgeBit"..idx):Show(bIsTrue, not bIsTrue)
 	end
 	self.wndEndurance:FindChild("EvadeProgressContainer"):Show(true)
-end
-
-function PvP_HealthShieldBar:UpdateCCArmor(nCurr, nMax)
-	if nMax == 0 and self.nLastCCArmorValue == 0 and not self.bBrokenCCArmorFadeTimer then
-		self.wndCCArmor:Show(false)
-		return
-	else
-		self.wndCCArmor:Show(true, true)
-	end
-
-	-- States
-	if nMax == -1 then -- impervious
-		self.wndCCArmor:SetSprite("sprResourceBar_InterruptFullShield")
-		self.wndCCArmor:FindChild("CCRing"):SetSprite("")
-		self.wndCCArmor:FindChild("CCText"):SetText("")
-	elseif nCurr == 0 and nMax > 0 then -- just broke
-		self.wndCCArmor:SetSprite("sprResourceBar_InterruptBroken")
-		self.wndCCArmor:FindChild("CCRing"):SetSprite("sprResourceBar_InterruptCircleRed")
-		self.wndCCArmor:FindChild("CCText"):SetText("")
-		self.wndCCArmor:FindChild("CCArmorFlash"):SetSprite("sprResourceBar_InterruptCircleFlash")
-		self.bBrokenCCArmorFadeTimer = true
-
-		Apollo.StopTimer("CCArmorBrokenDisplayTimer")
-		Apollo.StartTimer("CCArmorBrokenDisplayTimer")
-	elseif nMax > 0 then -- have armor
-		self.wndCCArmor:SetSprite("sprResourceBar_InterruptBG")
-		self.wndCCArmor:FindChild("CCRing"):SetSprite("sprResourceBar_InterruptCircleBlue")
-		self.wndCCArmor:FindChild("CCText"):SetText(nCurr)
-		self.bBrokenCCArmorFadeTimer = false
-	end
-
-	if nCurr < self.nLastCCArmorValue and nCurr ~= 0 and nCurr ~= -1 then
-		self.wndCCArmor:FindChild("CCArmorFlash"):SetSprite("sprResourceBar_InterruptCircleFlash")
-	end
-
-	self.nLastCCArmorValue = nCurr
 end
 
 function PvP_HealthShieldBar:OnEnteredCombat(unit, bInCombat)
