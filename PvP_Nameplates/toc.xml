@@ -1,0 +1,5 @@
+<Addon Author="Aust3n" APIVersion="3" Name="Nameplates1" Description="Nameplates">
+    <Script Name="Nameplates.lua"/>
+    <Form Name="Nameplates.xml"/>
+	<ReplaceAddon Name="Nameplates"/>
+</Addon>
