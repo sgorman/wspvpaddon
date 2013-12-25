@@ -179,6 +179,7 @@ function CastBar:DrawSingleBarFrameCircle(wnd)
 	wnd:FindChild("NameLabel"):SetText(self.tCurrentOpSpell.strName)
 end
 
+----------------------------
 function CastBar:DrawSingleBarFrameTiered(wnd)
 	local fPercentDone = GameLib.GetSpellThresholdTimePrcntDone(self.tCurrentOpSpell.id)
 	wnd:FindChild("Fill"):SetFillSprite("CRB_NameplateSprites:sprNp_HealthBarFriendly")
@@ -259,7 +260,7 @@ function CastBar:OnStartSpellThreshold(idSpell, nMaxThresholds, eCastMethod) -- 
 		-- set up the tier marks
 		for idx = 1, self.tCurrentOpSpell.nMaxTier do
 			self.tTierMarks[idx]:Show(true)
-			self.tTierMarks[idx]:FindChild("MarkerBacker"):SetSprite(self.arTierSprites[idx].strMarkEmpty)
+			self.tTierMarks[idx]:FindChild("MarkerBacker"):SetSprite("CRB_NameplateSprites:sprNp_HealthBarFriendly")
 			self.tTierMarks[idx]:FindChild("Marker"):SetSprite("")
 		end
 

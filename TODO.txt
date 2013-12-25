@@ -2,7 +2,6 @@ Aust3n's list -
 
 General
 Find artist
-Rename projects
 Learn Git
 Settings for each addon.
 
@@ -12,8 +11,6 @@ Movable.
 New Art
 
 PvP_DashMeter -
-Make digital
-Color threshold
 New Art
 
 
@@ -27,7 +24,7 @@ Make everything movable - or hideable.
 Save and load config.
 New Art
 
-
+TargetFrames
 
 Future Ideas:
 BattlegroundTargets
