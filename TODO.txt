@@ -13,11 +13,14 @@ Below 50% make text turn red.
 New Art
 
 PvP_DashMeter -
+Make digital
 Color threshold
 New Art
 
+
 PvP_Nameplates -
 Fix shields (blue, yellow)
+Class colored nameplates
 New Art
 
 PvP_HealthShieldBar (Scott will work on this) -
