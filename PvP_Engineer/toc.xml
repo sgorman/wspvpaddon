@@ -1,0 +1,5 @@
+<Addon Name="PvP_Engineer" Author="okaygo" APIVersion="3" Version="0.01" Description="Stuff for the engineer.">
+    <Script Name="PvP_Engineer.lua"/>
+    <Form Name="PvP_Engineer.xml"/>
+    <ReplaceAddon Name="EngineerResource"/>
+</Addon>

@@ -92,6 +92,10 @@ function PvP_HealthShieldBar:OnLoad()
 	-- Mount health
 	self.wndMountHealth = Apollo.LoadForm("PvP_HealthShieldBar.xml", "MountHealthFrame", "FixedHudStratum", self)
 	self.wndMountHealth:Show(false)
+
+end
+
+function PvP_HealthShieldBar:OnConfigureStart()
 end
 
 function PvP_HealthShieldBar:OnOptionsUpdated()

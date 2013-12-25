@@ -1,4 +1,4 @@
-<Addon Author="Aust3n" APIVersion="3" Name="Nameplates1" Description="Nameplates">
+<Addon Author="Aust3n, okaygo" APIVersion="3" Name="PvP_Nameplates" Description="Nameplates">
     <Script Name="Nameplates.lua"/>
     <Form Name="Nameplates.xml"/>
 	<ReplaceAddon Name="Nameplates"/>
