@@ -9,7 +9,7 @@
                     <Event Name="ButtonUncheck" Function="OnDisableDashToggle"/>
                 </Control>
             </Control>
-            <Control Class="Window" LAnchorPoint="0" LAnchorOffset="2" TAnchorPoint="0" TAnchorOffset="9" RAnchorPoint="0" RAnchorOffset="54" BAnchorPoint="0" BAnchorOffset="39" RelativeToClient="1" Font="Bold" Text="" Template="Default" TooltipType="OnCursor" Name="RollsLeft" BGColor="ffffffff" TextColor="ffffffff" TooltipColor="" TextId="CRB_2" Picture="1" IgnoreMouse="1" Moveable="1" Sizable="0" Border="0" NoClip="1" DT_CENTER="1" DT_VCENTER="1" Sprite="ClientSprites:BlackFill"/>
+            <Control Class="Window" LAnchorPoint="0" LAnchorOffset="12" TAnchorPoint="0" TAnchorOffset="7" RAnchorPoint="0" RAnchorOffset="64" BAnchorPoint="0" BAnchorOffset="37" RelativeToClient="1" Font="Bold" Text="" Template="Default" TooltipType="OnCursor" Name="RollsLeft" BGColor="ffffffff" TextColor="ffffffff" TooltipColor="" TextId="CRB_2" Picture="1" IgnoreMouse="1" Moveable="1" Sizable="0" Border="0" NoClip="1" DT_CENTER="1" DT_VCENTER="1" Sprite="ClientSprites:BlackFill"/>
         </Control>
     </Form>
 </Forms>
