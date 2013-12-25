@@ -31,13 +31,6 @@ local eHealthColor =
 	HealthInGreen = 3
 }
 
-local eEnduranceFlash =
-{
-	EnduranceFlashZero = 1,
-	EnduranceFlashOne = 2,
-	EnudranceFlashTwo = 3
-}
-
 function PvP_HealthShieldBar:OnLoad()
 	Apollo.RegisterEventHandler("UnitEnteredCombat", "OnEnteredCombat", self)
 	Apollo.RegisterEventHandler("RefreshPvP_HealthShieldBar", "OnFrameUpdate", self)
@@ -45,7 +38,6 @@ function PvP_HealthShieldBar:OnLoad()
 	Apollo.RegisterEventHandler("OptionsUpdated_PvP_HealthShieldBar", "OnOptionsUpdated", self)
 
 	Apollo.RegisterTimerHandler("HealthShieldBarTimer", "OnFrameUpdate", self)
-	Apollo.RegisterTimerHandler("EnduranceDisplayTimer", "OnEnduranceDisplayTimer", self)
 	Apollo.RegisterTimerHandler("CCArmorBrokenDisplayTimer", "OnCCArmorBrokenDisplayTimer", self)
 	Apollo.RegisterTimerHandler("PvP_HealthShieldBar_FlashThrottleTimer", "OnFlashThrottleTimer", self)
 
@@ -65,8 +57,6 @@ function PvP_HealthShieldBar:OnLoad()
 	self.wndFlashShield = self.wndMain:FindChild("CurrShieldFlash")
 	self.wndFlashAbsorb = self.wndMain:FindChild("CurrAbsorbFlash")
 	self.wndFlashHealth = self.wndMain:FindChild("HealthBarFlash")
-	self.wndEndurance = self.wndMain:FindChild("EnduranceContainer")
-	self.wndDisableDash = self.wndEndurance:FindChild("DisableDashToggleContainer")
 	self.wndCCArmor = self.wndMain:FindChild("CCArmorContainer")
 
 	self.nBarWidth = self.wndHealth:GetWidth()
@@ -74,8 +64,6 @@ function PvP_HealthShieldBar:OnLoad()
 	self.fHealthWarn = 0.4
 	self.fHealthWarn2 = 0.6
 	self.eHealthState = eHealthColor.HealthInGreen
-	self.eEnduranceState = eEnduranceFlash.EnduranceFlashZero
-	self.bEnduranceFadeTimer = false
 	self.bBrokenCCArmorFadeTimer = false
 	self.nLastCCArmorValue = 0
 
@@ -85,9 +73,6 @@ function PvP_HealthShieldBar:OnLoad()
 	self.nLastHealthCurr = -1
 	self.nLastShieldCurr = -1
 	self.nLastAbsorbCurr = -1
-
-	-- todo: make this selective
-	self.wndEndurance:Show(false, true)
 
 	-- Mount health
 	self.wndMountHealth = Apollo.LoadForm("PvP_HealthShieldBar.xml", "MountHealthFrame", "FixedHudStratum", self)
@@ -230,11 +215,6 @@ function PvP_HealthShieldBar:OnFrameUpdate()
 	self.wndFlashAbsorb:SetAnchorOffsets(nPointShieldRight, 0, nPointAbsorbMid, 0)
 	self.wndMaxAbsorb:SetAnchorOffsets(nPointShieldRight, 0, nPointAbsorbRight, 0)
 
-	-- Evades
-	local nEvadeCurr = unitPlayer:GetResource(knEvadeResource)
-	local nEvadeMax = unitPlayer:GetMaxResource(knEvadeResource)
-	self:UpdateEvades(nEvadeCurr, nEvadeMax)
-
 	-- Mount Health
 	local bMounted = unitPlayer:IsMounted()
 	self.wndMountHealth:Show(bMounted, not bMounted)
@@ -245,70 +225,8 @@ function PvP_HealthShieldBar:OnFrameUpdate()
 		self.wndMountHealth:FindChild("MountHealthText"):SetText(String_GetWeaselString(Apollo.GetString("HealthBar_MountHealth"),  unitPlayer:GetMountHealth(), unitPlayer:GetMountMaxHealth()))
 	end
 
-	-- Evade Blocker
-	-- TODO: Store this and only update when needed
-	local bShowDoubleTapToDash = Apollo.GetConsoleVariable("player.showDoubleTapToDash")
-	local bSettingDoubleTapToDash = Apollo.GetConsoleVariable("player.doubleTapToDash")
-
-	self.wndDisableDash:Show(bShowDoubleTapToDash)
-	self.wndEndurance:FindChild("EvadeFlashSprite"):Show(bShowDoubleTapToDash and bSettingDoubleTapToDash)
-	self.wndEndurance:FindChild("EvadeDisabledBlocker"):Show(bShowDoubleTapToDash and not bSettingDoubleTapToDash)
-	self.wndDisableDash:FindChild("DisableDashToggleFlash"):Show(bShowDoubleTapToDash and not bSettingDoubleTapToDash)
-	self.wndDisableDash:FindChild("DisableDashToggle"):SetCheck(bShowDoubleTapToDash and not bSettingDoubleTapToDash)
-	self.wndDisableDash:SetTooltip(bSettingDoubleTapToDash and Apollo.GetString("HealthBar_DisableDoubleTapEvades") or Apollo.GetString("HealthBar_EnableDoubletapTooltip"))
-
-	-- Show/Hide EnduranceEvade UI
-	if self.bInCombat or nRunCurr ~= nRunMax or nEvadeCurr ~= nEvadeMax or bSettingDoubleTapToDash then
-		Apollo.StopTimer("EnduranceDisplayTimer")
-		self.bEnduranceFadeTimer = false
-		self.wndEndurance:Show(true, true)
-	elseif not self.bEnduranceFadeTimer then
-		Apollo.StopTimer("EnduranceDisplayTimer")
-		Apollo.StartTimer("EnduranceDisplayTimer")
-		self.bEnduranceFadeTimer = true
-	end
-
 	--Interrupt Armor
 	self:UpdateCCArmor(unitPlayer:GetInterruptArmorValue(), unitPlayer:GetInterruptArmorMax())
-end
-
-function PvP_HealthShieldBar:UpdateEvades(nEvadeValue, nEvadeMax)
-	if nEvadeValue >= nEvadeMax then -- all full
-		self.wndEndurance:FindChild("EvadeProgressContainer"):Show(false)
-		self.wndEndurance:FindChild("EvadeFullSprite"):SetSprite("sprResourceBar_DodgeFull")
-
-		if self.nEnduranceState ~= eEnduranceFlash.EnuduranceFlashTwo then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashTwo
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashFull")
-		end
-	elseif nEvadeValue >= nEvadeMax / 2 then -- one ready, one filling
-		self:HelperDrawProgressAsTicks(nEvadeValue - nEvadeMax/2)
-		self.wndEndurance:FindChild("EvadeFullSprite"):SetSprite("sprResourceBar_DodgeHalf")
-
-		if self.nEnduranceState == eEnduranceFlash.EnduranceFlashZero then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashOne
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashHalf")
-		elseif self.nEnduranceState == eEnduranceFlash.EnduranceFlashTwo then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashOne
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashFull")
-		end
-	else -- under one
-		self:HelperDrawProgressAsTicks(nEvadeValue)
-		self.wndEndurance:FindChild("EvadeFullSprite"):SetSprite("")
-
-		if self.nEnduranceState == eEnduranceFlash.EnduranceFlashOne then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashZero
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashHalf")
-		elseif self.nEnduranceState == eEnduranceFlash.EnduranceFlashTwo then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashZero
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashFull")
-		end
-	end
-
-	local strEvadeTooltop = Apollo.GetString(Apollo.GetConsoleVariable("player.doubleTapToDash") and "HealthBar_EvadeDoubleTapTooltip" or "HealthBar_EvadeKeyTooltip")
-	local strDisplayTooltip = String_GetWeaselString(strEvadeTooltop, math.floor(nEvadeValue / 100), math.floor(nEvadeMax / 100))
-	self.wndEndurance:FindChild("EvadeProgressContainer"):SetTooltip(strDisplayTooltip)
-	self.wndEndurance:FindChild("EvadeFullSprite"):SetTooltip(strDisplayTooltip)
 end
 
 function PvP_HealthShieldBar:HelperDrawProgressAsTicks(nProgress)
@@ -369,11 +287,6 @@ end
 
 function PvP_HealthShieldBar:OnFlashThrottleTimer()
 	self.bFlashThrottle = false
-end
-
-function PvP_HealthShieldBar:OnEnduranceDisplayTimer()
-	self.bEnduranceFadeTimer = false
-	self.wndEndurance:Show(false)
 end
 
 function PvP_HealthShieldBar:OnMouseButtonDown(wnd, wndControl, iButton, nX, nY, bDouble)

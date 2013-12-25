@@ -1,0 +1,4 @@
+<Addon Author="Aust3n, okaygo" APIVersion="3" Name="PvP_DashMeter" Description="PvP_DashMeter seperates the dash meter from HealthShieldBar and gives options">
+    <Script Name="PvP_DashMeter.lua"/>
+    <Form Name="PvP_DashMeter.xml"/>
+</Addon>

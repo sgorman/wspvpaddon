@@ -1,4 +1,0 @@
-<Addon Author="Aust3n" APIVersion="3" Name="PvP_DigitalDash" Description="PvP_DigitalDash turns the sprint meter into a digital % number">
-    <Script Name="PvP_DigitalDash.lua"/>
-    <Form Name="PvP_DigitalDash.xml"/>
-</Addon>
