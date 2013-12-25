@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Addon Author="okaygo" APIVersion="3" Name="PvP_Settings" Description="Saves the settings of all the PvP Modules.">
+    <Script Name="PvP_Settings.lua"/>
+    <Form Name="PvP_Settings.xml"/>
+</Addon>

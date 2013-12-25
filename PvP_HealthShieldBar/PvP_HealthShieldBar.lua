@@ -32,6 +32,7 @@ local eHealthColor =
 }
 
 function PvP_HealthShieldBar:OnLoad()
+	
 	Apollo.RegisterEventHandler("UnitEnteredCombat", "OnEnteredCombat", self)
 	Apollo.RegisterEventHandler("RefreshPvP_HealthShieldBar", "OnFrameUpdate", self)
 	Apollo.RegisterEventHandler("Tutorial_RequestUIAnchor", "OnTutorial_RequestUIAnchor", self)
@@ -281,6 +282,19 @@ function PvP_HealthShieldBar:OnTutorial_RequestUIAnchor(eAnchor, idTutorial, str
 		tRect.l, tRect.t, tRect.r, tRect.b = self.wndMain:GetRect()
 		Event_FireGenericEvent("Tutorial_RequestUIAnchorResponse", eAnchor, idTutorial, strPopupText, tRect)
 	end
+end
+
+function PvP_HealthShieldBar:OnSave(eLevel)
+
+end
+
+---------------------------------------------------------------------------------------------------
+-- PvP_HealthShieldBarForm Functions
+---------------------------------------------------------------------------------------------------
+
+function PvP_HealthShieldBar:OnBarContainerMove( wndHandler, wndControl, nOldLeft, nOldTop, nOldRight, nOldBottom )
+	Position = 50
+	PvP_Settings.Set("HealthShieldBar", "X", Position)
 end
 
 local PvP_HealthShieldBarInst = PvP_HealthShieldBar:new()
