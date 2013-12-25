@@ -24,7 +24,7 @@ function SprintMeter:OnLoad()
 	Apollo.RegisterEventHandler("VarChange_FrameCount", "OnFrame", self)
 	Apollo.RegisterEventHandler("Tutorial_RequestUIAnchor", 	"OnTutorial_RequestUIAnchor", self)	
 
-	self.wndMain = Apollo.LoadForm("PvP_SprintPercent.xml", "SprintMeterFormVert", "InWorldHudStratum", self)
+	self.wndMain = Apollo.LoadForm("PvP_SprintMeter.xml", "SprintMeterFormVert", "InWorldHudStratum", self)
 	self.wndMain:Show(false, true)
 	--self.wndMain:SetUnit(GameLib.GetPlayerUnit(), 40) -- 1 or 9 are also good
 
@@ -66,6 +66,14 @@ function SprintMeter:OnFrame()
 	--self.wndMain:Show(bAtMax or self.bJustFilled, not bAtMax)
 	--Makes SprintPercent always visible
 	self.wndMain:Show(bAtMax or self.bJustFilled, not bAtMax)
+	
+	if nRunCurr >= 350 then
+	 self.wndMain:FindChild("ProgBar"):SetTextColor("green")
+	elseif nRunCurr >= 175 then
+	 self.wndMain:FindChild("ProgBar"):SetTextColor("yellow")
+	elseif nRunCurr >= 0 then
+	 self.wndMain:FindChild("ProgBar"):SetTextColor("red")
+	end
 end
 
 function SprintMeter:OnSprintMeterGracePeriod()

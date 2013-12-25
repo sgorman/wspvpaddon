@@ -1,5 +1,0 @@
-<Addon Author="Aust3n" APIVersion="3" Name="EnemyFocusCastbar" Description="Enemy and Focus castbar relocation and size increase">
-    <Script Name="TargetFrame.lua"/>
-    <Form Name="TargetFrame.xml"/>
-	<ReplaceAddon Name="TargetFrame"/>
-</Addon>
