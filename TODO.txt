@@ -27,3 +27,9 @@ PvP_HealthShieldBar (Scott will work on this) -
 Make everything movable - or hideable.
 Save and load config.
 New Art
+
+
+
+Future Ideas:
+BattlegroundTargets
+	
