@@ -1,0 +1,5 @@
+<Addon Name="PvP_HealthShieldBar" Version="0.01" Author="okaygo" APIVersion="3" Description="Makes it better for PvP.">
+    <Script Name="PvP_HealthShieldBar.lua"/>
+    <Form Name="PvP_HealthShieldBar.xml"/>
+    <ReplaceAddon Name="HealthShieldBar"/>
+</Addon>
