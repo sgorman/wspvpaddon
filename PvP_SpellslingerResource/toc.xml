@@ -1,0 +1,5 @@
+<Addon Author="Aust3n" APIVersion="3" Name="PvP_SpellslingerResource" Description="Turns standard resource meters for spellslingers into digital % versions">
+    <Script Name="PvP_SpellslingerResource.lua"/>
+    <Form Name="PvP_SpellslingerResource.xml"/>
+	<ReplaceAddon Name="SpellslingerResource"/>
+</Addon>

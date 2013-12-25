@@ -37,7 +37,7 @@ function SpellslingerResource:OnCharacterCreated()
 	Apollo.RegisterEventHandler("VarChange_FrameCount", "OnFrame", self)
 	Apollo.RegisterEventHandler("UnitEnteredCombat", "OnEnteredCombat", self)
 
-    self.wndMain = Apollo.LoadForm("PvP_SSR.xml", "SpellslingerResourceForm", "FixedHudStratum", self)
+    self.wndMain = Apollo.LoadForm("PvP_SpellslingerResource.xml", "SpellslingerResourceForm", "FixedHudStratum", self)
 
 	self.wndMain:FindChild("SurgeBacker"):SetTooltip(string.format("<T Font=\"CRB_InterfaceSmall\">%s</T>", Apollo.GetString("CRB_SpellslingerResource")))
 	

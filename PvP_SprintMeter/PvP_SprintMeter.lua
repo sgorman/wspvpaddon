@@ -66,6 +66,14 @@ function SprintMeter:OnFrame()
 	--self.wndMain:Show(bAtMax or self.bJustFilled, not bAtMax)
 	--Makes SprintPercent always visible
 	self.wndMain:Show(bAtMax or self.bJustFilled, not bAtMax)
+	
+	if nRunCurr >= 350 then
+	 self.wndMain:FindChild("ProgBar"):SetTextColor("green")
+	elseif nRunCurr >= 175 then
+	 self.wndMain:FindChild("ProgBar"):SetTextColor("yellow")
+	elseif nRunCurr >= 0 then
+	 self.wndMain:FindChild("ProgBar"):SetTextColor("red")
+	end
 end
 
 function SprintMeter:OnSprintMeterGracePeriod()
