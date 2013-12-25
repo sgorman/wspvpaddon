@@ -71,15 +71,16 @@ function SpellslingerResource:OnFrame()
 	self.wndMain:FindChild("SurgeProgressBar"):SetProgress(nResourceCurrent)
 	self.wndMain:FindChild("SurgeProgressBar"):SetTooltip(String_GetWeaselString(Apollo.GetString("Spellslinger_SpellSurge"), nResourceCurrent, nResourceMax))
 
-	local bSurgeReady = nResourceCurrent > 50
+	local bSurgeReady = nResourceCurrent >= 50
 	if bSurgeReady ~= self.wndMain:FindChild("SurgeBacker"):GetData() then
+		self.wndMain:FindChild("SurgeProgressBar"):SetTextColor("xkcdAmber")
 		self.wndMain:FindChild("SurgeBacker"):SetData(bSurgeReady)
 		self.wndMain:FindChild("SurgeBacker"):SetSprite(bSurgeReady and "sprSpellslinger_TEMP_BackerAnim" or "sprSpellslinger_TEMP_BackerArt")
 	end
 	
 	
 	if nResourceCurrent < 50 then 
-		self.wndMain:FindChild("SurgeProgressBar"):SetTextColor(bSurgeNotReady and "red")
+		self.wndMain:FindChild("SurgeProgressBar"):SetTextColor("xkcdLightRed")
 	end
 
 	-- Glow
