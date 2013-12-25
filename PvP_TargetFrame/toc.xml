@@ -1,0 +1,5 @@
+<Addon Author="Aust3n" APIVersion="3" Name="PvP_TargetFrame" Description="TargetFrame replacement. Emphasis on Target and Focus Cast Bars">
+    <Script Name="PvP_TargetFrame.lua"/>
+    <Form Name="PvP_TargetFrame.xml"/>
+	<ReplaceAddon Name="TargetFrame"/>
+</Addon>
