@@ -1,0 +1,5 @@
+<Addon Author="Aust3n" APIVersion="3" Name="PvP_CastBar" Description="PvP_CastBar makes the CastBar much easier to read">
+    <Script Name="PvP_CastBar.lua"/>
+    <Form Name="PvP_CastBar.xml"/>
+	<ReplaceAddon Name="CastBar"/>
+</Addon>
