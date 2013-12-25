@@ -75,7 +75,7 @@ function DashMeter:OnFrameUpdate()
 	-- Evades
 	local nEvadeCurr = unitPlayer:GetResource(knEvadeResource)
 	local nEvadeMax = unitPlayer:GetMaxResource(knEvadeResource)
-	self:UpdateEvades(nEvadeCurr, nEvadeMax)
+	
 
 	-- Evade Blocker
 	-- TODO: Store this and only update when needed
@@ -83,8 +83,7 @@ function DashMeter:OnFrameUpdate()
 	local bSettingDoubleTapToDash = Apollo.GetConsoleVariable("player.doubleTapToDash")
 
 	self.wndDisableDash:Show(bShowDoubleTapToDash)
-	self.wndEndurance:FindChild("EvadeFlashSprite"):Show(bShowDoubleTapToDash and bSettingDoubleTapToDash)
-	self.wndEndurance:FindChild("EvadeDisabledBlocker"):Show(bShowDoubleTapToDash and not bSettingDoubleTapToDash)
+		
 	self.wndDisableDash:FindChild("DisableDashToggleFlash"):Show(bShowDoubleTapToDash and not bSettingDoubleTapToDash)
 	self.wndDisableDash:FindChild("DisableDashToggle"):SetCheck(bShowDoubleTapToDash and not bSettingDoubleTapToDash)
 	self.wndDisableDash:SetTooltip(bSettingDoubleTapToDash and Apollo.GetString("HealthBar_DisableDoubleTapEvades") or Apollo.GetString("HealthBar_EnableDoubletapTooltip"))
@@ -100,85 +99,17 @@ function DashMeter:OnFrameUpdate()
 		self.bEnduranceFadeTimer = true
 	end
 	
-		if nEvadeCurr >= 200 then
-			self.wndEndurance:FindChild("RollsLeft"):SetText("2")
-		elseif nEvadeCurr >= 100 then
-			self.wndEndurance:FindChild("RollsLeft"):SetText("1")
-			
-		elseif nEvadeCurr >= 0 then
-			self.wndEndurance:FindChild("RollsLeft"):SetText("0")
-		end
-		
-		
-end
-
-function DashMeter:UpdateEvades(nEvadeValue, nEvadeMax)
-	if nEvadeValue >= nEvadeMax then -- all full
-		self.wndEndurance:FindChild("EvadeProgressContainer"):Show(false)
-		self.wndEndurance:FindChild("EvadeFullSprite"):SetSprite("sprResourceBar_DodgeFull")
-		
-		
-		if self.nEnduranceState ~= eEnduranceFlash.EnuduranceFlashTwo then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashTwo
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashFull")
-		end
-		
-	elseif nEvadeValue >= nEvadeMax / 2 then -- one ready, one filling
-		self:HelperDrawProgressAsTicks(nEvadeValue - nEvadeMax/2)
-		self.wndEndurance:FindChild("EvadeFullSprite"):SetSprite("sprResourceBar_DodgeHalf")
-
-		if self.nEnduranceState == eEnduranceFlash.EnduranceFlashZero then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashOne
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashHalf")
-		elseif self.nEnduranceState == eEnduranceFlash.EnduranceFlashTwo then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashOne
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashFull")
-		end
-	else -- under one
-		self:HelperDrawProgressAsTicks(nEvadeValue)
-		self.wndEndurance:FindChild("EvadeFullSprite"):SetSprite("")
-
-		if self.nEnduranceState == eEnduranceFlash.EnduranceFlashOne then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashZero
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashHalf")
-		elseif self.nEnduranceState == eEnduranceFlash.EnduranceFlashTwo then
-			self.nEnduranceState = eEnduranceFlash.EnduranceFlashZero
-			self.wndEndurance:FindChild("EvadeFlashSprite"):SetSprite("sprResourceBar_DodgeFlashFull")
-		end
-		
+    self.wndEndurance:FindChild("RollsLeft"):SetText(nEvadeCurr / 100)
+	if (nEvadeCurr / 100) >= 2 then
+		self.wndEndurance:FindChild("RollsLeft"):SetTextColor("Green")
+	elseif (nEvadeCurr / 100) >= 1 then
+		self.wndEndurance:FindChild("RollsLeft"):SetTextColor("Yellow")
+	elseif (nEvadeCurr / 100) >= 0 then
+		self.wndEndurance:FindChild("RollsLeft"):SetTextColor("Red")
+	end
 	
-	end
-
-	local strEvadeTooltop = Apollo.GetString(Apollo.GetConsoleVariable("player.doubleTapToDash") and "HealthBar_EvadeDoubleTapTooltip" or "HealthBar_EvadeKeyTooltip")
-	local strDisplayTooltip = String_GetWeaselString(strEvadeTooltop, math.floor(nEvadeValue / 100), math.floor(nEvadeMax / 100))
-	self.wndEndurance:FindChild("EvadeProgressContainer"):SetTooltip(strDisplayTooltip)
-	self.wndEndurance:FindChild("EvadeFullSprite"):SetTooltip(strDisplayTooltip)
 end
 
-function DashMeter:HelperDrawProgressAsTicks(nProgress)
-	local nTick = 100 / 8
-	local nAnimationOffset = 3 -- TODO animation hack, offsets the delayed bits to the diagonal
-	for idx = 1, 8 do
-		local bIsTrue = nProgress - nAnimationOffset > (nTick * (idx - 1))
-		self.wndEndurance:FindChild("EvadeDodgeBit"..idx):Show(bIsTrue, not bIsTrue)
-	end
-	self.wndEndurance:FindChild("EvadeProgressContainer"):Show(true)
-end
-
-function DashMeter:OnEnteredCombat(unit, bInCombat)
-	if unit == GameLib.GetPlayerUnit() then
-		self.bInCombat = bInCombat
-	end
-end
-
-function DashMeter:OnFlashThrottleTimer()
-	self.bFlashThrottle = false
-end
-
-function DashMeter:OnEnduranceDisplayTimer()
-	self.bEnduranceFadeTimer = false
-	self.wndEndurance:Show(false)
-end
 
 function DashMeter:OnDisableDashToggle(wndHandler, wndControl)
 	Apollo.SetConsoleVariable("player.doubleTapToDash", not wndControl:IsChecked())
