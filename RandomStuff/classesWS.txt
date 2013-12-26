@@ -1,0 +1,79 @@
+warrior      = 1
+engineer     = 2
+Esper        = 3
+medic        = 4
+stalker      = 5
+Spellslinger = 7
+
+	<table n='CodeEnumAttributeMilestoneResult'>
+				<number n='Ok' v='1'/>
+				<number n='InvalidUnit' v='3'/>
+				<number n='UnknownClassId' v='5'/>
+				
+
+				
+				
+				
+				
+				GroupDisplay.lua
+		838		local bCorrectTarget = GameLib.GetTargetUnit() and GameLib.GetTargetUnit() == unitMember--tPortrait.unitMember
+					tPortrait.wndHud:FindChild("GroupPortraitBtn"):SetCheck(bCorrectTarget)
+
+GameLib.CodeEnumClass.Warrior = 
+
+if ktInviteClassIcons[tMemberInfo.classId] then
+	strSpriteToUse = ktInviteClassIcons[tMemberInfo.classId]
+end
+
+			
+local ktInviteClassIcons =
+{
+	[GameLib.CodeEnumClass.Warrior] 			= "Icon_Windows_UI_CRB_Warrior",
+	[GameLib.CodeEnumClass.Engineer] 			= "Icon_Windows_UI_CRB_Engineer",
+	[GameLib.CodeEnumClass.Esper]				= "Icon_Windows_UI_CRB_Esper",
+	[GameLib.CodeEnumClass.Medic]				= "Icon_Windows_UI_CRB_Medic",
+	[GameLib.CodeEnumClass.Stalker] 			= "Icon_Windows_UI_CRB_Stalker",
+	[GameLib.CodeEnumClass.Spellslinger]	 	= "Icon_Windows_UI_CRB_Spellslinger"
+}
+
+	local strClassSprite = ""
+	if ktInviteClassIcons[tMemberInfo.classId] then
+		strClassSprite = ktInviteClassIcons[tMemberInfo.classId]
+	end
+	tPortrait.wndClass:SetSprite(strClassSprite)
+	
+	
+	
+	if unitOwner:GetClassId() == 7 then
+	
+	
+local eDisposition = unitOwner:GetDispositionTo(self.unitPlayerDisposComparisonTEMP)
+	
+	
+	
+function Nameplates:OnNameplatesOn()
+	local ePath = PlayerPathLib.GetPlayerPathType()
+	self.wndOptionsMain:FindChild("ShowRewardTypeMission"):FindChild("Icon"):SetSprite(karPathSprite[ePath])
+	self.wndMain:Show(true)
+	self:RefreshNameplatesConfigure()
+end
+
+if unitOwner:GetType() == "Player" and x then	
+
+class = unitOwner:GetClassId()
+
+if eType ~= GameLib.CodeEnumClass.Warrior then
+		return
+	end
+
+local unitPlayer = GameLib.GetPlayerUnit()
+	if unitPlayer:GetClassId() ~= GameLib.CodeEnumClass.Spellslinger then
+		return
+	end
+
+
+
+strText = string.format("%s (%s)", strText, strShieldCurr)
+
+	
+	
