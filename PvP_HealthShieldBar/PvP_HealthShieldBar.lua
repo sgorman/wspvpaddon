@@ -49,7 +49,12 @@ function PvP_HealthShieldBar:OnLoad()
 	Apollo.CreateTimer("CCArmorBrokenDisplayTimer", 3, false)
 
     self.wndMain = Apollo.LoadForm("PvP_HealthShieldBar.xml", "PvP_HealthShieldBarForm", "FixedHudStratum", self)
-
+	--wndParent = self.wndMain:Get
+	--local tAddon = wndParent:GetData()
+	--Print("Addon" .. tAddon.strName)
+	for k,info in pairs(self) do
+		Print(info.strName)
+	end
 	self.wndHealth = self.wndMain:FindChild("HealthBar")
 	self.wndMaxAbsorb = self.wndMain:FindChild("MaxAbsorbBar")
 	self.wndMaxShield = self.wndMain:FindChild("MaxShieldBar")

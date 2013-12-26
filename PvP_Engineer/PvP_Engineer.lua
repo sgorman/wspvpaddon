@@ -99,14 +99,14 @@ function PvP_Engineer:OnFrameUpdate()
 	local unitPlayer = GameLib.GetPlayerUnit()
 	
 	local nLeft, nTop, nRight, nBottom = self.wndMain:GetRect() -- legacy code
-	Apollo.SetGlobalAnchor("CastingBarBottom", 0.0, nTop - 15, true)
+	--Apollo.SetGlobalAnchor("CastingBarBottom", 0.0, nTop - 15, true)
 	
 	-- Resource 1 (Volatility)
 	local nResourceMax = unitPlayer:GetMaxResource(1)
 	local nResourceCurrent = unitPlayer:GetResource(1)
 	local nResourcePercent = nResourceCurrent/nResourceMax
-	local nOffset = nResourcePercent * self.nUseableProgWidth
-	self.wndMain:FindChild("BaseProgressSlider"):SetAnchorOffsets(nOffset, 0, nOffset + self.nSliderWidth, 0)
+	--local nOffset = nResourcePercent * self.nUseableProgWidth
+	--self.wndMain:FindChild("BaseProgressSlider"):SetAnchorOffsets(nOffset, 0, nOffset + self.nSliderWidth, 0)
 	self.wndMain:FindChild("BaseProgressWarning"):Show(nResourceCurrent == nResourceMax)
 	
 	if not self.bInCombat and nResourceCurrent == 0 then

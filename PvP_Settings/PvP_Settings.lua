@@ -9,7 +9,8 @@ require "Window"
 -- PvP_Settings Module Definition
 -----------------------------------------------------------------------------------------------
 local PvP_Settings = {} 
-
+local GeminiInterfaceLib = nil
+local Settings = {}
 -----------------------------------------------------------------------------------------------
 -- Constants
 -----------------------------------------------------------------------------------------------
@@ -40,51 +41,62 @@ end
 -----------------------------------------------------------------------------------------------
 function PvP_Settings:OnLoad()
     -- Register handlers for events, slash commands and timer, etc.
-    -- e.g. Apollo.RegisterEventHandler("KeyDown", "OnKeyDown", self)
-    --Apollo.RegisterSlashCommand("pvpsettingstest", "OnPvP_SettingsOn", self)    
-	--Apollo.RegisterSlashCommand("pvpsettingstest2", "OnPvP_SettingsOn2", self)
-	--PvP_Settings:RegisterModule("pvpsettings")
-	Print("type: " .. type(self.pvpSettings))
-	PvP_Settings:Set("Settings", "Debug", true)
-	
-	--self.debugMode = PvP_Settings:Get("Settings", "Debug")
-	--if (self.debugMode == true) then
-	--	Print("PvP_Settings Debug is Enabled")
-	--end
-
-	
-
-		--Print(self.pvpSettings['pvpsettingstest']) --PvP_Settings:GetSetting("pvpsettings","test"))
+    Apollo.RegisterSlashCommand("settingstest", "OnPvP_SettingsOn", self)    
 end
 
+function PvP_Settings:OnPvP_SettingsOn()
+--	GeminiInterfaceLib.AddLine("Hello")
+PvP_Settings:Set("Settings", "Debug", true)
+PvP_Settings:Set("Settings", "Hello", "Hello")
+PvP_Settings:Set("Settings", "Table", { "TableData1", "TableData2", { "SubTable1", "SubTable2" } })
+
+end
 
 function PvP_Settings:Get( module, setting )
 		
-	if (type(self.pvpSettings) ~= 'table') then
-		self.pvpSettings = {}
+	if (type(Settings) ~= 'table') then
+		Settings = {}
 	end
-	if (type(self.pvpSettings[module]) ~= 'table') then
-		self.pvpSettings[module] = {}
+	if (type(Settings[module]) ~= 'table') then
+		Settings[module] = {}
 	end
 	
-	if (self.pvpSettings[module][setting] ~= nil) then
-		return self.pvpSettings[module][setting]
+	if (Settings[module][setting] ~= nil) then
+		return Settings[module][setting]
 	end
 	
 	return nil
 end
 
 function PvP_Settings:Set( module, setting, value )
-	if (type(self.pvpSettings) ~= 'table') then
-		self.pvpSettings = {}
+	if (type(Settings) ~= 'table') then
+		Settings = {}
 	end	
 
-	if (type(self.pvpSettings[module]) ~= 'table') then
-		self.pvpSettings[module] = {}
+	if (type(Settings[module]) ~= 'table') then
+		Settings[module] = {}
 	end
 	
-	self.pvpSettings[module][setting] = value
+	Settings[module][setting] = value
 	
+	local tSave = {}
+	for k,tItem in pairs(Settings) do
+        -- for each player in our list, create a table using the name as our key
+        tSave[k] = {}
+		--GeminiInterfaceLib.AddLine("Hello")
+				--tSave[k] = tItem
+        -- save a table version of the color
+		Print(k)
+		if (type(tItem) == 'table') then
+			for y,tSetting in pairs(tItem) do
+				Print(y .. " " .. type(tSetting))
+	      	 	tSave[k][y] = tSetting
+			end
+		else
+			tSave[k] = tItem
+		end
+    end
+
 	return value
 end
 
@@ -94,28 +106,28 @@ end
 -- Define general functions here
 
 function PvP_Settings:OnSave(eLevel)
-	if eLevel ~= GameLib.CodeEnumAddonSaveLevel.General then return nil end
+	--if eLevel ~= GameLib.CodeEnumAddonSaveLevel.General then return nil end
     -- create a table to hold our data
-   -- local tSave = {}
-   -- for k,tItem in pairs(self.pvpSettings) do
+	local tSave = {}
+	for k,tItem in pairs(Settings) do
         -- for each player in our list, create a table using the name as our key
-    --    tSave[k] = {}
-		
-	--	tSave[k] = tItem
+        tSave[k] = {}
         -- save a table version of the color
-
-	--	for y,tSetting in pairs(tItem) do
-    --   	tSave[k][y] = tSetting:ToTable()
-	--	end
-    --end
-	--tSave['testing'] = 'test'
+		if (type(tItem) == 'table') then
+			for y,tSetting in pairs(tItem) do
+	      	 	tSave[k][y] = tSetting
+			end
+		else
+			tSave[k] = tItem
+		end
+    end
     -- simply return this value and Apollo will save the file!
-    return { "test" }-- self.pvpSettings:ToTable()
+    return tSave-- self.pvpSettings:ToTable()
 end
 
 function PvP_Settings:OnRestore(eLevel, tData)
     -- just store this and use it later
-    self.pvpSettings = tData
+    Settings = tData
 end
 
 --------------------------------------------------------------------------------
