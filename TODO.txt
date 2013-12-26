@@ -28,4 +28,7 @@ TargetFrames
 
 Future Ideas:
 BattlegroundTargets
-	
+
+
+Errors:
+PvP_TargetFrame - has some kind of error in it, copy/paste errors so we can look at them later.
