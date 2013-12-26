@@ -137,18 +137,18 @@ function CastBar:OnUpdate()
 	end
 
 	-- reposition if needed
-	if self.wndCastFrame:IsShown() and self.wndOppFrame:IsShown() then
-		local nLeft, nTop, nRight, nBottom = self.wndOppFrame:GetAnchorOffsets()
-		if nBottom ~= self.nCastTop then
-			self.wndOppFrame:SetAnchorOffsets(self.nOppLeft, self.nOppTop + self.nCastTop, self.nOppRight, self.nOppBottom + self.nCastTop)
-		end
-	elseif self.wndOppFrame:IsShown() then
-		local nLeft,nTop,nRight,nBottom = self.wndOppFrame:GetAnchorOffsets()
-		if nBottom ~= self.nOppBottom then
-			self.wndOppFrame:SetAnchorOffsets(self.nOppLeft, self.nOppTop, self.nOppRight, self.nOppBottom)
-		end	
+	--if self.wndCastFrame:IsShown() and self.wndOppFrame:IsShown() then
+	--	local nLeft, nTop, nRight, nBottom = self.wndOppFrame:GetAnchorOffsets()
+	--	if nBottom ~= self.nCastTop then
+	--		self.wndOppFrame:SetAnchorOffsets(self.nOppLeft, self.nOppTop + self.nCastTop, self.nOppRight, self.nOppBottom + self.nCastTop)
+	--	end
+	--elseif self.wndOppFrame:IsShown() then
+	--	local nLeft,nTop,nRight,nBottom = self.wndOppFrame:GetAnchorOffsets()
+	--	if nBottom ~= self.nOppBottom then
+	--		self.wndOppFrame:SetAnchorOffsets(self.nOppLeft, self.nOppTop, self.nOppRight, self.nOppBottom)
+	--	end	
 	
-	end
+	--end
 
 	-- Buff Icons
 	if unitPlayer ~= nil then

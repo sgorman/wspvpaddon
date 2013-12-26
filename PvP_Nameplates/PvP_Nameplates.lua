@@ -1420,6 +1420,9 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		strText = string.format("%s (%s)", strText, strShieldCurr)
 	end
 	wndHealth:FindChild("HealthLabel"):SetText(strText)
+	--wndHealth:FindChild("HealthLabel"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Percent"), math.floor(nHealthCurr / nHealthMax * 100)))
+	
+
 	
 
 

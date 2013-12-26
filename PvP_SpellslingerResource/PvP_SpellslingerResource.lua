@@ -25,6 +25,7 @@ function SpellslingerResource:OnLoad()
 	if GameLib.GetPlayerUnit() then
 		self:OnCharacterCreated()
 	end
+	
 end
 
 function SpellslingerResource:OnCharacterCreated()
@@ -88,6 +89,9 @@ function SpellslingerResource:OnFrame()
 	self.wndMain:FindChild("SurgeGlowBG"):Show(bSurgeActive)
 	self.wndMain:FindChild("SurgeGlowAnims"):Show(bSurgeActive)
 end
+
+
+
 
 function SpellslingerResource:OnEnteredCombat(unitPlayer, bInCombat)
 	if self.wndMain and self.wndMain:FindChild("CombatNoticeLeft") and self.wndMain:FindChild("CombatNoticeRight") and unitPlayer == GameLib.GetPlayerUnit() then

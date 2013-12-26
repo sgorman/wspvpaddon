@@ -1,0 +1,5 @@
+...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:1153: attempt to index local 'wndCurr' (a nil value)
+stack trace:
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:1153: in function 'HelperLoadRewardIcon'
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:1074: in function 'HelperAddRewardsToTarget'
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:245: in function <...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:198>

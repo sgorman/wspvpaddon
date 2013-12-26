@@ -1,0 +1,173 @@
+				<string n='ScoreBoardUpdate' v='ScoreBoardUpdate'/>
+				<string n='ScoreBoardDisplay' v='ScoreBoardDisplay'/>
+
+				<function n='SetFocus'/>
+				<function n='ClearFocus'/>
+
+<table n='CodeEnumCCState'>
+				<number n='Taunt' v='13'/>
+				<number n='Disarm' v='3'/>
+				<number n='Polymorph' v='5'/>
+				<number n='Disorient' v='11'/>
+				<number n='Hold' v='7'/>
+				<number n='Stun' v='0'/>
+				<number n='Vulnerability' v='9'/>
+				<number n='Daze' v='23'/>
+				<number n='Fear' v='6'/>
+				<number n='Interrupt' v='22'/>
+				<number n='Knockback' v='16'/>
+				<number n='Blind' v='15'/>
+				<number n='Snare' v='21'/>
+				<number n='Root' v='2'/>
+				<number n='Tether' v='20'/>
+				<number n='DeTaunt' v='14'/>
+				<number n='VulnerabilityWithAct' v='10'/>
+				<number n='Pull' v='18'/>
+				<number n='PositionSwitch' v='19'/>
+				<number n='Knockdown' v='8'/>
+				<number n='Sleep' v='1'/>
+				<number n='Pushback' v='17'/>
+				<number n='Silence' v='4'/>
+				<number n='Subdue' v='24'/>
+				<number n='Disable' v='12'/>
+</table>
+
+<table n='CodeEnumCastBarType'>
+				<number n='Normal' v='1'/>
+				<number n='Telegraph_Backlash' v='2'/>
+				<number n='Telegraph_Evade' v='3'/>
+				<number n='None' v='0'/>
+</table>
+
+<table n='CodeEnumVital'>
+				<number n='SpellSurge' v='19'/>
+				<number n='Resource6' v='11'/>
+				<number n='Mana' v='15'/>
+				<number n='StalkerB' v='13'/>
+				<number n='Resource2' v='7'/>
+				<number n='InterruptArmor' v='20'/>
+				<number n='Resource3' v='8'/>
+				<number n='Resource1' v='6'/>
+				<number n='Resource4' v='9'/>
+				<number n='StalkerA' v='12'/>
+				<number n='MedicCore' v='18'/>
+				<number n='Breath' v='2'/>
+				<number n='KineticCell' v='4'/>
+				<number n='Resource0' v='5'/>
+				<number n='Resource5' v='10'/>
+				<number n='Health' v='1'/>
+				<number n='Invalid' v='0'/>
+				<number n='StalkerC' v='14'/>
+				<number n='Resource7' v='16'/>
+				<number n='Absorption' v='21'/>
+				<number n='ShieldCapacity' v='3'/>
+</table>
+
+				<function n='GetPlayerUnit'/>
+				<function n='SetTargetUnit'/>
+				<function n='GetPlayerUnitByName'/>
+
+				<function n='GetSpellThresholdTimePrcntLeft'/>
+
+				<function n='GetUnitById'/>
+				
+				<function n='GetScreenSize'/>
+
+
+<table n='CodeEnumSpellClass'>
+				<number n='DebuffNonDispellable' v='39'/>
+				<number n='BuffDispellable' v='36'/>
+				<number n='DebuffDispellable' v='38'/>
+				<number n='BuffNonDispellable' v='37'/>
+</table>
+
+
+				<string n='PvP_CTF_FlagStolenDroppedCollected' v='PvP_CTF_FlagStolenDroppedCollected'/>
+				<string n='PvP_CTF_FlagRecovered' v='PvP_CTF_FlagRecovered'/>
+				<string n='PvP_CTF_FlagStolen' v='PvP_CTF_FlagStolen'/>
+				<string n='PvP_CTF_FlagCollected' v='PvP_CTF_FlagCollected'/>
+				<string n='PvP_CTF_FlagSocketed' v='PvP_CTF_FlagSocketed'/>
+				<string n='PvP_CTF_FlagSpawned' v='PvP_CTF_FlagSpawned'/>
+				<string n='PvP_CTF_FlagDropped' v='PvP_CTF_FlagDropped'/>
+
+				<string n='PvP_HTL_TimeToBeat' v='PvP_HTL_TimeToBeat'/>
+				<string n='PvP_HTL_Respawn' v='PvP_HTL_Respawn'/>
+			
+
+				<function n='GetCurrentZoneMap'/>
+
+				<function n='GetPvpRating'/>
+
+<table n='MatchingGame'>
+				<function n='CanQueueAsGroup'/>
+				<function n='is'/>
+				<function n='IsGamePending'/>
+				<function n='GetPvpRating'/>
+				<function n='GetAverageWaitTime'/>
+				<function n='IsInPVPGame'/>
+				<function n='IsQueuedAsGroup'/>
+				<table n='RatingType'>
+				<number n='Arena2v2' v='0'/>
+				<number n='RatedBattleground' v='3'/>
+				<number n='Arena3v3' v='1'/>
+				<number n='Arena5v5' v='2'/>
+</table>
+				<function n='IsQueuedForMatching'/>
+				<function n='IsVoteKickActive'/>
+				<function n='CanLeaveQueueAsGroup'/>
+				<function n='CastVoteKick'/>
+				<function n='IsInMatchingInstance'/>
+				<function n='GetPVPMatchState'/>
+				<function n='LeaveMatchingQueueAsGroup'/>
+<table n='Roles'>
+				<number n='Tank' v='0'/>
+				<number n='DPS' v='2'/>
+				<number n='Healer' v='1'/>
+</table>
+<table n='Rules'>
+				<number n='WaveRespawn' v='1'/>
+				<number n='Default' v='0'/>
+				<number n='DeathmatchPool' v='2'/>
+</table>
+				<function n='SelectRole'/>
+				<function n='DeclineRoleCheck'/>
+				<function n='IsLookingForReplacements'/>
+				<function n='TransferIntoMatchingGame'/>
+				<function n='GetEligibleRoles'/>
+				<function n='GetPendingInfo'/>
+<table n='Team'>
+				<number n='Team2' v='1'/>
+				<number n='Team1' v='0'/>
+</table>
+table n='PVPGameState'>
+				<number n='Preparation' v='1'/>
+				<number n='InProgress' v='2'/>
+				<number n='Finished' v='3'/>
+</table>
+<table n='MatchType'>
+				<number n='Dungeon' v='1'/>
+				<number n='RatedBattleground' v='5'/>
+				<number n='Warplot' v='4'/>
+				<number n='Adventure' v='2'/>
+				<number n='Arena' v='3'/>
+				<number n='Battleground' v='0'/>
+</table>
+				<function n='LeaveMatchingQueue'/>
+				<function n='StopLookingForReplacements'/>
+				<function n='RespondToPendingGame'/>
+				<function n='GetTimeInQueue'/>
+				<function n='LookForReplacements'/>
+<table n='MatchEndReason'>
+				<number n='Forfeit' v='1'/>
+				<number n='TimeExpired' v='2'/>
+				<number n='Completed' v='0'/>
+</table>
+	
+				<number n='PVPBattlegroundNotifications' v='16'/>
+
+
+
+
+Apollo:
+				<function n='LinkAddon'/>
+				<function n='UnlinkAddon'/>
