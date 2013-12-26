@@ -62,9 +62,9 @@ function SprintMeter:OnFrame()
 		self.bJustFilled = true
 		Apollo.StopTimer("SprintMeterGracePeriod")
 	end
-	--Makes SprintPercent disappear at 100% capacity
+	--Makes SprintMeter disappear at 100% capacity
 	--self.wndMain:Show(bAtMax or self.bJustFilled, not bAtMax)
-	--Makes SprintPercent always visible
+	--Makes SprintMeter always visible
 	self.wndMain:Show(bAtMax or self.bJustFilled, not bAtMax)
 	
 	if nRunCurr >= 350 then

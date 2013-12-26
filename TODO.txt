@@ -28,6 +28,8 @@ TargetFrames
 
 Future Ideas:
 BattlegroundTargets
+Crit addon for Flame Burst
+	
 
 
 Errors:

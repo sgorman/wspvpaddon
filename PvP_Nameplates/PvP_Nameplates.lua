@@ -62,11 +62,23 @@ local ktHealthBarSprites =
 	-- "sprNp_Health_FillGreen",
 	-- "sprNp_Health_FillOrange",
 	-- "sprNp_Health_FillRed"
+
 	
 	"CRB_Raid:sprRaid_HealthProgBar_Green",	
 	"CRB_Raid:sprRaid_HealthProgBar_Orange",
 	"CRB_Raid:sprRaid_HealthProgBar_Red"
 }
+
+local ktInviteClassIcons =
+{
+	[GameLib.CodeEnumClass.Warrior] 			= "Icon_Windows_UI_CRB_Warrior",
+	[GameLib.CodeEnumClass.Engineer] 			= "Icon_Windows_UI_CRB_Engineer",
+	[GameLib.CodeEnumClass.Esper]				= "Icon_Windows_UI_CRB_Esper",
+	[GameLib.CodeEnumClass.Medic]				= "Icon_Windows_UI_CRB_Medic",
+	[GameLib.CodeEnumClass.Stalker] 			= "Icon_Windows_UI_CRB_Stalker",
+	[GameLib.CodeEnumClass.Spellslinger]	 	= "Icon_Windows_UI_CRB_Spellslinger"
+}
+
 
 local karConColors =  -- differential value, color
 {
@@ -220,7 +232,8 @@ function Nameplates:OnLoad()
 	Apollo.RegisterEventHandler("PlayerPathMissionActivate", 	"OnPlayerPathMissionChange", self)
 	
 	Apollo.RegisterTimerHandler("InitialParseTimer", 			"OptionsChanged", self)
-	
+	print(GetClassId)
+
 	Apollo.CreateTimer("InitialParseTimer", 1.0, false)
 	Apollo.StopTimer("InitialParseTimer")
 
@@ -256,6 +269,7 @@ function Nameplates:OnLoad()
 	self.wndOptionsMain:FindChild("MainShowGroup"):SetCheck(self.bShowMainGroupOnly)
 	self.wndOptionsMain:FindChild("MainShowMine"):SetCheck(self.bShowMyNameplate)
 
+		
 	self.tShowDispositionOnly =
 	{
 		true, -- hostile
@@ -692,7 +706,7 @@ function Nameplates:DrawNameplate(tNameplate)
 	bShowNameplate = bShowNameplate
 						and not self.bBlinded
 						and tNameplate.bOnScreen
-						and (not tNameplate.bOccluded or unitOwner:IsMounted())
+						and(not tNameplate.bOccluded or unitOwner:IsMounted())
 						and not tNameplate.bSpeechBubble
 
 	if not bShowNameplate then
@@ -1406,6 +1420,8 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		strText = string.format("%s (%s)", strText, strShieldCurr)
 	end
 	wndHealth:FindChild("HealthLabel"):SetText(strText)
+	
+
 
 	-- Sprite
 	if nVulnerabilityTime and nVulnerabilityTime > 0 then
@@ -1417,6 +1433,22 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	else
 		wndHealth:FindChild("MaxHealth"):SetSprite(ktHealthBarSprites[1])
 	end
+-----------------------------------------------------------------------------------------------------------------
+    --local class = GameLib.GetTargetUnit():GetClassId()
+	
+
+	--if unitOwner:GetType() == "Player" then
+	--	if class == 7 then
+	-- local classNmbr = unitOwner:GetClassId()
+	 --wndHealth:findChild("MaxHealth"):SetSprite(ktInviteClassIcons[unitOwner.classId])
+	--   Print("hello")
+	-- end
+	
+	
+	--if GameLib.GetPlayerUnit():GetClassId() == 7 then
+	--	wndHealth:FindChild("MaxHealth"):SetSprite("Icon_Windows_UI_CRB_Warrior")
+	-- end
+
 end
 
 function Nameplates:HelperFormatBigNumber(nArg)
