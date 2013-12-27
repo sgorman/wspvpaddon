@@ -412,7 +412,7 @@ function TargetFrame:UpdateAlternateFrame(unitToT)
 	local nPointAbsorbRight = self.nAltHealthLeft + (self.nAltHealthWidth * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax))
 
 	if nShieldMax > 0 and nShieldMax / nTotalMax < 0.2 then
-		local nMinShieldSize = 0.2 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
+		local nMinShieldSize = 0.0 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
 		nPointHealthRight = self.nAltHealthLeft + (self.nAltHealthWidth * (math.min (1 - nMinShieldSize, nHealthCurr / nTotalMax)))
 		nPointShieldRight = self.nAltHealthLeft + (self.nAltHealthWidth * (math.min (1, (nHealthCurr / nTotalMax) + nMinShieldSize)))
 	end
@@ -426,10 +426,10 @@ function TargetFrame:UpdateAlternateFrame(unitToT)
 	wndFrame:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 1, self.nAltHealthTop, nPointAbsorbRight, self.nAltHealthBottom)
 
 	-- Bars
-	wndFrame:FindChild("ShieldFill"):Show(nHealthCurr > 0)
-	wndFrame:FindChild("MaxHealth"):Show(nHealthCurr > 0)
-	wndFrame:FindChild("MaxShield"):Show(nHealthCurr > 0 and nShieldMax > 0)
-	wndFrame:FindChild("MaxAbsorb"):Show(nHealthCurr > 0 and nAbsorbMax > 0)
+	--wndFrame:FindChild("ShieldFill"):Show(nHealthCurr > 0)
+	--wndFrame:FindChild("MaxHealth"):Show(nHealthCurr > 0)
+	--wndFrame:FindChild("MaxShield"):Show(nHealthCurr > 0 and nShieldMax > 0)
+	--wndFrame:FindChild("MaxAbsorb"):Show(nHealthCurr > 0 and nAbsorbMax > 0)
 
 	-- Text
 	local strHealthMax = self:HelperFormatBigNumber(nHealthMax)
@@ -439,17 +439,20 @@ function TargetFrame:UpdateAlternateFrame(unitToT)
 	if nShieldMax > 0 and nShieldCurr > 0 then
 		strText = String_GetWeaselString(Apollo.GetString("TargetFrame_HealthShieldText"), strText, strShieldCurr)
 	end
-	wndFrame:FindChild("HealthText"):SetText(strText)
+	
+	wndFrame:FindChild("HealthText"):SetText(strHealthCurr)
+	--wndFrame:FindChild("ShieldText"):SetText("hello")
 
+		
 	-- Sprite
 	if nVulnerabilityTime and nVulnerabilityTime > 0 then
 		wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillPurple")
-	elseif nHealthCurr / nHealthMax < .3 then
-		wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillRed")
-	elseif 	nHealthCurr / nHealthMax < .5 then
-		wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillOrange")
-	else
-		wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillGreen")
+	--elseif nHealthCurr / nHealthMax < .3 then
+	--	wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillRed")
+	--elseif 	nHealthCurr / nHealthMax < .5 then
+	--	wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillOrange")
+	--else
+	--	wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillGreen")
 	end
 
 	-- Interrupt Armor
@@ -1270,12 +1273,8 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 
 	if unitTarget:IsInCCState(Unit.CodeEnumCCState.Vulnerability) then
 		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_TargetFrameSprites:sprTF_HealthFill_Vulnerable")
-	elseif nHealthCurr / nHealthMax <= .3 then
-		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_TargetFrameSprites:sprTF_HealthFill_Red")
-	elseif nHealthCurr / nHealthMax <= .5 then
-		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_TargetFrameSprites:sprTF_HealthFill_Yellow")
 	else
-		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_TargetFrameSprites:sprTF_HealthFill_Green")
+		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_NameplateSprites:sprNp_HealthBarFriendly")
 	end
 
 	local nPointHealthRight = nil
@@ -1288,7 +1287,7 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	nPointAbsorbRight = self.nLFrameRight * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax)
 
 	if nShieldMax > 0 and nShieldMax / nTotalMax < 0.2 then
-		local nMinShieldSize = 0.2 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
+		local nMinShieldSize = 0.0 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
 		nPointHealthRight = self.nLFrameRight * math.min(1 - nMinShieldSize, nHealthCurr / nTotalMax) -- Health is normal, but caps at 80%
 		nPointShieldRight = self.nLFrameRight * math.min(1, (nHealthCurr / nTotalMax) + nMinShieldSize) -- If not 1, the size is thus healthbar + hard minimum
 	end
@@ -1298,8 +1297,8 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	self:SetBarValue(self.wndRankedFrame:FindChild("ShieldCapacityTint"), 0, nShieldCurr, nShieldMax) -- Only the Curr Shield really progress fills
 	self:SetBarValue(self.wndRankedFrame:FindChild("AbsorbCapacityTint"), 0, nAbsorbCurr, nAbsorbMax)
 
-	self.wndRankedFrame:FindChild("MaxHealth"):SetAnchorOffsets(self.nLFrameLeft, self.nLFrameTop, nPointHealthRight + 14, self.nLFrameBottom)
-	self.wndRankedFrame:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight, self.nLFrameTop, nPointShieldRight, self.nLFrameBottom)
+	self.wndRankedFrame:FindChild("MaxHealth"):SetAnchorOffsets(self.nLFrameLeft, self.nLFrameTop, nPointHealthRight + 84, self.nLFrameBottom)
+	--self.wndRankedFrame:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight, self.nLFrameTop, nPointShieldRight, self.nLFrameBottom)
 	self.wndRankedFrame:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 14, self.nLFrameTop, nPointAbsorbRight, self.nLFrameBottom)	
 		
 	if nShieldMax == 0 then
@@ -1317,9 +1316,19 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	local strShieldCurr = self:HelperFormatBigNumber(nShieldCurr)
 	local strText = String_GetWeaselString(Apollo.GetString("TargetFrame_HealthText"), strHealthCurr, strHealthMax)
 	if nShieldMax > 0 and nShieldCurr > 0 then
-		strText = String_GetWeaselString(Apollo.GetString("TargetFrame_HealthShieldText"), strText, strShieldCurr)
+		--strText = String_GetWeaselString(Apollo.GetString("TargetFrame_HealthShieldText"), strText, strShieldCurr)
+		strText = String_GetWeaselString(Apollo.GetString("TargetFrame_HealthText"), strHealthCurr, strHealthMax)
 	end
 	self.wndRankedFrame:FindChild("HealthText"):SetText(strText)
+	
+	
+	if nShieldCurr == 0 or nil then
+		self.wndRankedFrame:FindChild("ShieldText"):SetText("")
+	end
+	
+	if nShieldCurr > 0 then
+		self.wndRankedFrame:FindChild("ShieldText"):SetText(strShieldCurr)
+	end
 end
 
 

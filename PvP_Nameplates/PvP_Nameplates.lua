@@ -69,17 +69,6 @@ local ktHealthBarSprites =
 	"CRB_Raid:sprRaid_HealthProgBar_Red"
 }
 
-local ktInviteClassIcons =
-{
-	[GameLib.CodeEnumClass.Warrior] 			= "Icon_Windows_UI_CRB_Warrior",
-	[GameLib.CodeEnumClass.Engineer] 			= "Icon_Windows_UI_CRB_Engineer",
-	[GameLib.CodeEnumClass.Esper]				= "Icon_Windows_UI_CRB_Esper",
-	[GameLib.CodeEnumClass.Medic]				= "Icon_Windows_UI_CRB_Medic",
-	[GameLib.CodeEnumClass.Stalker] 			= "Icon_Windows_UI_CRB_Stalker",
-	[GameLib.CodeEnumClass.Spellslinger]	 	= "Icon_Windows_UI_CRB_Spellslinger"
-}
-
-
 local npClassColors = 
 {
 	[GameLib.CodeEnumClass.Warrior]				= "ff8B5A2B",
