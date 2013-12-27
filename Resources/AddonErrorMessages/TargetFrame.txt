@@ -17,3 +17,29 @@ stack trace:
 	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:1153: in function 'HelperLoadRewardIcon'
 	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:1022: in function 'HelperAddRewardsToTarget'
 	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:245: in function <...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:198>
+	
+	
+
+
+
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:1156: attempt to index local 'wndCurr' (a nil value)
+stack trace:
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:1156: in function 'HelperLoadRewardIcon'
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:976: in function 'HelperAddRewardsToTarget'
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:541: in function 'UpdateClusterFrame'
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:224: in function <...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:198>
+	
+
+	
+...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:1156: attempt to index local 'wndCurr' (a nil value)
+stack trace:
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:1156: in function 'HelperLoadRewardIcon'
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:976: in function 'HelperAddRewardsToTarget'
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:330: in function 'UpdatePrimaryFrame'
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:231: in function <...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:198>
+	
+
+...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:405: attempt to compare number with nil
+stack trace:
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:405: in function 'UpdateAlternateFrame'
+	...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:255: in function <...\WildStar\Addons\PvP_TargetFrame\PvP_TargetFrame.lua:198>

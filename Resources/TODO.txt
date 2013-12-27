@@ -34,3 +34,7 @@ Crit addon for Flame Burst
 
 Errors:
 PvP_TargetFrame - has some kind of error in it, copy/paste errors so we can look at them later.
+
+PvP_Nameplates  - White line is infront of health bar of npc units.
+		- Health bar for guards isnt the correct length, it is too short
+		- the nameplate name colors sometimes unsync and go white.

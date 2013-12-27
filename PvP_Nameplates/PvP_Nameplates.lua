@@ -121,17 +121,17 @@ local knTargetRange 		= 40000 -- the distance^2 that normal nameplates should dr
 
 -- Todo: break these out onto options
 local kcrWarPartyTextColor 				= ApolloColor.new("crayBlizzardBlue")
-local kcrFlaggedFriendlyTextColor 		= ApolloColor.new("DispositionFriendly")
+local kcrFlaggedFriendlyTextColor 		= "FFFFFFAA"
 local kcrDefaultGuildmemberTextColor 	= ApolloColor.new("DispositionFriendly")
-local kcrAggressiveEnemyTextColor 		= ApolloColor.new("DispositionNeutral")
-local kcrNeutralEnemyTextColor 			= ApolloColor.new("crayDenim")
-local kcrDefaultUnflaggedAllyTextColor 	= ApolloColor.new("DispositionFriendly")
+local kcrAggressiveEnemyTextColor 		= ApolloColor.new("DispositionHostile")
+local kcrNeutralEnemyTextColor 			= "FFFF6A6A"
+local kcrDefaultUnflaggedAllyTextColor 	= "FFFFFFFF"
 --local kcrFlaggedFriendlyTextColor = ApolloColor.new("crayPurpleHeart")
 --local kcrAggressiveEnemyTextColor = ApolloColor.new("crayOrange")
 --local kcrNeutralEnemyTextColor = ApolloColor.new("DispositionNeutral")
 --local kcrDefaultUnflaggedAllyTextColor = ApolloColor.new("crayDenim")
 
-local kcrDefaultTaggedColor = ApolloColor.new("crayGray")
+local kcrDefaultTaggedColor = "WhiteFill"
 
 local karSavedProperties =
 {
@@ -1466,7 +1466,18 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		wndHealth:FindChild("MaxHealth"):SetBGColor(npClassColors[unitOwner:GetClassId()])
 	elseif unitOwner:GetType() == "NonPlayer" then
 		wndHealth:FindChild("MaxHealth"):SetSprite(karDisposition.HealthBar[eDisposition])
-		--wndHealth:FindChild("MaxHealth"):SetBGColor(karDisposition.HealthBar[eDisposition])
+		
+	if unitOwner:GetType() == "NonPlayer" and nShieldCurr == 0 or nil then
+		wndHealth:FindChild("ShieldLabel"):Show(false)
+		wndHealth:FindChild("WhiteSeperator"):Show(false)
+	end
+
+	if unitOwner:GetType() == "NonPlayer" and nShieldCurr > 0 or nil then
+		wndHealth:FindChild("ShieldLabel"):Show(true)
+		wndHealth:FindChild("WhiteSeperator"):Show(true)
+	end
+
+	
 	end
 	--if GameLib.GetPlayerUnit():GetClassId() == 7 then
 	--	wndHealth:FindChild("MaxHealth"):SetSprite("Icon_Windows_UI_CRB_Warrior")
