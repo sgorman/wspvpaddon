@@ -71,12 +71,13 @@ local ktHealthBarSprites =
 
 local npClassColors = 
 {
-	[GameLib.CodeEnumClass.Warrior]				= "ff8B5A2B",
-	[GameLib.CodeEnumClass.Engineer] 			= "ff7BBF6A",
+	[GameLib.CodeEnumClass.Warrior]				= "ff654B30",
+	[GameLib.CodeEnumClass.Engineer] 			= "ff96b361",
 	[GameLib.CodeEnumClass.Esper]				= "ff7171C6",
-	[GameLib.CodeEnumClass.Medic]				= "ffE0DFDB",
-	[GameLib.CodeEnumClass.Stalker] 			= "ffFCDC3B",
-	[GameLib.CodeEnumClass.Spellslinger]	 	= "ff499DF5"
+	[GameLib.CodeEnumClass.Medic]				= "ffD2779E",
+	[GameLib.CodeEnumClass.Stalker] 			= "ffCFC15E",
+	[GameLib.CodeEnumClass.Spellslinger]	 	= "ff3579DC"
+	
 }
 
 
@@ -1389,7 +1390,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 
 
 	if nShieldMax > 0 and nShieldMax / nTotalMax < 0.2 then
-		local nMinShieldSize = 0.2 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
+		local nMinShieldSize = 0.0 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
 		--nPointHealthRight = self.nFrameR * math.min(1-nMinShieldSize, nHealthCurr / nTotalMax) -- Health is normal, but caps at 80%
 		--nPointShieldRight = self.nFrameR * math.min(1, (nHealthCurr / nTotalMax) + nMinShieldSize) -- If not 1, the size is thus healthbar + hard minimum
 
@@ -1401,8 +1402,8 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	wndHealth:FindChild("ShieldFill"):EnableGlow(nShieldCurr > 0)
 	self:SetBarValue(wndHealth:FindChild("ShieldFill"), 0, nShieldCurr, nShieldMax) -- Only the Curr Shield really progress fills
 	self:SetBarValue(wndHealth:FindChild("AbsorbFill"), 0, nAbsorbCurr, nAbsorbMax)
-	wndHealth:FindChild("MaxHealth"):SetAnchorOffsets(self.nFrameLeft, self.nFrameTop, nPointHealthRight, self.nFrameBottom)
-	wndHealth:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight - 1, self.nFrameTop, nPointShieldRight, self.nFrameBottom)
+	--wndHealth:FindChild("MaxHealth"):SetAnchorOffsets(self.nFrameLeft, self.nFrameTop, nPointHealthRight + 34, self.nFrameBottom)
+	wndHealth:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight + 80, self.nFrameTop, nPointShieldRight, self.nFrameBottom)
 	wndHealth:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 1, self.nFrameTop, nPointAbsorbRight, self.nFrameBottom)
 
 	-- Bars
@@ -1416,11 +1417,13 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	local strHealthCurr = self:HelperFormatBigNumber(nHealthCurr)
 	local strShieldCurr = self:HelperFormatBigNumber(nShieldCurr)
 	local strText = string.format("%s/%s", strHealthCurr, strHealthMax)
-	if nShieldMax > 0 and nShieldCurr > 0 then
-		strText = string.format("%s (%s)", strText, strShieldCurr)
-	end
+	
+	--if nShieldMax > 0 and nShieldCurr > 0 then
+		--strText = string.format("%s (%s)", strText, strShieldCurr)
+	--end
 	wndHealth:FindChild("HealthLabel"):SetText(strText)
-	--wndHealth:FindChild("HealthLabel"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Percent"), math.floor(nHealthCurr / nHealthMax * 100)))
+	--wndHealth:FindChild("ShieldLabel"):SetText(nShieldCurr)
+	wndHealth:FindChild("ShieldLabel"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Percent"), math.floor(nShieldCurr / nShieldMax * 100)))
 	
 
 	
