@@ -1437,6 +1437,12 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		wndHealth:FindChild("MaxHealth"):SetSprite(ktHealthBarSprites[1])
 	end
 -----------------------------------------------------------------------------------------------------------------
+	if not self.unitPlayerDisposComparisonTEMP then
+		self.unitPlayerDisposComparisonTEMP = GameLib.GetPlayerUnit()
+	end
+
+	local eDisposition = unitOwner:GetDispositionTo(self.unitPlayerDisposComparisonTEMP)
+
     local class = -1
 	if (GameLib.GetTargetUnit() ~= nil) then
 		class = GameLib.GetTargetUnit():GetClassId()
@@ -1445,9 +1451,10 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	if unitOwner:GetType() == "Player" then
 	 	wndHealth:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		wndHealth:FindChild("MaxHealth"):SetBGColor(npClassColors[unitOwner:GetClassId()])
+	elseif unitOwner:GetType() == "NonPlayer" then
+		wndHealth:FindChild("MaxHealth"):SetSprite("WhiteFill")
+		wndHealth:FindChild("MaxHealth"):SetBGColor(karDisposition.TextColors[eDisposition])
 	end
-	
-	
 	--if GameLib.GetPlayerUnit():GetClassId() == 7 then
 	--	wndHealth:FindChild("MaxHealth"):SetSprite("Icon_Windows_UI_CRB_Warrior")
 	--end
