@@ -1402,7 +1402,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	wndHealth:FindChild("ShieldFill"):EnableGlow(nShieldCurr > 0)
 	self:SetBarValue(wndHealth:FindChild("ShieldFill"), 0, nShieldCurr, nShieldMax) -- Only the Curr Shield really progress fills
 	self:SetBarValue(wndHealth:FindChild("AbsorbFill"), 0, nAbsorbCurr, nAbsorbMax)
-	--wndHealth:FindChild("MaxHealth"):SetAnchorOffsets(self.nFrameLeft, self.nFrameTop, nPointHealthRight + 34, self.nFrameBottom)
+	wndHealth:FindChild("MaxHealth"):SetAnchorOffsets(self.nFrameLeft, self.nFrameTop, nPointHealthRight + 34, self.nFrameBottom)
 	wndHealth:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight + 80, self.nFrameTop, nPointShieldRight, self.nFrameBottom)
 	wndHealth:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 1, self.nFrameTop, nPointAbsorbRight, self.nFrameBottom)
 
