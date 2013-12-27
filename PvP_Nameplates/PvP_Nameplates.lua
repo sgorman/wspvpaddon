@@ -80,6 +80,17 @@ local ktInviteClassIcons =
 }
 
 
+local npClassColors = 
+{
+	[GameLib.CodeEnumClass.Warrior]				= "ff8B5A2B",
+	[GameLib.CodeEnumClass.Engineer] 			= "ff7BBF6A",
+	[GameLib.CodeEnumClass.Esper]				= "ff7171C6",
+	[GameLib.CodeEnumClass.Medic]				= "ffE0DFDB",
+	[GameLib.CodeEnumClass.Stalker] 			= "ffFCDC3B",
+	[GameLib.CodeEnumClass.Spellslinger]	 	= "ff499DF5"
+}
+
+
 local karConColors =  -- differential value, color
 {
 	{-4, ApolloColor.new("ConTrivial")},
@@ -1437,20 +1448,20 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		wndHealth:FindChild("MaxHealth"):SetSprite(ktHealthBarSprites[1])
 	end
 -----------------------------------------------------------------------------------------------------------------
-    --local class = GameLib.GetTargetUnit():GetClassId()
-	
+    local class = -1
+	if (GameLib.GetTargetUnit() ~= nil) then
+		class = GameLib.GetTargetUnit():GetClassId()
+	end
 
-	--if unitOwner:GetType() == "Player" then
-	--	if class == 7 then
-	-- local classNmbr = unitOwner:GetClassId()
-	 --wndHealth:findChild("MaxHealth"):SetSprite(ktInviteClassIcons[unitOwner.classId])
-	--   Print("hello")
-	-- end
+	if unitOwner:GetType() == "Player" then
+	 	wndHealth:FindChild("MaxHealth"):SetSprite("WhiteFill")
+		wndHealth:FindChild("MaxHealth"):SetBGColor(npClassColors[unitOwner:GetClassId()])
+	end
 	
 	
 	--if GameLib.GetPlayerUnit():GetClassId() == 7 then
 	--	wndHealth:FindChild("MaxHealth"):SetSprite("Icon_Windows_UI_CRB_Warrior")
-	-- end
+	--end
 
 end
 
