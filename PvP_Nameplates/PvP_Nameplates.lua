@@ -55,13 +55,9 @@ karDisposition.TargetSecondary =
 
 karDisposition.HealthBar =
 {
-	--[Unit.CodeEnumDisposition.Hostile] 	= "ffF83031",
-	--[Unit.CodeEnumDisposition.Neutral] 	= "ffEEAD0E",
-	--[Unit.CodeEnumDisposition.Friendly] = "ff448800",
 	[Unit.CodeEnumDisposition.Hostile] 	= "CRB_Raid:sprRaid_HealthProgBar_Red",
 	[Unit.CodeEnumDisposition.Neutral] 	= "CRB_Raid:sprRaid_HealthProgBar_Orange",
 	[Unit.CodeEnumDisposition.Friendly] = "CRB_Raid:sprRaid_HealthProgBar_Green",
-
 }
 
 local ktHealthBarSprites =
@@ -84,7 +80,6 @@ local npClassColors =
 	[GameLib.CodeEnumClass.Medic]				= "ffD2779E",
 	[GameLib.CodeEnumClass.Stalker] 			= "ffCFC15E",
 	[GameLib.CodeEnumClass.Spellslinger]	 	= "ff3579DC"
-	
 }
 
 
@@ -797,7 +792,7 @@ function Nameplates:DrawNameplate(tNameplate)
 		end
 	end
 
-	local wndCastBar = tNameplate.wndNameplate:FindChild("CastBar")
+	wndCastBar = tNameplate.wndNameplate:FindChild("CastBar")
 	if wndCastBar:IsShown() then
 		wndCastBar:FindChild("Label"):SetText(unitOwner:GetCastName())
 		wndCastBar:FindChild("CastFill"):SetMax(unitOwner:GetCastDuration())
@@ -1464,25 +1459,26 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	if unitOwner:GetType() == "Player" then
 	 	wndHealth:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		wndHealth:FindChild("MaxHealth"):SetBGColor(npClassColors[unitOwner:GetClassId()])
-	elseif unitOwner:GetType() == "NonPlayer" then
-		wndHealth:FindChild("MaxHealth"):SetSprite(karDisposition.HealthBar[eDisposition])
-		
-	if unitOwner:GetType() == "NonPlayer" and nShieldCurr == 0 or nil then
-		wndHealth:FindChild("ShieldLabel"):Show(false)
-		wndHealth:FindChild("WhiteSeperator"):Show(false)
-	end
-
-	if unitOwner:GetType() == "NonPlayer" and nShieldCurr > 0 or nil then
 		wndHealth:FindChild("ShieldLabel"):Show(true)
 		wndHealth:FindChild("WhiteSeperator"):Show(true)
-	end
-
+	elseif unitOwner:GetType() == "NonPlayer" then
+		wndHealth:FindChild("MaxHealth"):SetSprite(karDisposition.HealthBar[eDisposition])
+    end
+		
 	
-	end
-	--if GameLib.GetPlayerUnit():GetClassId() == 7 then
-	--	wndHealth:FindChild("MaxHealth"):SetSprite("Icon_Windows_UI_CRB_Warrior")
-	--end
+	if unitOwner:GetType() == "NonPlayer" and nShieldCurr == 0 or nil then -- Hides shield % and shortens cast bar
+		wndHealth:FindChild("ShieldLabel"):Show(false)
+		wndHealth:FindChild("WhiteSeperator"):Show(false)
+    	--wndCastBar:SetAnchorOffsets(51, 103, 223, 113)
 
+	end
+
+	if unitOwner:GetType() == "NonPlayer" and nShieldCurr > 0 or nil then -- Shows shield % and lengthens cast bar
+		wndHealth:FindChild("ShieldLabel"):Show(true)
+		wndHealth:FindChild("WhiteSeperator"):Show(true)
+	--elseif wndCastBar:IsShown() then
+	--	wndCastBar:SetAnchorOffsets(0.20400, 0.66026, 0.89200, 0.72436)
+	end
 end
 
 function Nameplates:HelperFormatBigNumber(nArg)

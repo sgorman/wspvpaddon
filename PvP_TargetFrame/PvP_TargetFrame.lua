@@ -23,9 +23,13 @@ local kcrScalingCColor = CColor.new(1.0, 191/255, 128/255, 0.7)
 
 local karDispositionColors =
 {
-	[Unit.CodeEnumDisposition.Neutral]  = ApolloColor.new("DispositionNeutral"),
-	[Unit.CodeEnumDisposition.Hostile]  = ApolloColor.new("DispositionHostile"),
-	[Unit.CodeEnumDisposition.Friendly] = ApolloColor.new("DispositionFriendly"), 
+	--[Unit.CodeEnumDisposition.Neutral]  = ApolloColor.new("DispositionNeutral"),
+	--[Unit.CodeEnumDisposition.Hostile]  = ApolloColor.new("DispositionHostile"),
+	--[Unit.CodeEnumDisposition.Friendly] = ApolloColor.new("DispositionFriendly"), 
+	[Unit.CodeEnumDisposition.Neutral]  = "White",
+	[Unit.CodeEnumDisposition.Hostile]  = "White",
+	[Unit.CodeEnumDisposition.Friendly] = "White", 
+
 }
 
 local kstrRaidMarkerToSprite =
@@ -40,14 +44,47 @@ local kstrRaidMarkerToSprite =
 	"Icon_Windows_UI_CRB_Marker_UFO",
 }
 
+local karDispositionHealthBar =
+{
+	[Unit.CodeEnumDisposition.Hostile] 	= "CRB_Raid:sprRaid_HealthProgBar_Red",
+	[Unit.CodeEnumDisposition.Neutral] 	= "CRB_Raid:sprRaid_HealthProgBar_Orange",
+	[Unit.CodeEnumDisposition.Friendly] = "CRB_Raid:sprRaid_HealthProgBar_Green",
+}
+
+local npClassColors = 
+{
+	[GameLib.CodeEnumClass.Warrior]				= "ff654B30",
+	[GameLib.CodeEnumClass.Engineer] 			= "ff96b361",
+	[GameLib.CodeEnumClass.Esper]				= "ff7171C6",
+	[GameLib.CodeEnumClass.Medic]				= "ffD2779E",
+	[GameLib.CodeEnumClass.Stalker] 			= "ffCFC15E",
+	[GameLib.CodeEnumClass.Spellslinger]	 	= "ff3579DC"
+}
+
+--local karDisposition.HealthBar =
+--{
+	--[Unit.CodeEnumDisposition.Hostile] 	= "CRB_Raid:sprRaid_HealthProgBar_Red",
+	--[Unit.CodeEnumDisposition.Neutral] 	= "CRB_Raid:sprRaid_HealthProgBar_Orange",
+	--[Unit.CodeEnumDisposition.Friendly] = "CRB_Raid:sprRaid_HealthProgBar_Green",
+--}
+
+
 -- Todo: break these out onto options
+--local kcrGroupTextColor					= ApolloColor.new("crayBlizzardBlue")
+--local kcrFlaggedFriendlyTextColor 		= karDispositionColors[Unit.CodeEnumDisposition.Friendly]
+--local kcrDefaultGuildmemberTextColor 	= karDispositionColors[Unit.CodeEnumDisposition.Friendly]
+--local kcrHostileEnemyTextColor 			= karDispositionColors[Unit.CodeEnumDisposition.Hostile]
+--local kcrAggressiveEnemyTextColor 		= karDispositionColors[Unit.CodeEnumDisposition.Neutral]
+--local kcrNeutralEnemyTextColor 			= ApolloColor.new("crayDenim")
+--local kcrDefaultUnflaggedAllyTextColor 	= karDispositionColors[Unit.CodeEnumDisposition.Friendly]
+
 local kcrGroupTextColor					= ApolloColor.new("crayBlizzardBlue")
-local kcrFlaggedFriendlyTextColor 		= karDispositionColors[Unit.CodeEnumDisposition.Friendly]
-local kcrDefaultGuildmemberTextColor 	= karDispositionColors[Unit.CodeEnumDisposition.Friendly]
-local kcrHostileEnemyTextColor 			= karDispositionColors[Unit.CodeEnumDisposition.Hostile]
-local kcrAggressiveEnemyTextColor 		= karDispositionColors[Unit.CodeEnumDisposition.Neutral]
-local kcrNeutralEnemyTextColor 			= ApolloColor.new("crayDenim")
-local kcrDefaultUnflaggedAllyTextColor 	= karDispositionColors[Unit.CodeEnumDisposition.Friendly]
+local kcrFlaggedFriendlyTextColor 		= "FFFFFFAA"
+local kcrDefaultGuildmemberTextColor 	= ApolloColor.new("DispositionFriendly")
+local kcrHostileEnemyTextColor 			= "FFFFFFFF"
+local kcrAggressiveEnemyTextColor 		= ApolloColor.new("DispositionHostile")
+local kcrNeutralEnemyTextColor 			= "FFFF6A6A"
+local kcrDefaultUnflaggedAllyTextColor 	= "FFFFFFFF"
 
 -- TODO:Localize all of these
 -- differential value, color, title, description, title color (for tooltip)
@@ -1276,6 +1313,27 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	else
 		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_NameplateSprites:sprNp_HealthBarFriendly")
 	end
+	
+--------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
+	local eDisposition = unitTarget:GetDispositionTo(GameLib.GetPlayerUnit())
+
+	--if unitTarget:GetType() == "Player" and unitTarget:GetDispositionTo() ==  then
+		--self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_Raid:sprRaid_HealthProgBar_Green")
+	if unitTarget:GetType() == "Player" then
+	 	self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("WhiteFill")
+		self.wndRankedFrame:FindChild("MaxHealth"):SetBGColor(npClassColors[unitTarget:GetClassId()])
+	elseif unitTarget:GetType() == "NonPlayer" then
+		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite(karDispositionHealthBar[eDisposition])
+    end
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
+
 
 	local nPointHealthRight = nil
 	local nPointShieldRight = nil

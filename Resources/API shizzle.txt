@@ -1,3 +1,6 @@
+GeminiConsole:
+	inspect GameLib.GetTargetUnit()		
+
 				<string n='ScoreBoardUpdate' v='ScoreBoardUpdate'/>
 				<string n='ScoreBoardDisplay' v='ScoreBoardDisplay'/>
 
