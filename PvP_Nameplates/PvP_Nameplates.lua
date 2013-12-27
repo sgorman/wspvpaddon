@@ -31,9 +31,12 @@ local Nameplates = {}
 local karDisposition = {}
 karDisposition.TextColors =
 {
-	[Unit.CodeEnumDisposition.Hostile] 	= ApolloColor.new("DispositionHostile"),
-	[Unit.CodeEnumDisposition.Neutral] 	= ApolloColor.new("DispositionNeutral"),
-	[Unit.CodeEnumDisposition.Friendly] = ApolloColor.new("DispositionFriendly"),
+	[Unit.CodeEnumDisposition.Hostile] 	= "White",
+	[Unit.CodeEnumDisposition.Neutral] 	= "White",
+	[Unit.CodeEnumDisposition.Friendly] = "White",
+	--[Unit.CodeEnumDisposition.Hostile] 	= ApolloColor.new("DispositionHostile"),
+	--[Unit.CodeEnumDisposition.Neutral] 	= ApolloColor.new("DispositionNeutral"),
+	--[Unit.CodeEnumDisposition.Friendly] = ApolloColor.new("DispositionFriendly"),
 }
 
 karDisposition.TargetPrimary =
@@ -52,9 +55,13 @@ karDisposition.TargetSecondary =
 
 karDisposition.HealthBar =
 {
-	[Unit.CodeEnumDisposition.Hostile] 	= "sprNp_HealthBarHostile",
-	[Unit.CodeEnumDisposition.Neutral] 	= "sprNp_HealthBarNeutral",
-	[Unit.CodeEnumDisposition.Friendly] = "sprNp_HealthBarFriendly",
+	--[Unit.CodeEnumDisposition.Hostile] 	= "ffF83031",
+	--[Unit.CodeEnumDisposition.Neutral] 	= "ffEEAD0E",
+	--[Unit.CodeEnumDisposition.Friendly] = "ff448800",
+	[Unit.CodeEnumDisposition.Hostile] 	= "CRB_Raid:sprRaid_HealthProgBar_Red",
+	[Unit.CodeEnumDisposition.Neutral] 	= "CRB_Raid:sprRaid_HealthProgBar_Orange",
+	[Unit.CodeEnumDisposition.Friendly] = "CRB_Raid:sprRaid_HealthProgBar_Green",
+
 }
 
 local ktHealthBarSprites =
@@ -1423,8 +1430,11 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	--end
 	wndHealth:FindChild("HealthLabel"):SetText(strText)
 	--wndHealth:FindChild("ShieldLabel"):SetText(nShieldCurr)
-	wndHealth:FindChild("ShieldLabel"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Percent"), math.floor(nShieldCurr / nShieldMax * 100)))
-	
+	if nShieldCurr == nShieldMax then
+		wndHealth:FindChild("ShieldLabel"):SetText(String_GetWeaselString("$1c", math.floor(nShieldCurr / nShieldMax * 100)))
+	else 
+		wndHealth:FindChild("ShieldLabel"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Percent"), math.floor(nShieldCurr / nShieldMax * 100)))
+	end
 
 	
 
@@ -1455,8 +1465,8 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	 	wndHealth:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		wndHealth:FindChild("MaxHealth"):SetBGColor(npClassColors[unitOwner:GetClassId()])
 	elseif unitOwner:GetType() == "NonPlayer" then
-		wndHealth:FindChild("MaxHealth"):SetSprite("WhiteFill")
-		wndHealth:FindChild("MaxHealth"):SetBGColor(karDisposition.TextColors[eDisposition])
+		wndHealth:FindChild("MaxHealth"):SetSprite(karDisposition.HealthBar[eDisposition])
+		--wndHealth:FindChild("MaxHealth"):SetBGColor(karDisposition.HealthBar[eDisposition])
 	end
 	--if GameLib.GetPlayerUnit():GetClassId() == 7 then
 	--	wndHealth:FindChild("MaxHealth"):SetSprite("Icon_Windows_UI_CRB_Warrior")
