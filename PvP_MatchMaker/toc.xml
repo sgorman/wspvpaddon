@@ -1,0 +1,5 @@
+<Addon Name="PvP_MatchMaker" APIVersion="3" Author="okaygo" Version="0.01" Description="Changes to the match maker.">
+    <Script Name="PvP_MatchMaker.lua"/>
+    <Form Name="PvP_MatchMaker.xml"/>
+    <ReplaceAddon Name="MatchMaker"/>
+</Addon>
