@@ -32,6 +32,8 @@ local karDispositionColors =
 
 }
 
+
+
 local kstrRaidMarkerToSprite =
 {
 	"Icon_Windows_UI_CRB_Marker_Bomb",
@@ -61,11 +63,10 @@ local npClassColors =
 	[GameLib.CodeEnumClass.Spellslinger]	 	= "ff3579DC"
 }
 
---local karDisposition.HealthBar =
+--local FactionCheck
 --{
-	--[Unit.CodeEnumDisposition.Hostile] 	= "CRB_Raid:sprRaid_HealthProgBar_Red",
-	--[Unit.CodeEnumDisposition.Neutral] 	= "CRB_Raid:sprRaid_HealthProgBar_Orange",
-	--[Unit.CodeEnumDisposition.Friendly] = "CRB_Raid:sprRaid_HealthProgBar_Green",
+	--CodeEnumFaction.DominionPlayer =           --value = 166
+	--CodeEnumFaction.ExilesPlayer = 			   --value = 167
 --}
 
 

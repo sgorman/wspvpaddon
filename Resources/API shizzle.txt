@@ -1,5 +1,13 @@
 GeminiConsole:
-	inspect GameLib.GetTargetUnit()		
+	inspect GameLib.GetTargetUnit()	
+
+	
+
+				<number n='Faction2Disposition_Hostile' v='0'/>
+<table n='CodeEnumFaction'>
+				<number n='DominionPlayer' v='166'/>
+				<number n='ExilesPlayer' v='167'/>
+</table>
 
 				<string n='ScoreBoardUpdate' v='ScoreBoardUpdate'/>
 				<string n='ScoreBoardDisplay' v='ScoreBoardDisplay'/>
