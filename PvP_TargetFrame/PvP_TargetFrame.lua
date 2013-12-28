@@ -1147,21 +1147,28 @@ function TargetFrame:HelperAddRewardsToTarget(wndTarget, unitTarget)
 	 
 	if bIsRival then
 		local wndCurr = self:HelperLoadRewardIcon(wndRewardPanel, "Rival")
-		nActiveRewardCount = nActiveRewardCount + self:HelperDrawRewardIcon(wndCurr)
-		tRewardString["Rival"] = self:HelperDrawBasicRewardTooltip(wndCurr, Apollo.GetString("TargetFrame_Rival"), unitTarget:GetName(), tRewardString["Rival"])
-		wndCurr:SetTooltip(tRewardString["Rival"])
+		if (wndCurr) then
+			nActiveRewardCount = nActiveRewardCount + self:HelperDrawRewardIcon(wndCurr)
+			tRewardString["Rival"] = self:HelperDrawBasicRewardTooltip(wndCurr, Apollo.GetString("TargetFrame_Rival"), unitTarget:GetName(), tRewardString["Rival"])
+			wndCurr:SetTooltip(tRewardString["Rival"])
+		end
 	end
+	
 	if bIsFriend then
 		local wndCurr = self:HelperLoadRewardIcon(wndRewardPanel, "Friend")
-		nActiveRewardCount = nActiveRewardCount + self:HelperDrawRewardIcon(wndCurr)
-		tRewardString["Friend"] = self:HelperDrawBasicRewardTooltip(wndCurr, Apollo.GetString("TargetFrame_Friend"), unitTarget:GetName(), tRewardString["Friend"])
-		wndCurr:SetTooltip(tRewardString["Friend"])
+		if (wndCurr) then
+			nActiveRewardCount = nActiveRewardCount + self:HelperDrawRewardIcon(wndCurr)
+			tRewardString["Friend"] = self:HelperDrawBasicRewardTooltip(wndCurr, Apollo.GetString("TargetFrame_Friend"), unitTarget:GetName(), tRewardString["Friend"])
+			wndCurr:SetTooltip(tRewardString["Friend"])
+		end
 	end
 	if bIsAccountFriend then
 		local wndCurr = self:HelperLoadRewardIcon(wndRewardPanel, "Friend")
-		nActiveRewardCount = nActiveRewardCount + self:HelperDrawRewardIcon(wndCurr)
-		tRewardString["Friend"] = self:HelperDrawBasicRewardTooltip(wndCurr, Apollo.GetString("TargetFrame_AccountFriend"), unitTarget:GetName(), tRewardString["Friend"])
-		wndCurr:SetTooltip(tRewardString["Friend"])
+		if (wndCurr) then
+			nActiveRewardCount = nActiveRewardCount + self:HelperDrawRewardIcon(wndCurr)
+			tRewardString["Friend"] = self:HelperDrawBasicRewardTooltip(wndCurr, Apollo.GetString("TargetFrame_AccountFriend"), unitTarget:GetName(), tRewardString["Friend"])
+			wndCurr:SetTooltip(tRewardString["Friend"])
+		end
 	end
 	
 	if nActiveRewardCount > 0 then
@@ -1191,7 +1198,8 @@ function TargetFrame:HelperLoadRewardIcon(wndRewardPanel, strType)
 		return wndCurr
 	end
 
-	wndCurr = Apollo.LoadForm("ui\\TargetFrame\\PvP_TargetRewardPanel.xml", "RewardIcon", wndRewardPanel, self)
+	wndCurr = Apollo.LoadForm("ui\\TargetFrame\\TargetRewardPanel.xml", "RewardIcon", wndRewardPanel, self)
+	
 	wndCurr:SetName(strType)
 	wndCurr:Show(false) -- Visibility is important
 	
@@ -1199,6 +1207,7 @@ function TargetFrame:HelperLoadRewardIcon(wndRewardPanel, strType)
 	wndCurr:FindChild("Multi"):SetSprite(karRewardIcons[strType].strMulti)
 
 	return wndCurr
+
 end
 
 function TargetFrame:HelperDrawRewardIcon(wndRewardIcon)
