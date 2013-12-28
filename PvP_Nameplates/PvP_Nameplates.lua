@@ -1450,17 +1450,24 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	end
 
 	local eDisposition = unitOwner:GetDispositionTo(self.unitPlayerDisposComparisonTEMP)
+	local playerFaction = GameLib.GetPlayerUnit():GetFaction()
+	local unitOwnerFaction = unitOwner:GetFaction()
+	local class = -1
 
-    local class = -1
 	if (GameLib.GetTargetUnit() ~= nil) then
 		class = GameLib.GetTargetUnit():GetClassId()
 	end
 
-	if unitOwner:GetType() == "Player" then
+	if unitOwner:GetType() == "Player" or unitOwner:GetType() == "Pet" and playerFaction ~= unitOwnerFaction then
 	 	wndHealth:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		wndHealth:FindChild("MaxHealth"):SetBGColor(npClassColors[unitOwner:GetClassId()])
 		wndHealth:FindChild("ShieldLabel"):Show(true)
 		wndHealth:FindChild("WhiteSeperator"):Show(true)
+		if unitOwner:GetType() == "Pet" then
+			wndHealth:FindChild("MaxHealth"):SetBGColor("FFbed497")
+		end
+	elseif unitOwner:GetType() == "Player" and playerFaction == unitOwnerFaction then 
+		wndHealth:FindChild("MaxHealth"):SetSprite("CRB_Raid:sprRaid_HealthProgBar_Green")
 	elseif unitOwner:GetType() == "NonPlayer" then
 		wndHealth:FindChild("MaxHealth"):SetSprite(karDisposition.HealthBar[eDisposition])
     end

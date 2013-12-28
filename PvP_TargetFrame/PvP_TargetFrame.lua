@@ -237,6 +237,7 @@ function TargetFrame:OnUpdate()
 	
 	local bTargetChanged = false
 	local unitTarget = GameLib.GetTargetUnit()
+	
 
 	local unitPlayer = GameLib.GetPlayerUnit()
 	if unitPlayer ~= nil then
@@ -1319,12 +1320,19 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 --------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------
 	local eDisposition = unitTarget:GetDispositionTo(GameLib.GetPlayerUnit())
+	local playerFaction = GameLib.GetPlayerUnit():GetFaction()
+	local targetFaction = GameLib.GetTargetUnit():GetFaction()
 
 	--if unitTarget:GetType() == "Player" and unitTarget:GetDispositionTo() ==  then
 		--self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_Raid:sprRaid_HealthProgBar_Green")
-	if unitTarget:GetType() == "Player" then
+	if unitTarget:GetType() == "Player" or unitTarget:GetType() == "Pet" and playerFaction ~= targetFaction then
 	 	self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		self.wndRankedFrame:FindChild("MaxHealth"):SetBGColor(npClassColors[unitTarget:GetClassId()])
+		if unitTarget:GetType() == "Pet" then
+			wndHealth:FindChild("MaxHealth"):SetSprite("CRB_Raid:sprRaid_HealthProgBar_Red")
+		end
+	elseif unitTarget:GetType() == "Player" and playerFaction == targetFaction then
+		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_Raid:sprRaid_HealthProgBar_Green")
 	elseif unitTarget:GetType() == "NonPlayer" then
 		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite(karDispositionHealthBar[eDisposition])
     end
