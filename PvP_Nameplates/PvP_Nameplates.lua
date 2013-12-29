@@ -1426,9 +1426,9 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	wndHealth:FindChild("HealthLabel"):SetText(strText)
 	wndHealth:FindChild("ShieldLabel"):SetText(nShieldCurr)
 	if nShieldCurr == nShieldMax then
-		wndHealth:FindChild("ShieldLabel"):SetText(String_GetWeaselString("$1c", math.floor(nShieldCurr / nShieldMax * 100)))
+		wndHealth:FindChild("ShieldLabel"):SetText(String_GetWeaselString("$1c", math.floor((nShieldCurr + nAbsorbCurr) / nShieldMax * 100)))
 	else 
-		wndHealth:FindChild("ShieldLabel"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Percent"), math.floor(nShieldCurr / nShieldMax * 100)))
+		wndHealth:FindChild("ShieldLabel"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Percent"), math.floor((nShieldCurr + nAbsorbCurr) / nShieldMax * 100)))
 	end
 
 	
@@ -1467,7 +1467,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 			wndHealth:FindChild("MaxHealth"):SetBGColor("FFbed497")
 		end
 	elseif unitOwner:GetType() == "Player" and playerFaction == unitOwnerFaction then 
-		wndHealth:FindChild("MaxHealth"):SetSprite("CRB_Raid:sprRaid_HealthProgBar_Green")
+		wndHealth:FindChild("MaxHealth"):SetSprite("PlayerPathContent_TEMP:spr_PathListItemProgressFill")
 		wndHealth:FindChild("ShieldLabel"):Show(true)
 		wndHealth:FindChild("WhiteSeperator"):Show(true)
 	elseif unitOwner:GetType() == "NonPlayer" then
@@ -1475,19 +1475,27 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
     end
 		
 	
-	if unitOwner:GetType() == "NonPlayer" and nShieldCurr == 0 or nil then -- Hides shield % and shortens cast bar
+	if (unitOwner:GetType() == "NonPlayer" and (nShieldCurr == 0 and nAbsorbCurr == 0)) then -- Hides shield % and shortens cast bar
 		wndHealth:FindChild("ShieldLabel"):Show(false)
 		wndHealth:FindChild("WhiteSeperator"):Show(false)
     	--wndCastBar:SetAnchorOffsets(51, 103, 223, 113)
 
 	end
 
-	if unitOwner:GetType() == "NonPlayer" and nShieldCurr > 0 or nil then -- Shows shield % and lengthens cast bar
+	if (unitOwner:GetType() == "NonPlayer" and (nShieldCurr > 0 or nAbsorbCurr > 0)) then -- Shows shield % and lengthens cast bar
 		wndHealth:FindChild("ShieldLabel"):Show(true)
 		wndHealth:FindChild("WhiteSeperator"):Show(true)
 	--elseif wndCastBar:IsShown() then
 	--	wndCastBar:SetAnchorOffsets(0.20400, 0.66026, 0.89200, 0.72436)
 	end
+	
+	if nAbsorbCurr > 0 then
+		wndHealth:FindChild("ShieldLabel"):SetTextColor("yellow")
+	elseif nAbsorbCurr == 0 then
+		wndHealth:FindChild("ShieldLabel"):SetTextColor("cyan")
+	end
+	
+	
 end
 
 function Nameplates:HelperFormatBigNumber(nArg)
