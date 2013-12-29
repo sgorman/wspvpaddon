@@ -1338,10 +1338,10 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	 	self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		self.wndRankedFrame:FindChild("MaxHealth"):SetBGColor(npClassColors[unitTarget:GetClassId()])
 		if unitTarget:GetType() == "Pet" then
-			wndHealth:FindChild("MaxHealth"):SetSprite("CRB_Raid:sprRaid_HealthProgBar_Red")
+			wndHealth:FindChild("MaxHealth"):SetBGColor("FFbed497")
 		end
 	elseif unitTarget:GetType() == "Player" and playerFaction == targetFaction then
-		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("PlayerPathContent_TEMP:spr_PathListItemProgressFill")
+		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("GreenCastBar")
 	elseif unitTarget:GetType() == "NonPlayer" then
 		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite(karDispositionHealthBar[eDisposition])
     end

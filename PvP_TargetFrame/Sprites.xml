@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Sprites>
+    <Sprite Name="GreenCastBar" Cycle="1">
+        <Frame Texture="PvP_TargetFrame\resources\GreenCastBar.tga" x0="0" x1="0" x2="0" x3="477" x4="1224" x5="1224" y0="0" y1="0" y2="210" y3="782" y4="782" y5="788" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
+</Sprites>
