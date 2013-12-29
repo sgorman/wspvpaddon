@@ -444,9 +444,9 @@ function TargetFrame:UpdateAlternateFrame(unitToT)
 	if nAbsorbMax > 0 then
 		nAbsorbCurr = unitToT:GetAbsorptionValue() -- Since it doesn't clear when the buff drops off
 	end
-	local nTotalMax = nHealthMax-- + nShieldMax + nAbsorbMax
+	local nTotalMax = nHealthMax + nShieldMax + nAbsorbMax
 
-	local nPointHealthRight = self.nAltHealthLeft + (self.nAltHealthWidth * (nHealthCurr / nTotalMax)) -- applied to the difference between L and R
+	local nPointHealthRight = self.nAltHealthLeft + (self.nAltHealthWidth * (nHealthCurr / nHealthMax)) -- applied to the difference between L and R
 	local nPointShieldRight = self.nAltHealthLeft + (self.nAltHealthWidth * ((nHealthCurr + nShieldMax) / nTotalMax))
 	local nPointAbsorbRight = self.nAltHealthLeft + (self.nAltHealthWidth * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax))
 
@@ -1358,13 +1358,13 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	local nPointAbsorbRight = nil
 
 	-- Scaling
-	nPointHealthRight = self.nLFrameRight * (nHealthCurr / nTotalMax)
+	nPointHealthRight = self.nLFrameRight * (nHealthCurr / nHealthMax)
 	nPointShieldRight = self.nLFrameRight * ((nHealthCurr + nShieldMax) / nTotalMax)
 	nPointAbsorbRight = self.nLFrameRight * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax)
 
 	if nShieldMax > 0 and nShieldMax / nTotalMax < 0.2 then
 		local nMinShieldSize = 0.0 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
-		nPointHealthRight = self.nLFrameRight * math.min(1 - nMinShieldSize, nHealthCurr / nTotalMax) -- Health is normal, but caps at 80%
+		--nPointHealthRight = self.nLFrameRight * math.min(1 - nMinShieldSize, nHealthCurr / nTotalMax) -- Health is normal, but caps at 80%
 		nPointShieldRight = self.nLFrameRight * math.min(1, (nHealthCurr / nTotalMax) + nMinShieldSize) -- If not 1, the size is thus healthbar + hard minimum
 	end
 
@@ -1373,7 +1373,7 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	self:SetBarValue(self.wndRankedFrame:FindChild("ShieldCapacityTint"), 0, nShieldCurr, nShieldMax) -- Only the Curr Shield really progress fills
 	self:SetBarValue(self.wndRankedFrame:FindChild("AbsorbCapacityTint"), 0, nAbsorbCurr, nAbsorbMax)
 
-	self.wndRankedFrame:FindChild("MaxHealth"):SetAnchorOffsets(self.nLFrameLeft, self.nLFrameTop, nPointHealthRight + 84, self.nLFrameBottom)
+	self.wndRankedFrame:FindChild("MaxHealth"):SetAnchorOffsets(self.nLFrameLeft, self.nLFrameTop, nPointHealthRight, self.nLFrameBottom)
 	--self.wndRankedFrame:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight, self.nLFrameTop, nPointShieldRight, self.nLFrameBottom)
 	self.wndRankedFrame:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 14, self.nLFrameTop, nPointAbsorbRight, self.nLFrameBottom)	
 		
