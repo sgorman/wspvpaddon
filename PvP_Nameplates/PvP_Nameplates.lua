@@ -1424,7 +1424,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		--strText = string.format("%s (%s)", strText, strShieldCurr)
 	--end
 	wndHealth:FindChild("HealthLabel"):SetText(strText)
-	--wndHealth:FindChild("ShieldLabel"):SetText(nShieldCurr)
+	wndHealth:FindChild("ShieldLabel"):SetText(nShieldCurr)
 	if nShieldCurr == nShieldMax then
 		wndHealth:FindChild("ShieldLabel"):SetText(String_GetWeaselString("$1c", math.floor(nShieldCurr / nShieldMax * 100)))
 	else 
@@ -1468,6 +1468,8 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		end
 	elseif unitOwner:GetType() == "Player" and playerFaction == unitOwnerFaction then 
 		wndHealth:FindChild("MaxHealth"):SetSprite("CRB_Raid:sprRaid_HealthProgBar_Green")
+		wndHealth:FindChild("ShieldLabel"):Show(true)
+		wndHealth:FindChild("WhiteSeperator"):Show(true)
 	elseif unitOwner:GetType() == "NonPlayer" then
 		wndHealth:FindChild("MaxHealth"):SetSprite(karDisposition.HealthBar[eDisposition])
     end
