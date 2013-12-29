@@ -1379,7 +1379,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	if nAbsorbMax > 0 then
 		nAbsorbCurr = unitOwner:GetAbsorptionValue() -- Since it doesn't clear when the buff drops off
 	end
-	local nTotalMax = nHealthMax + nShieldMax + nAbsorbMax
+	local nTotalMax = nHealthMax-- + nShieldMax + nAbsorbMax
 
 	-- Scaling
 	--[[local nPointHealthRight = self.nFrameR * (nHealthCurr / nTotalMax) -
@@ -1387,8 +1387,8 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	local nPointAbsorbRight = self.nFrameR * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax)--]]
 
 	local nPointHealthRight = self.nFrameLeft + (self.nHealthWidth * (nHealthCurr / nTotalMax)) -- applied to the difference between L and R
-	local nPointShieldRight = self.nFrameLeft + (self.nHealthWidth * ((nHealthCurr + nShieldMax) / nTotalMax))
-	local nPointAbsorbRight = self.nFrameLeft + (self.nHealthWidth * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax))
+	--local nPointShieldRight = self.nFrameLeft + (self.nHealthWidth * ((nHealthCurr + nShieldMax) / nTotalMax))
+	--local nPointAbsorbRight = self.nFrameLeft + (self.nHealthWidth * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax))
 
 
 	if nShieldMax > 0 and nShieldMax / nTotalMax < 0.2 then
@@ -1396,23 +1396,23 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		--nPointHealthRight = self.nFrameR * math.min(1-nMinShieldSize, nHealthCurr / nTotalMax) -- Health is normal, but caps at 80%
 		--nPointShieldRight = self.nFrameR * math.min(1, (nHealthCurr / nTotalMax) + nMinShieldSize) -- If not 1, the size is thus healthbar + hard minimum
 
-		nPointHealthRight = self.nFrameLeft + (self.nHealthWidth*(math.min(1 - nMinShieldSize, nHealthCurr / nTotalMax)))
-		nPointShieldRight = self.nFrameLeft + (self.nHealthWidth*(math.min(1, (nHealthCurr / nTotalMax) + nMinShieldSize)))
+		--nPointHealthRight = self.nFrameLeft + (self.nHealthWidth*(math.min(1 - nMinShieldSize, nHealthCurr / nTotalMax)))
+		--nPointShieldRight = self.nFrameLeft + (self.nHealthWidth*(math.min(1, (nHealthCurr / nTotalMax) + nMinShieldSize)))
 	end
 
 	-- Resize
-	wndHealth:FindChild("ShieldFill"):EnableGlow(nShieldCurr > 0)
-	self:SetBarValue(wndHealth:FindChild("ShieldFill"), 0, nShieldCurr, nShieldMax) -- Only the Curr Shield really progress fills
-	self:SetBarValue(wndHealth:FindChild("AbsorbFill"), 0, nAbsorbCurr, nAbsorbMax)
-	wndHealth:FindChild("MaxHealth"):SetAnchorOffsets(self.nFrameLeft, self.nFrameTop, nPointHealthRight + 34, self.nFrameBottom)
-	wndHealth:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight + 80, self.nFrameTop, nPointShieldRight, self.nFrameBottom)
-	wndHealth:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 1, self.nFrameTop, nPointAbsorbRight, self.nFrameBottom)
+	--wndHealth:FindChild("ShieldFill"):EnableGlow(nShieldCurr > 0)
+	--self:SetBarValue(wndHealth:FindChild("ShieldFill"), 0, nShieldCurr, nShieldMax) -- Only the Curr Shield really progress fills
+	--self:SetBarValue(wndHealth:FindChild("AbsorbFill"), 0, nAbsorbCurr, nAbsorbMax)
+	wndHealth:FindChild("MaxHealth"):SetAnchorOffsets(self.nFrameLeft, self.nFrameTop, nPointHealthRight, self.nFrameBottom)
+	--wndHealth:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight + 80, self.nFrameTop, nPointShieldRight, self.nFrameBottom)
+	--wndHealth:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 1, self.nFrameTop, nPointAbsorbRight, self.nFrameBottom)
 
 	-- Bars
-	wndHealth:FindChild("ShieldFill"):Show(nHealthCurr > 0)
+	--wndHealth:FindChild("ShieldFill"):Show(nHealthCurr > 0)
 	wndHealth:FindChild("MaxHealth"):Show(nHealthCurr > 0)
-	wndHealth:FindChild("MaxShield"):Show(nHealthCurr > 0 and nShieldMax > 0)
-	wndHealth:FindChild("MaxAbsorb"):Show(nHealthCurr > 0 and nAbsorbMax > 0)
+	--wndHealth:FindChild("MaxShield"):Show(nHealthCurr > 0 and nShieldMax > 0)
+	--wndHealth:FindChild("MaxAbsorb"):Show(nHealthCurr > 0 and nAbsorbMax > 0)
 
 	-- Text
 	local strHealthMax = self:HelperFormatBigNumber(nHealthMax)

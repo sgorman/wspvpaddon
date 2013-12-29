@@ -444,7 +444,7 @@ function TargetFrame:UpdateAlternateFrame(unitToT)
 	if nAbsorbMax > 0 then
 		nAbsorbCurr = unitToT:GetAbsorptionValue() -- Since it doesn't clear when the buff drops off
 	end
-	local nTotalMax = nHealthMax + nShieldMax + nAbsorbMax
+	local nTotalMax = nHealthMax-- + nShieldMax + nAbsorbMax
 
 	local nPointHealthRight = self.nAltHealthLeft + (self.nAltHealthWidth * (nHealthCurr / nTotalMax)) -- applied to the difference between L and R
 	local nPointShieldRight = self.nAltHealthLeft + (self.nAltHealthWidth * ((nHealthCurr + nShieldMax) / nTotalMax))
@@ -452,7 +452,7 @@ function TargetFrame:UpdateAlternateFrame(unitToT)
 
 	if nShieldMax > 0 and nShieldMax / nTotalMax < 0.2 then
 		local nMinShieldSize = 0.0 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
-		nPointHealthRight = self.nAltHealthLeft + (self.nAltHealthWidth * (math.min (1 - nMinShieldSize, nHealthCurr / nTotalMax)))
+		--nPointHealthRight = self.nAltHealthLeft + (self.nAltHealthWidth * (math.min (1 - nMinShieldSize, nHealthCurr / nTotalMax)))
 		nPointShieldRight = self.nAltHealthLeft + (self.nAltHealthWidth * (math.min (1, (nHealthCurr / nTotalMax) + nMinShieldSize)))
 	end
 
