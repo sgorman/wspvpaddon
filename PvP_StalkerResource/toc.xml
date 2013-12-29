@@ -1,0 +1,5 @@
+<Addon Author="Aust3n, okaygo" APIVersion="3" Name="PvP_StalkerResource" Description="The energy bar for rogues moved to the center of the screen.">
+    <Script Name="PvP_StalkerResource.lua"/>
+    <Form Name="PvP_StalkerResource.xml"/>
+	<ReplaceAddon Name="Nameplates"/>
+</Addon>

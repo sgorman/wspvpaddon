@@ -1458,7 +1458,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		class = GameLib.GetTargetUnit():GetClassId()
 	end
 
-	if unitOwner:GetType() == "Player" or unitOwner:GetType() == "Pet" and playerFaction ~= unitOwnerFaction then
+	if ((unitOwner:GetType() == "Player" or unitOwner:GetType() == "Pet") and playerFaction ~= unitOwnerFaction) then
 	 	wndHealth:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		wndHealth:FindChild("MaxHealth"):SetBGColor(npClassColors[unitOwner:GetClassId()])
 		wndHealth:FindChild("ShieldLabel"):Show(true)

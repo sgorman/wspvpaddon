@@ -1,5 +1,7 @@
 GeminiConsole:
 	inspect GameLib.GetTargetUnit()	
+	inspect GameLib.GetPlayerUnit():GetFaction()
+
 
 	
 
