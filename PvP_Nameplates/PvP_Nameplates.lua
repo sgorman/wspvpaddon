@@ -187,6 +187,8 @@ end
 function Nameplates:OnLoad()
     -- Register handlers for events, slash commands and timer, etc.
     -- e.g. Apollo.RegisterEventHandler("KeyDown", "OnKeyDown", self)
+	Apollo.LoadSprites("Sprites.xml")
+
 	Apollo.RegisterSlashCommand("Nameplates", 					"OnNameplatesOn", self)
 	Apollo.RegisterSlashCommand("nameplates", 					"OnNameplatesOn", self)
 	Apollo.RegisterSlashCommand("Nameplates_OpenMenu", 			"OnNameplatesOn", self)
@@ -1467,7 +1469,8 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 			wndHealth:FindChild("MaxHealth"):SetBGColor("FFbed497")
 		end
 	elseif unitOwner:GetType() == "Player" and playerFaction == unitOwnerFaction then 
-		wndHealth:FindChild("MaxHealth"):SetSprite("PlayerPathContent_TEMP:spr_PathListItemProgressFill")
+		--wndHealth:FindChild("MaxHealth"):SetSprite("PlayerPathContent_TEMP:spr_PathListItemProgressFill")
+		wndHealth:FindChild("MaxHealth"):SetSprite("GreenCastBar")
 		wndHealth:FindChild("ShieldLabel"):Show(true)
 		wndHealth:FindChild("WhiteSeperator"):Show(true)
 	elseif unitOwner:GetType() == "NonPlayer" then
@@ -1479,7 +1482,6 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		wndHealth:FindChild("ShieldLabel"):Show(false)
 		wndHealth:FindChild("WhiteSeperator"):Show(false)
     	--wndCastBar:SetAnchorOffsets(51, 103, 223, 113)
-
 	end
 
 	if (unitOwner:GetType() == "NonPlayer" and (nShieldCurr > 0 or nAbsorbCurr > 0)) then -- Shows shield % and lengthens cast bar
