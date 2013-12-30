@@ -5,7 +5,7 @@ Find artist
 
 Class Specific -
 	Make class specific addons for the following
-		Everything but stalker
+		Everything but Spellslinger
 
 Settings, Save and Load Config-
 	Every addon
@@ -18,6 +18,8 @@ PvP_Nameplates -
 	Make a CC Duration Timer for nameplates
 	Make the castbar not "bump up" the nameplate of the caster
 	Make healthbar turn a different color when player becomes immune.
+	Make the castbar and redborder dynamic. Currently it is the full length horizontaly from the level to the shield. It needs to be 
+		from the level to end of health bar if player has no shield
 
 PvP_TargetFrames -
 	Make mana bar for target frame.
