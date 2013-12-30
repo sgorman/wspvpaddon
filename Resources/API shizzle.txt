@@ -1,7 +1,19 @@
 GeminiConsole:
 	inspect GameLib.GetTargetUnit()	
 	inspect GameLib.GetPlayerUnit():GetFaction()
-
+	inspect GameLib.GetTargetUnit():GetTarget():IsThePlayer()
+	inspect GameLib.GetTargetUnit():GetTargetOfTarget()
+	inspect GameLib.GetTargetUnit():IsThePlayer()
+	inspect GameLib.GetTargetUnit():GetMana()
+	inspect GameLib.GetTargetUnit():GetMagicMitigation()
+	inspect GameLib.GetTargetUnit():GetPhysicalMitigation()
+	inspect GameLib.GetTargetUnit():GetSupportPower()
+	inspect GameLib.GetTargetUnit():GetAssaultPower()
+	inspect GameLib.GetTargetUnit():GetCCDurationModifier()
+	inspect GameLib.GetTargetUnit():GetCCStateTimeRemaining()
+	inspect GameLib.GetTargetUnit():GetBuffs()
+	inspect GameLib.GetTargetUnit():GetAlternateTarget()
+	inspect GameLib.GetTargetUnit():IsCasting()
 
 	
 

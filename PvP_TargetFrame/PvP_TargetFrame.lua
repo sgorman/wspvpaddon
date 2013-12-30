@@ -1338,7 +1338,7 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	 	self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		self.wndRankedFrame:FindChild("MaxHealth"):SetBGColor(npClassColors[unitTarget:GetClassId()])
 		if unitTarget:GetType() == "Pet" then
-			wndHealth:FindChild("MaxHealth"):SetBGColor("FFbed497")
+			wndHealth:FindChild("MaxHealth"):SetBGColor("ffbed497")
 		end
 	elseif unitTarget:GetType() == "Player" and playerFaction == targetFaction then
 		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("GreenCastBar")

@@ -1465,7 +1465,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		wndHealth:FindChild("MaxHealth"):SetBGColor(npClassColors[unitOwner:GetClassId()])
 		wndHealth:FindChild("ShieldLabel"):Show(true)
 		wndHealth:FindChild("WhiteSeperator"):Show(true)
-		if unitOwner:GetType() == "Pet" then
+		if unitOwner:GetType() == "Pet" then --nested if
 			wndHealth:FindChild("MaxHealth"):SetBGColor("FFbed497")
 		end
 	elseif unitOwner:GetType() == "Player" and playerFaction == unitOwnerFaction then 
@@ -1482,9 +1482,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		wndHealth:FindChild("ShieldLabel"):Show(false)
 		wndHealth:FindChild("WhiteSeperator"):Show(false)
     	--wndCastBar:SetAnchorOffsets(51, 103, 223, 113)
-	end
-
-	if (unitOwner:GetType() == "NonPlayer" and (nShieldCurr > 0 or nAbsorbCurr > 0)) then -- Shows shield % and lengthens cast bar
+	elseif (unitOwner:GetType() == "NonPlayer" and (nShieldCurr > 0 or nAbsorbCurr > 0)) then -- Shows shield % and lengthens cast bar
 		wndHealth:FindChild("ShieldLabel"):Show(true)
 		wndHealth:FindChild("WhiteSeperator"):Show(true)
 	--elseif wndCastBar:IsShown() then
@@ -1496,7 +1494,35 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	elseif nAbsorbCurr == 0 then
 		wndHealth:FindChild("ShieldLabel"):SetTextColor("cyan")
 	end
+
 	
+	if 	(unitOwner:GetTarget() == nil) or (unitOwner:GetTarget():IsThePlayer() == false) then
+			wndHealth:FindChild("RedBorder"):Show(false)
+			wndHealth:FindChild("RedBorder1"):Show(false)
+	elseif (unitOwner:GetTarget():IsThePlayer() == true) and (playerFaction ~= unitOwnerFaction) then
+			wndHealth:FindChild("RedBorder"):Show(true)
+			wndHealth:FindChild("RedBorder"):SetBGColor("red")
+			wndHealth:FindChild("RedBorder1"):Show(true)
+			wndHealth:FindChild("RedBorder1"):SetBGColor("red")
+	elseif (unitOwner:GetTarget():IsThePlayer() == true) and (playerFaction == unitOwnerFaction) then
+			wndHealth:FindChild("RedBorder"):Show(true)
+			wndHealth:FindChild("RedBorder"):SetBGColor("green")
+			wndHealth:FindChild("RedBorder1"):Show(true)
+			wndHealth:FindChild("RedBorder1"):SetBGColor("green")
+	end
+	
+	-- This isn't working!!! Supposed to change the color of the nameplates border if you are set as their focus
+	if 	(unitOwner:GetAlternateTarget() == nil) or (unitOwner:GetAlternateTarget():IsThePlayer() == false) then
+			wndHealth:FindChild("RedBorder"):Show(false)
+			wndHealth:FindChild("RedBorder1"):Show(false)
+	elseif (unitOwner:GetAlternateTarget():IsThePlayer() == true) then
+			wndHealth:FindChild("RedBorder"):Show(true)
+			wndHealth:FindChild("RedBorder"):SetBGColor("cyan")
+			wndHealth:FindChild("RedBorder1"):Show(true)
+			wndHealth:FindChild("RedBorder1"):SetBGColor("cyan")
+	end
+
+
 	
 end
 
