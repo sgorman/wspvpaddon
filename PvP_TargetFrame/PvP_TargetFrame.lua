@@ -1366,7 +1366,7 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	if nShieldMax > 0 and nShieldMax / nTotalMax < 0.2 then
 		local nMinShieldSize = 0.0 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
 		--nPointHealthRight = self.nLFrameRight * math.min(1 - nMinShieldSize, nHealthCurr / nTotalMax) -- Health is normal, but caps at 80%
-		nPointShieldRight = self.nLFrameRight * math.min(1, (nHealthCurr / nTotalMax) + nMinShieldSize) + (nShieldCurr / nTotalMax) -- If not 1, the size is thus healthbar + hard minimum
+		--nPointShieldRight = self.nLFrameRight * math.min(1, (nHealthCurr / nTotalMax + nMinShieldSize)  / nTotalMax) -- If not 1, the size is thus healthbar + hard minimum
 	end
 
 	-- Resize
@@ -1375,8 +1375,8 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	self:SetBarValue(self.wndRankedFrame:FindChild("AbsorbCapacityTint"), 0, nAbsorbCurr, nAbsorbMax)
 
 	self.wndRankedFrame:FindChild("MaxHealth"):SetAnchorOffsets(self.nLFrameLeft, self.nLFrameTop, nPointHealthRight, self.nLFrameBottom)
-	--self.wndRankedFrame:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight, self.nLFrameTop, nPointShieldRight, self.nLFrameBottom)
-	self.wndRankedFrame:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 50, self.nLFrameTop, nPointShieldRight +30, self.nLFrameBottom)	
+	self.wndRankedFrame:FindChild("MaxShield"):SetAnchorOffsets(self.nLFrameLeft, self.nLFrameTop, nPointShieldRight, self.nLFrameBottom)
+	self.wndRankedFrame:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 20, self.nLFrameTop, nAbsorbMax, self.nLFrameBottom)	
 		
 	if nShieldMax == 0 then
 		self.wndRankedFrame:FindChild("MaxHealth"):SetAnchorOffsets(self.nAltHealthLeft, self.nAltHealthTop, nPointHealthRight, self.nAltHealthBottom)
@@ -1392,6 +1392,7 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	local strHealthCurr = self:HelperFormatBigNumber(nHealthCurr)
 	local strShieldCurr = self:HelperFormatBigNumber(nShieldCurr)
 	local strAbsorbCurr = self:HelperFormatBigNumber(nAbsorbCurr)
+	
 	--local HealthBarPercentage 
 	
 	
@@ -1420,6 +1421,8 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	elseif not unitTarget:IsDead() then
 		self.wndRankedFrame:FindChild("LargeBarContainer"):SetSprite("")
 		self.wndRankedFrame:FindChild("HealthPercentage"):Show(true)
+		self.wndRankedFrame:FindChild("HealthPercentage"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Percent"), math.floor((nHealthCurr / nHealthMax) * 100)))
+
 	end
 end
 

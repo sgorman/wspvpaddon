@@ -755,6 +755,8 @@ function Nameplates:DrawNameplate(tNameplate)
 
 	if tNameplate.wndNameplate:FindChild("Health"):IsShown() then
 		self:HelperDoHealthShieldBar(tNameplate.wndNameplate:FindChild("Health"), unitOwner, eDisposition)
+		
+		
 		if tNameplate.wndNameplate:FindChild("TargetScalingMark"):IsShown() then
 			tNameplate.wndNameplate:FindChild("Level"):SetTextColor(kcrScalingCColor)
 		elseif unitOwner:GetLevel() == nil then
@@ -1389,7 +1391,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	local nPointAbsorbRight = self.nFrameR * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax)--]]
 
 	local nPointHealthRight = self.nFrameLeft + (self.nHealthWidth * (nHealthCurr / nTotalMax)) -- applied to the difference between L and R
-	--local nPointShieldRight = self.nFrameLeft + (self.nHealthWidth * ((nHealthCurr + nShieldMax) / nTotalMax))
+	local nPointShieldRight = self.nFrameLeft + (self.nHealthWidth * ((nHealthCurr + nShieldMax) / nTotalMax))
 	--local nPointAbsorbRight = self.nFrameLeft + (self.nHealthWidth * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax))
 
 
@@ -1452,8 +1454,8 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	end
 
 	local eDisposition = unitOwner:GetDispositionTo(self.unitPlayerDisposComparisonTEMP)
-	local playerFaction = GameLib.GetPlayerUnit():GetFaction()
-	local unitOwnerFaction = unitOwner:GetFaction()
+	 playerFaction = GameLib.GetPlayerUnit():GetFaction()
+	 unitOwnerFaction = unitOwner:GetFaction()
 	local class = -1
 
 	if (GameLib.GetTargetUnit() ~= nil) then
@@ -1473,6 +1475,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		wndHealth:FindChild("MaxHealth"):SetSprite("GreenCastBar")
 		wndHealth:FindChild("ShieldLabel"):Show(true)
 		wndHealth:FindChild("WhiteSeperator"):Show(true)
+		
 	elseif unitOwner:GetType() == "NonPlayer" then
 		wndHealth:FindChild("MaxHealth"):SetSprite(karDisposition.HealthBar[eDisposition])
     end
@@ -1494,6 +1497,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	elseif nAbsorbCurr == 0 then
 		wndHealth:FindChild("ShieldLabel"):SetTextColor("cyan")
 	end
+	
 
 	
 	if 	(unitOwner:GetTarget() == nil) or (unitOwner:GetTarget():IsThePlayer() == false) then
@@ -1510,6 +1514,8 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 			wndHealth:FindChild("RedBorder1"):Show(true)
 			wndHealth:FindChild("RedBorder1"):SetBGColor("red")
 	end
+	
+
 	
 	-- This isn't working!!! Supposed to change the color of the nameplates border if you are set as their focus
 	--[[

@@ -2,43 +2,37 @@ Aust3n's list -
 
 General
 Find artist
-Learn Git
-Settings for each addon.
 
-PvP_SurgeBar
-Locations savable.
-Movable.
-New Art
+Class Specific -
+	Make class specific addons for the following
+		Everything but stalker
 
-PvP_DashMeter -
-New Art
+Settings, Save and Load Config-
+	Every addon
 
-
+New Art - 
+	Every addon
+	
 PvP_Nameplates -
-Fix shields (blue, yellow)
-Class colored nameplates
-New Art
+	Make ally player "Level" number class colored.
+	Make a CC Duration Timer for nameplates
+	Make the castbar not "bump up" the nameplate of the caster
+	Make healthbar turn a different color when player becomes immune.
 
-PvP_HealthShieldBar (Scott will work on this) -
-Make everything movable - or hideable.
-Save and load config.
-New Art
-
-TargetFrames
-
+PvP_TargetFrames -
+	Make mana bar for target frame.
+	
 Future Ideas:
-BattlegroundTargets
-Crit addon for Flame Burst
+	BattlegroundTargets
+	Crit addon for abilities like Spellslinger Flame Burst
+	HealersMustDie addon that finds healers in BG's and attaches a big logo to their nameplate
 	
 
-
 Errors:
-PvP_TargetFrame - has some kind of error in it, copy/paste errors so we can look at them later.
+PvP_TargetFrame 
+		- has some kind of error in it, copy/paste errors so we can look at them later.
 		- Healthbar colors associated with npc's seems to fade and become darker. Not sure why, It might have to do with the sprite.
 
-PvP_Nameplates  - White line is infront of health bar of npc units.
-				- Health bar for guards isnt the correct length, it is too short
-				- the nameplate name colors sometimes unsync and go white.
-				- Shield percentage sometimes disappears from players
-					- might have fixed this. Let me know if you see this happen anymore
+PvP_Nameplates 
+		- Healthbar colors associated with npc's seems to fade and become darker. Not sure why, It might have to do with the sprite.
 				
