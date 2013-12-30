@@ -63,11 +63,6 @@ local npClassColors =
 	[GameLib.CodeEnumClass.Spellslinger]	 	= "ff3579DC"
 }
 
---local FactionCheck
---{
-	--CodeEnumFaction.DominionPlayer =           --value = 166
-	--CodeEnumFaction.ExilesPlayer = 			   --value = 167
---}
 
 
 -- Todo: break these out onto options
@@ -480,19 +475,13 @@ function TargetFrame:UpdateAlternateFrame(unitToT)
 	end
 	
 	wndFrame:FindChild("HealthText"):SetText(strHealthCurr)
-	--wndFrame:FindChild("ShieldText"):SetText("hello")
 
-		
 	-- Sprite
 	if nVulnerabilityTime and nVulnerabilityTime > 0 then
 		wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillPurple")
-	--elseif nHealthCurr / nHealthMax < .3 then
-	--	wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillRed")
-	--elseif 	nHealthCurr / nHealthMax < .5 then
-	--	wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillOrange")
-	--else
-	--	wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillGreen")
 	end
+		
+
 
 	-- Interrupt Armor
 	---------------------------------------------------------------------------
@@ -580,6 +569,7 @@ function TargetFrame:UpdateClusterFrame(tCluster) -- called on frame
 				self:HelperAddRewardsToTarget(self.arClusterFrames[nCount], tCluster[idx])
 				
 				-- TODO: This probably doesn't belong here
+				--[[
 				local nHealth = tCluster[idx]:GetHealth()
 				if nHealth ~= nil then
 					if self.arClusterFrames[nCount]:FindChild("HealthTint") then
@@ -595,6 +585,8 @@ function TargetFrame:UpdateClusterFrame(tCluster) -- called on frame
 						end
 					end
 				end
+				--]]
+				
 
 				local nLevel = tCluster[idx]:GetLevel()
 				if nLevel == nil then
@@ -840,6 +832,11 @@ function TargetFrame:UpdateCastingBar(wndFrame, unitCaster)
 			strGlowSprite = "sprTF_CastMeterCapRed"
 		end
 
+		
+			
+		
+		
+		
 		if eType ~= Unit.CodeEnumCastBarType.None then
 
 			bShowCasting = true
@@ -1325,6 +1322,9 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_NameplateSprites:sprNp_HealthBarFriendly")
 	end
 	
+	if nVulnerabilityTime and nVulnerabilityTime > 0 then
+		wndFrame:FindChild("MaxHealth"):SetSprite("sprNp_Health_FillPurple")
+	end
 --------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1332,9 +1332,9 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	local playerFaction = GameLib.GetPlayerUnit():GetFaction()
 	local targetFaction = GameLib.GetTargetUnit():GetFaction()
 
-	--if unitTarget:GetType() == "Player" and unitTarget:GetDispositionTo() ==  then
-		--self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_Raid:sprRaid_HealthProgBar_Green")
-	if ((unitTarget:GetType() == "Player" or unitTarget:GetType() == "Pet") and playerFaction ~= targetFaction) then
+	if unitTarget:IsInCCState(Unit.CodeEnumCCState.Vulnerability) then
+		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_TargetFrameSprites:sprTF_HealthFill_Vulnerable")
+	elseif ((unitTarget:GetType() == "Player" or unitTarget:GetType() == "Pet") and playerFaction ~= targetFaction) then
 	 	self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		self.wndRankedFrame:FindChild("MaxHealth"):SetBGColor(npClassColors[unitTarget:GetClassId()])
 		if unitTarget:GetType() == "Pet" then
@@ -1360,7 +1360,8 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	-- Scaling
 	nPointHealthRight = self.nLFrameRight * (nHealthCurr / nHealthMax)
 	nPointShieldRight = self.nLFrameRight * ((nHealthCurr + nShieldMax) / nTotalMax)
-	nPointAbsorbRight = self.nLFrameRight * ((nHealthCurr + nShieldMax + nAbsorbMax) / nTotalMax)
+	nPointAbsorbRight = self.nLFrameRight * ((nShieldCurr + nShieldMax + nAbsorbMax) / nTotalMax)
+
 
 	if nShieldMax > 0 and nShieldMax / nTotalMax < 0.2 then
 		local nMinShieldSize = 0.0 -- HARDCODE: Minimum shield bar length is 20% of total for formatting
@@ -1375,7 +1376,7 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 
 	self.wndRankedFrame:FindChild("MaxHealth"):SetAnchorOffsets(self.nLFrameLeft, self.nLFrameTop, nPointHealthRight, self.nLFrameBottom)
 	--self.wndRankedFrame:FindChild("MaxShield"):SetAnchorOffsets(nPointHealthRight, self.nLFrameTop, nPointShieldRight, self.nLFrameBottom)
-	--self.wndRankedFrame:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 14, self.nLFrameTop, nPointAbsorbRight, self.nLFrameBottom)	
+	self.wndRankedFrame:FindChild("MaxAbsorb"):SetAnchorOffsets(nPointShieldRight - 50, self.nLFrameTop, nPointShieldRight +30, self.nLFrameBottom)	
 		
 	if nShieldMax == 0 then
 		self.wndRankedFrame:FindChild("MaxHealth"):SetAnchorOffsets(self.nAltHealthLeft, self.nAltHealthTop, nPointHealthRight, self.nAltHealthBottom)
@@ -1404,10 +1405,12 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	
 	if nShieldCurr == 0 and nAbsorbCurr == 0 then
 		self.wndRankedFrame:FindChild("ShieldText"):SetText("")
+		self.wndRankedFrame:FindChild("MaxShield"):Show(false)
 	end
 	
 	if nShieldCurr > 0 or nAbsorbCurr > 0 then
 		self.wndRankedFrame:FindChild("ShieldText"):SetText(nShieldCurr + nAbsorbCurr)
+		self.wndRankedFrame:FindChild("MaxShield"):Show(true)
 	end
 	
 	if unitTarget:IsDead() then

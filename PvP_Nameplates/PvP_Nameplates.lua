@@ -1499,19 +1499,20 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	if 	(unitOwner:GetTarget() == nil) or (unitOwner:GetTarget():IsThePlayer() == false) then
 			wndHealth:FindChild("RedBorder"):Show(false)
 			wndHealth:FindChild("RedBorder1"):Show(false)
-	elseif (unitOwner:GetTarget():IsThePlayer() == true) and (playerFaction ~= unitOwnerFaction) then
-			wndHealth:FindChild("RedBorder"):Show(true)
-			wndHealth:FindChild("RedBorder"):SetBGColor("red")
-			wndHealth:FindChild("RedBorder1"):Show(true)
-			wndHealth:FindChild("RedBorder1"):SetBGColor("red")
 	elseif (unitOwner:GetTarget():IsThePlayer() == true) and (playerFaction == unitOwnerFaction) then
 			wndHealth:FindChild("RedBorder"):Show(true)
 			wndHealth:FindChild("RedBorder"):SetBGColor("green")
 			wndHealth:FindChild("RedBorder1"):Show(true)
 			wndHealth:FindChild("RedBorder1"):SetBGColor("green")
+	elseif (unitOwner:GetTarget():IsThePlayer() == true) then
+			wndHealth:FindChild("RedBorder"):Show(true)
+			wndHealth:FindChild("RedBorder"):SetBGColor("red")
+			wndHealth:FindChild("RedBorder1"):Show(true)
+			wndHealth:FindChild("RedBorder1"):SetBGColor("red")
 	end
 	
 	-- This isn't working!!! Supposed to change the color of the nameplates border if you are set as their focus
+	--[[
 	if 	(unitOwner:GetAlternateTarget() == nil) or (unitOwner:GetAlternateTarget():IsThePlayer() == false) then
 			wndHealth:FindChild("RedBorder"):Show(false)
 			wndHealth:FindChild("RedBorder1"):Show(false)
@@ -1521,6 +1522,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 			wndHealth:FindChild("RedBorder1"):Show(true)
 			wndHealth:FindChild("RedBorder1"):SetBGColor("cyan")
 	end
+	--]]
 
 
 	
