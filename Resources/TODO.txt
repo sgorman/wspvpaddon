@@ -39,3 +39,8 @@ PvP_TargetFrame
 PvP_Nameplates 
 		- Healthbar colors associated with npc's seems to fade and become darker. Not sure why, It might have to do with the sprite.
 				
+
+
+Thins Scott noticed:
+
+When I ignite on my SS it doesnt show the debuff on my target.
