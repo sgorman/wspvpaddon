@@ -57,7 +57,7 @@ end
 function PvP_MatchMaker:OnLoad()
 	
     Apollo.RegisterSlashCommand("checkrating", 							"OnCheckRating", self)
-	Apollo.RegisterEventHandler("ToggleGroupFinder", 					"OnTogglePvP_MatchMaker", self)
+	Apollo.RegisterEventHandler("ToggleGroupFinder", 					"OnToggleMatchMaker", self)
 	Apollo.RegisterEventHandler("MatchingJoinQueue", 					"RefreshStatus", self)	
 	Apollo.RegisterEventHandler("MatchingLeaveQueue", 					"OnLeaveQueue", self)
 	Apollo.RegisterEventHandler("MatchingGameReady", 					"OnGameReady", self)
@@ -258,7 +258,7 @@ end
 -- PvP_MatchMaker Functions
 -----------------------------------------------------------------------------------------------
 
-function PvP_MatchMaker:OnTogglePvP_MatchMaker()
+function PvP_MatchMaker:OnToggleMatchMaker()
 	if self.wndMain:IsShown() then
 		self.wndMain:Show(false)
 		Event_FireGenericEvent("LFGWindowHasBeenClosed")
