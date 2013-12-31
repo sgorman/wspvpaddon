@@ -15,6 +15,16 @@ GeminiConsole:
 	inspect GameLib.GetTargetUnit():GetAlternateTarget()
 	inspect GameLib.GetTargetUnit():IsCasting()
 
+<table n='CodeEnumSpellMechanic'>
+				<number n='SpellSurge' v='4'/>
+				<number n='Empathy' v='3'/>
+				<number n='MedicCore' v='2'/>
+				<number n='Volatility' v='6'/>
+				<number n='Kinetic' v='5'/>
+				<number n='Focus' v='1'/>
+				<number n='None' v='0'/>
+</table>
+
 	
 
 				<number n='Faction2Disposition_Hostile' v='0'/>

@@ -16,6 +16,7 @@ New Art -
 PvP_Nameplates -
 	Make ally player "Level" number class colored.
 	Make a CC Duration Timer for nameplates
+	When a weapon is taken from a character and thrown on the ground, put their name above it.
 	Make the castbar not "bump up" the nameplate of the caster
 	Make healthbar turn a different color when player becomes immune.
 	Make the castbar and redborder dynamic. Currently it is the full length horizontaly from the level to the shield. It needs to be 

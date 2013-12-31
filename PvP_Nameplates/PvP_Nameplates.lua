@@ -522,7 +522,7 @@ function Nameplates:OnUnitTextBubbleToggled(tUnitArg, strText)
 	end
 
 	if strText and strText ~= "" then
-		self.arUnit2Nameplate[idUnit].bSpeechBubble = true
+		self.arUnit2Nameplate[idUnit].bSpeechBubble = false
 	else
 		self.arUnit2Nameplate[idUnit].bSpeechBubble = false
 	end
@@ -722,7 +722,8 @@ function Nameplates:DrawNameplate(tNameplate)
 	end
 	
 	if unitOwner:IsMounted() and tNameplate.wndNameplate:GetUnit() == unitOwner then
-		tNameplate.wndNameplate:SetUnit(tNameplate.unitOwner:GetUnitMount(), 1)
+		tNameplate.wndNameplate:SetUnit(tNameplate.unitOwner, 1)
+		--tNameplate.wndNameplate:SetUnit(tNameplate.unitOwner(), 1)
 	end
 
 	if not self.unitPlayerDisposComparisonTEMP then
@@ -764,6 +765,11 @@ function Nameplates:DrawNameplate(tNameplate)
 		else
 			tNameplate.wndNameplate:FindChild("Level"):SetTextColor(karConColors[nCon][2])
 		end
+		
+		if unitOwner:GetFaction() == GameLib.GetPlayerUnit():GetFaction() then
+			tNameplate.wndNameplate:FindChild("Level"):SetTextColor(npClassColors[unitOwner:GetClassId()])
+		end
+
 	end
 
 	tNameplate.wndNameplate:FindChild("CertainDeath"):Show(nCon == #karConColors and eDisposition ~= Unit.CodeEnumDisposition.Friendly
@@ -1514,6 +1520,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 			wndHealth:FindChild("RedBorder1"):Show(true)
 			wndHealth:FindChild("RedBorder1"):SetBGColor("red")
 	end
+	
 	
 
 	
