@@ -14,10 +14,8 @@ New Art -
 	Every addon
 	
 PvP_Nameplates -
-	Make ally player "Level" number class colored.
 	Make a CC Duration Timer for nameplates
 	When a weapon is taken from a character and thrown on the ground, put their name above it.
-	Make the castbar not "bump up" the nameplate of the caster
 	Make healthbar turn a different color when player becomes immune.
 	Make the castbar and redborder dynamic. Currently it is the full length horizontaly from the level to the shield. It needs to be 
 		from the level to end of health bar if player has no shield
@@ -44,3 +42,4 @@ PvP_Nameplates
 Thins Scott noticed:
 
 When I ignite on my SS it doesnt show the debuff on my target.
+	- the debuff bar is in the "Mana bar" part of the target frame. The black space.

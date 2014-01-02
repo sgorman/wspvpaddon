@@ -798,15 +798,19 @@ function Nameplates:DrawNameplate(tNameplate)
 		local bIsCasting = unitOwner:ShouldShowCastBar() and not bHiddenUnit
 		if bIsCasting ~= tNameplate.bIsCasting then
 			tNameplate.bIsCasting = bIsCasting
-			tNameplate.wndNameplate:FindChild("CastBar"):Show(bIsCasting)
+			tNameplate.wndNameplate:FindChild("CastBar"):Show(bIsCasting)-- redudancy to make sure the castbars aren't showing when not casti
 		end
 	end
 
 	wndCastBar = tNameplate.wndNameplate:FindChild("CastBar")
 	if wndCastBar:IsShown() then
+	local bIsCasting = unitOwner:ShouldShowCastBar()
 		wndCastBar:FindChild("Label"):SetText(unitOwner:GetCastName())
 		wndCastBar:FindChild("CastFill"):SetMax(unitOwner:GetCastDuration())
 		wndCastBar:FindChild("CastFill"):SetProgress(unitOwner:GetCastElapsed())
+		wndCastBar:FindChild("CastBar"):ToFront(top)
+		tNameplate.wndNameplate:FindChild("CastBar"):Show(bIsCasting)
+
 	end
 
 	-- Targeted set -------------------------------------------------------------

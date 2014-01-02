@@ -1333,12 +1333,13 @@ function TargetFrame:SetTargetHealthAndShields(wndTargetFrame, unitTarget)
 	local targetFaction = GameLib.GetTargetUnit():GetFaction()
 
 	if unitTarget:IsInCCState(Unit.CodeEnumCCState.Vulnerability) then
-		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("CRB_TargetFrameSprites:sprTF_HealthFill_Vulnerable")
+		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("WhiteFill")
+		self.wndRankedFrame:FindChild("MaxHealth"):SetBGColor("ff7F00FF")
 	elseif ((unitTarget:GetType() == "Player" or unitTarget:GetType() == "Pet") and playerFaction ~= targetFaction) then
 	 	self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("WhiteFill")
 		self.wndRankedFrame:FindChild("MaxHealth"):SetBGColor(npClassColors[unitTarget:GetClassId()])
 		if unitTarget:GetType() == "Pet" then
-			wndHealth:FindChild("MaxHealth"):SetBGColor("ffbed497")
+			self.wndRankedFrame:FindChild("MaxHealth"):SetBGColor("ffbed497")
 		end
 	elseif unitTarget:GetType() == "Player" and playerFaction == targetFaction then
 		self.wndRankedFrame:FindChild("MaxHealth"):SetSprite("GreenCastBar")
