@@ -113,11 +113,20 @@ function PvP_Engineer:OnFrameUpdate()
 	if not self.bInCombat and nResourceCurrent == 0 then
 		self.wndMain:FindChild("BaseProgressSliderText"):SetData(0)
 		self.wndMain:FindChild("BaseProgressSliderText"):SetText("0%")
+		self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor("red")
 	else
 		self.wndMain:FindChild("BaseProgressSliderText"):SetData(nResourcePercent)
 		self.wndMain:FindChild("BaseProgressSliderText"):SetText(nResourcePercent * 100 .. "%")
 		if self.bInCombat then
-			self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1))
+			--self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1))
+			
+			if nResourceCurrent > 70 then
+				self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor("green")
+			elseif nResourceCurrent > 35 then
+				self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor("yellow")
+			elseif nResourceCurrent >= 0 then
+				self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor("red")
+			end
 		end
 	end
 	
@@ -203,17 +212,16 @@ function PvP_Engineer:OnEnteredCombat(unitPlayer, bInCombat)
 		self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1))
 		
 		self.nFadeLevel = 0
-		self.nCombatTimer = 5.0
+		self.nCombatTimer = 4.5
 		Apollo.StopTimer("OutOfCombatFade")
 		Apollo.StopTimer("CombatTimer")
-		self.wndMain:FindChild("CombatTimerText"):SetText("5.0")
+		self.wndMain:FindChild("CombatTimerText"):SetText("4.6")
 		--self.wndMain:FindChild("CombatTimer"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1 - (0.25 * self.nFadeLevel)))
 	else
 		self.wndMain:FindChild("CombatTimerText"):SetText("5.0")
 
 		Apollo.StartTimer("OutOfCombatFade")
 		Apollo.StartTimer("CombatTimer")
-		local CombatTimer = 
 		
 
 		self.wndMain:FindChild("CombatTimerText"):SetText(CombatTimer)
@@ -226,8 +234,8 @@ end
 function PvP_Engineer:OnOutOfCombatFade()
 	if self.wndMain and self.wndMain:IsValid() then
 		local nResourcePercent = self.wndMain:FindChild("BaseProgressSliderText"):GetData()
-		self.nFadeLevel = self.nFadeLevel + 1
-		self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1 - (0.25 * self.nFadeLevel)))
+		--self.nFadeLevel = self.nFadeLevel + 1
+		--self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1 - (0.25 * self.nFadeLevel)))
 	end
 	if self.nFadeLevel <= 3 then
 		--Apollo.CreateTimer("OutOfCombatFade", 1.25, false)
@@ -238,7 +246,7 @@ end
 function PvP_Engineer:OnCombatTimer()
 	self.wndMain:FindChild("CombatTimerText"):SetText(self.nCombatTimer)
 	self.nCombatTimer = self.nCombatTimer - 0.1
-	if (self.nCombatTimer > 0) then
+		if (self.nCombatTimer > 0) then
 		Apollo.CreateTimer("CombatTimer", 0.1, false)
 	else 
 		self.wndMain:FindChild("CombatTimerText"):SetText("0.0")
