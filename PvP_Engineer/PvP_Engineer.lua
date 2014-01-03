@@ -66,12 +66,12 @@ local unitPlayer = GameLib.GetPlayerUnit()
 	Apollo.RegisterEventHandler("VarChange_FrameCount", 		"OnFrameUpdate", self)
 	Apollo.RegisterEventHandler("ShowActionBarShortcut", 		"OnShowActionBarShortcut", self)
 	Apollo.RegisterTimerHandler("OutOfCombatFade", 				"OnOutOfCombatFade", self)
-	
+	Apollo.RegisterTimerHandler("CombatTimer",					"OnCombatTimer", self)
 	Apollo.CreateTimer("OutOfCombatFade", 1.250, false)
-	Apollo.CreateTimer("CombatTimer", 5.00, false)
+	Apollo.CreateTimer("CombatTimer", 0.1, false)
 	
 	self.nFadeLevel = 0
-
+	self.nCombatTimer = 0.0
     self.wndMain = Apollo.LoadForm("PvP_Engineer.xml", "PvP_EngineerForm", "FixedHudStratum", self)
 	self.wndMain:FindChild("BaseProgressSliderText"):SetData(0)
 	self.wndMain:FindChild("StanceMenuOpenerBtn"):AttachWindow(self.wndMain:FindChild("StanceMenuBG"))
@@ -203,16 +203,18 @@ function PvP_Engineer:OnEnteredCombat(unitPlayer, bInCombat)
 		self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1))
 		
 		self.nFadeLevel = 0
+		self.nCombatTimer = 5.0
 		Apollo.StopTimer("OutOfCombatFade")
 		Apollo.StopTimer("CombatTimer")
 		self.wndMain:FindChild("CombatTimerText"):SetText("5.0")
 		--self.wndMain:FindChild("CombatTimer"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1 - (0.25 * self.nFadeLevel)))
 	else
+		self.wndMain:FindChild("CombatTimerText"):SetText("5.0")
+
 		Apollo.StartTimer("OutOfCombatFade")
 		Apollo.StartTimer("CombatTimer")
 		
-		self.wndMain:FindChild("CombatTimerText"):SetText(Combat)
-		
+				
 		--for i=5,0,-1 do 
 		--self.wndMain:FindChild("CombatTimerText"):SetText(i)
 		--end
@@ -231,6 +233,16 @@ function PvP_Engineer:OnOutOfCombatFade()
 	end
 end
 
+
+function PvP_Engineer:OnCombatTimer()
+	self.wndMain:FindChild("CombatTimerText"):SetText(self.nCombatTimer)
+	self.nCombatTimer = self.nCombatTimer - 0.1
+	if (self.nCombatTimer > 0) then
+		Apollo.CreateTimer("CombatTimer", 0.1, false)
+	else 
+		self.wndMain:FindChild("CombatTimerText"):SetText("0.0")
+	end
+end
 -----------------------------------------------------------------------------------------------
 -- Helpers
 -----------------------------------------------------------------------------------------------
