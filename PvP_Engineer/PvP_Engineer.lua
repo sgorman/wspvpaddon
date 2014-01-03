@@ -210,8 +210,9 @@ function PvP_Engineer:OnEnteredCombat(unitPlayer, bInCombat)
 	else
 		Apollo.StartTimer("OutOfCombatFade")
 		Apollo.StartTimer("CombatTimer")
+		local CombatTimer = 
 		
-		self.wndMain:FindChild("CombatTimerText"):SetText(Combat)
+		self.wndMain:FindChild("CombatTimerText"):SetText(CombatTimer)
 		
 		--for i=5,0,-1 do 
 		--self.wndMain:FindChild("CombatTimerText"):SetText(i)
