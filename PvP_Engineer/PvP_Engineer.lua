@@ -120,9 +120,9 @@ function PvP_Engineer:OnFrameUpdate()
 		if self.bInCombat then
 			--self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1))
 			
-			if nResourceCurrent > 70 then
+			if nResourceCurrent >= 70 then
 				self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor("green")
-			elseif nResourceCurrent > 35 then
+			elseif nResourceCurrent >= 35 then
 				self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor("yellow")
 			elseif nResourceCurrent >= 0 then
 				self.wndMain:FindChild("BaseProgressSliderText"):SetTextColor("red")
