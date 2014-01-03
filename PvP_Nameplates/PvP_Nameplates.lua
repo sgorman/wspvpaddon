@@ -435,7 +435,8 @@ function Nameplates:CreateNameplateObject(unit)
 		nVulnerableTime = 0,
 		nFriendlyTargets = 0,
 		nHostileTargets = 0,
-		uLastTarget = nil
+		uLastTarget = nil,
+		uLastDisposition = nil
 	}
 
 	self.arUnit2Nameplate[tNameplate.idUnit] = tNameplate
@@ -1514,35 +1515,46 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 
 	if (unitOwner:GetTarget()) then
 		previousTarget = self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget
+		previousDisposition = self.arUnit2Nameplate[unitOwner:GetId()].uLastDisposition
 		targetedUnit = unitOwner:GetTarget()
 		targetedId = targetedUnit:GetId();
 		targetedNameplate = self.arUnit2Nameplate[targetedId]
+		targetedDisposition = unitOwner:GetDispositionTo(targetedUnit)
 		if (targetedNameplate and (previousTarget ~= targetedUnit or previousTarget == nil)) then
-			if (unitOwnerFaction == targetedUnit:GetFaction()) then
+			if (targetedDisposition == Unit.CodeEnumDisposition.Friendly) then
 				targetedNameplate.nFriendlyTargets = targetedNameplate.nFriendlyTargets + 1
-				targetedNameplate.wndNameplate:FindChild("FriendlyTargets"):SetText(targetedNameplate.nFriendlyTargets)
+				if (targetedNameplate.wndNameplate) then
+					targetedNameplate.wndNameplate:FindChild("FriendlyTargets"):SetText(targetedNameplate.nFriendlyTargets)
+				end
 				--Print("Friendly" .. targetedNameplate.nFriendlyTargets);
 			else
 				targetedNameplate.nHostileTargets = targetedNameplate.nHostileTargets + 1 
-				targetedNameplate.wndNameplate:FindChild("HostileTargets"):SetText(targetedNameplate.nHostileTargets)				--Print("Hostile" .. targetedNameplate.nHostileTargets);
+				if (targetedNameplate.wndNameplate) then
+					targetedNameplate.wndNameplate:FindChild("HostileTargets"):SetText(targetedNameplate.nHostileTargets)				--Print("Hostile" .. targetedNameplate.nHostileTargets);
+				end
 			end
 			
 			if (previousTarget ~= nil) then
 				previousNameplate = self.arUnit2Nameplate[previousTarget:GetId()]
 				if (previousNameplate) then
-					if (previousTarget:GetFaction() == unitOwner:GetFaction()) then
+					if (previousDisposition ==  Unit.CodeEnumDisposition.Friendly) then
 						previousNameplate.nFriendlyTargets = previousNameplate.nFriendlyTargets - 1
-						previousNameplate.wndNameplate:FindChild("FriendlyTargets"):SetText(previousNameplate.nFriendlyTargets)
+						if (previousNameplate.wndNameplate) then
+							previousNameplate.wndNameplate:FindChild("FriendlyTargets"):SetText(previousNameplate.nFriendlyTargets)
+						end
 						--Print("Friendly" .. previousNameplate.nFriendlyTargets)
 					else
 						previousNameplate.nHostileTargets = previousNameplate.nHostileTargets - 1
-						previousNameplate.wndNameplate:FindChild("HostileTargets"):SetText(previousNameplate.nHostileTargets)
+						if (previousNameplate.wndNameplate) then
+							previousNameplate.wndNameplate:FindChild("HostileTargets"):SetText(previousNameplate.nHostileTargets)
+						end
 						--Print("Hostile" .. previousNameplate.nHostileTargets)
 					end
 				end
 			end
 		end
-		self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget = unitOwner:GetTarget()
+		self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget = targetedUnit
+		self.arUnit2Nameplate[unitOwner:GetId()].uLastDisposition = targetedDisposition
 	end
 	if 	(unitOwner:GetTarget() == nil) or (unitOwner:GetTarget():IsThePlayer() == false) then
 			wndHealth:FindChild("RedBorder"):Show(false)
