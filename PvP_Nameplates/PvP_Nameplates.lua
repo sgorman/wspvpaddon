@@ -1409,22 +1409,24 @@ function Nameplates:UpdateTargetedInfo(unitOwner)
 	end
 	
 	if (unitOwner:IsDead() or previousTarget ~= nil and (previousTarget ~= self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget or targetedUnit == nil)) then
-		previousNameplate = self.arUnit2Nameplate[previousTarget:GetId()]
-		if (previousNameplate) then
-			if (previousDisposition ==  Unit.CodeEnumDisposition.Friendly) then
-				previousNameplate.nFriendlyTargets = previousNameplate.nFriendlyTargets - 1
-				if (previousNameplate.wndNameplate) then
-					previousNameplate.wndNameplate:FindChild("FriendlyTargets"):SetText(previousNameplate.nFriendlyTargets)
+		if (previousTarget ~= nil) then
+			previousNameplate = self.arUnit2Nameplate[previousTarget:GetId()]
+			if (previousNameplate) then
+				if (previousDisposition ==  Unit.CodeEnumDisposition.Friendly) then
+					previousNameplate.nFriendlyTargets = previousNameplate.nFriendlyTargets - 1
+					if (previousNameplate.wndNameplate) then
+						previousNameplate.wndNameplate:FindChild("FriendlyTargets"):SetText(previousNameplate.nFriendlyTargets)
+					end
+					--Print("Friendly" .. previousNameplate.nFriendlyTargets)
+				else
+					previousNameplate.nHostileTargets = previousNameplate.nHostileTargets - 1
+					if (previousNameplate.wndNameplate) then
+						previousNameplate.wndNameplate:FindChild("HostileTargets"):SetText(previousNameplate.nHostileTargets)
+					end
+					--Print("Hostile" .. previousNameplate.nHostileTargets)
 				end
-				--Print("Friendly" .. previousNameplate.nFriendlyTargets)
-			else
-				previousNameplate.nHostileTargets = previousNameplate.nHostileTargets - 1
-				if (previousNameplate.wndNameplate) then
-					previousNameplate.wndNameplate:FindChild("HostileTargets"):SetText(previousNameplate.nHostileTargets)
-				end
-				--Print("Hostile" .. previousNameplate.nHostileTargets)
 			end
-		end
+		end	
 		
 		if (targetedUnit == nil) then
 			self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget = nil
