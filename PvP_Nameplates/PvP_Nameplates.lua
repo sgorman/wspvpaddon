@@ -432,7 +432,10 @@ function Nameplates:CreateNameplateObject(unit)
 		bIsCluster 		= false,
 		bIsCasting 		= false,
 		strGuildColor	= nil,
-		nVulnerableTime = 0
+		nVulnerableTime = 0,
+		nFriendlyTargets = 0,
+		nHostileTargets = 0,
+		uLastTarget = nil
 	}
 
 	self.arUnit2Nameplate[tNameplate.idUnit] = tNameplate
@@ -1509,7 +1512,38 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 	end
 	
 
-	
+	if (unitOwner:GetTarget()) then
+		previousTarget = self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget
+		targetedUnit = unitOwner:GetTarget()
+		targetedId = targetedUnit:GetId();
+		targetedNameplate = self.arUnit2Nameplate[targetedId]
+		if (targetedNameplate and (previousTarget ~= targetedUnit or previousTarget == nil)) then
+			if (unitOwnerFaction == targetedUnit:GetFaction()) then
+				targetedNameplate.nFriendlyTargets = targetedNameplate.nFriendlyTargets + 1
+				targetedNameplate.wndNameplate:FindChild("FriendlyTargets"):SetText(targetedNameplate.nFriendlyTargets)
+				--Print("Friendly" .. targetedNameplate.nFriendlyTargets);
+			else
+				targetedNameplate.nHostileTargets = targetedNameplate.nHostileTargets + 1 
+				targetedNameplate.wndNameplate:FindChild("HostileTargets"):SetText(targetedNameplate.nHostileTargets)				--Print("Hostile" .. targetedNameplate.nHostileTargets);
+			end
+			
+			if (previousTarget ~= nil) then
+				previousNameplate = self.arUnit2Nameplate[previousTarget:GetId()]
+				if (previousNameplate) then
+					if (previousTarget:GetFaction() == unitOwner:GetFaction()) then
+						previousNameplate.nFriendlyTargets = previousNameplate.nFriendlyTargets - 1
+						previousNameplate.wndNameplate:FindChild("FriendlyTargets"):SetText(previousNameplate.nFriendlyTargets)
+						--Print("Friendly" .. previousNameplate.nFriendlyTargets)
+					else
+						previousNameplate.nHostileTargets = previousNameplate.nHostileTargets - 1
+						previousNameplate.wndNameplate:FindChild("HostileTargets"):SetText(previousNameplate.nHostileTargets)
+						--Print("Hostile" .. previousNameplate.nHostileTargets)
+					end
+				end
+			end
+		end
+		self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget = unitOwner:GetTarget()
+	end
 	if 	(unitOwner:GetTarget() == nil) or (unitOwner:GetTarget():IsThePlayer() == false) then
 			wndHealth:FindChild("RedBorder"):Show(false)
 			wndHealth:FindChild("RedBorder1"):Show(false)
