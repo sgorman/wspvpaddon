@@ -113,9 +113,9 @@ function StalkerResource:OnFrame(varName, cnt)
 	
 	EnergyResource = GameLib.GetPlayerUnit():GetResource(3)
 	
-	if EnergyResource > 70 then
+	if EnergyResource >= 70 then
 		self.wndResourceBar:FindChild("EnergyMeter"):SetTextColor("green")
-	elseif EnergyResource > 35 then
+	elseif EnergyResource >= 35 then
 		self.wndResourceBar:FindChild("EnergyMeter"):SetTextColor("yellow")
 	elseif EnergyResource >= 0 then
 		self.wndResourceBar:FindChild("EnergyMeter"):SetTextColor("red")
