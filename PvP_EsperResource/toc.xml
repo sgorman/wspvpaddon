@@ -1,0 +1,5 @@
+<Addon Author="Aust3n, okaygo" APIVersion="3" Name="PvP_EsperResource" Description="A different take on the Esper Resource addon">
+    <Script Name="PvP_EsperResource.lua"/>
+    <Form Name="PvP_EsperResource.xml"/>
+	<ReplaceAddon Name="EsperResource"/>
+</Addon>

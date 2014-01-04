@@ -1,0 +1,5 @@
+<Addon Author="Aust3n, okaygo" APIVersion="3" Name="PvP_WarriorResource" Description="Different take on the warrior resource addon">
+    <Script Name="PvP_WarriorResource.lua"/>
+    <Form Name="PvP_WarriorResource.xml"/>
+	<ReplaceAddon Name="WarriorResource"/>
+</Addon>

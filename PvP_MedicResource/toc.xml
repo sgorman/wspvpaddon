@@ -1,0 +1,5 @@
+<Addon Author="Aust3n" APIVersion="3" Name="PvP_MedicResource" Description="A different take on the medic resource addon">
+    <Script Name="PvP_MedicResource.lua"/>
+    <Form Name="PvP_MedicResource.xml"/>
+	<ReplaceAddon Name="Medic"/>
+</Addon>
