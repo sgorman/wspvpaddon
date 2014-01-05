@@ -101,7 +101,7 @@ function PvP_Engineer:OnFrameUpdate()
 	local unitPlayer = GameLib.GetPlayerUnit()
 	
 	local nLeft, nTop, nRight, nBottom = self.wndMain:GetRect() -- legacy code
-	--Apollo.SetGlobalAnchor("CastingBarBottom", 0.0, nTop - 15, true)
+	Apollo.SetGlobalAnchor("CastingBarBottom", 0.0, nTop + 50, true)
 	
 	-- Resource 1 (Volatility)
 	local nResourceMax = unitPlayer:GetMaxResource(1)
