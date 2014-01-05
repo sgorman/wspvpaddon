@@ -496,12 +496,12 @@ end
 
 function Nameplates:UnattachNameplateWindow(tNameplate)
 	if tNameplate.wndNameplate ~= nil then
-		self:UpdateTargetedInfo(tNameplate.unitOwner)
 		local idWnd = tNameplate.wndNameplate:GetId()
 		tNameplate.wndNameplate:SetNowhere()
 		tNameplate.wndNameplate:Show(false)
 		table.insert(self.arFreeWindows, tNameplate.wndNameplate)
 		tNameplate.wndNameplate = nil
+		self:UpdateTargetedInfo(tNameplate.unitOwner)
 		self.arDisplayedNameplates[idWnd] = nil
 	end
 end
@@ -760,6 +760,8 @@ function Nameplates:DrawNameplate(tNameplate)
 	local nCon = self:HelperCalculateConValue(unitOwner)
 
 	if tNameplate.wndNameplate:FindChild("Health"):IsShown() then
+		
+		--tNameplate.nHostileTargets = self:CalculateHostileTargets(tNameplate.unitOwner)
 		self:HelperDoHealthShieldBar(tNameplate.wndNameplate:FindChild("Health"), unitOwner, eDisposition)
 		
 		
@@ -839,6 +841,34 @@ function Nameplates:DrawNameplate(tNameplate)
 	tNameplate.wndNameplate:Show(unitOwner:ShouldShowNamePlate())
 
 	return bShowNameplate
+end
+
+function Nameplates:CalculateTargets(unitOwner)
+	unitNameplate = self.arUnit2Nameplate[unitOwner:GetId()]
+	unitNameplate.nFriendlyTargets = 0
+	unitNameplate.nHostileTargets = 0
+	--Print(unitOwner:GetName())
+	for idx, tNameplate in pairs(self.arUnit2Nameplate) do
+		if (tNameplate.uLastTarget == unitOwner and tNameplate.uLastTarget ~= nil) then
+			--Print(tNameplate.unitOwner:GetName() .. " Matching: " .. unitOwner:GetName())
+			if (tNameplate.uLastDisposition == Unit.CodeEnumDisposition.Friendly) then
+				unitNameplate.nFriendlyTargets = unitNameplate.nFriendlyTargets + 1
+			else 
+				unitNameplate.nHostileTargets = unitNameplate.nHostileTargets + 1
+			end
+		else 
+			--Print(tNameplate.unitOwner:GetName() .. " not targeting " .. unitOwner:GetName())
+
+		end
+		
+	end
+	
+	--Print("END")
+	
+	if (unitNameplate.wndNameplate ~= nil) then
+		unitNameplate.wndNameplate:FindChild("FriendlyTargets"):SetText(unitNameplate.nFriendlyTargets)
+		unitNameplate.wndNameplate:FindChild("HostileTargets"):SetText(unitNameplate.nHostileTargets)
+	end
 end
 
 function Nameplates:HelperVerifyVisibilityOptions(tNameplate)
@@ -1381,16 +1411,15 @@ function Nameplates:SetTargetedNameplate(tNameplate) -- happens when the creatur
 end
 
 function Nameplates:UpdateTargetedInfo(unitOwner)
+	self:CalculateTargets(unitOwner)
 	previousTarget = self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget
 	previousDisposition = self.arUnit2Nameplate[unitOwner:GetId()].uLastDisposition
 	targetedUnit = unitOwner:GetTarget()
 	if (targetedUnit) then
-
-	
 		targetedId = targetedUnit:GetId();
 		targetedNameplate = self.arUnit2Nameplate[targetedId]
 		targetedDisposition = unitOwner:GetDispositionTo(targetedUnit)
-		if (targetedNameplate and (previousTarget ~= targetedUnit or previousTarget == nil)) then
+		--[[if (targetedNameplate and (previousTarget ~= targetedUnit or previousTarget == nil)) then
 			if (targetedDisposition == Unit.CodeEnumDisposition.Friendly) then
 				targetedNameplate.nFriendlyTargets = targetedNameplate.nFriendlyTargets + 1
 				if (targetedNameplate.wndNameplate) then
@@ -1403,13 +1432,19 @@ function Nameplates:UpdateTargetedInfo(unitOwner)
 					targetedNameplate.wndNameplate:FindChild("HostileTargets"):SetText(targetedNameplate.nHostileTargets)				--Print("Hostile" .. targetedNameplate.nHostileTargets);
 				end
 			end
+		end]]--
+		if (self.arUnit2Nameplate[unitOwner:GetId()].wndNameplate ~= nil) then
+			self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget = targetedUnit
+			self.arUnit2Nameplate[unitOwner:GetId()].uLastDisposition = targetedDisposition
+		else
+			self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget = nil
+			self.arUnit2Nameplate[unitOwner:GetId()].uLastDisposition = nil
 		end
-		self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget = targetedUnit
-		self.arUnit2Nameplate[unitOwner:GetId()].uLastDisposition = targetedDisposition
+			
 	end
 	
 	if (unitOwner:IsDead() or previousTarget ~= nil and (previousTarget ~= self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget or targetedUnit == nil)) then
-		if (previousTarget ~= nil) then
+		--[[if (previousTarget ~= nil) then
 			previousNameplate = self.arUnit2Nameplate[previousTarget:GetId()]
 			if (previousNameplate) then
 				if (previousDisposition ==  Unit.CodeEnumDisposition.Friendly) then
@@ -1426,9 +1461,9 @@ function Nameplates:UpdateTargetedInfo(unitOwner)
 					--Print("Hostile" .. previousNameplate.nHostileTargets)
 				end
 			end
-		end	
+		end]]--
 		
-		if (targetedUnit == nil) then
+		if (targetedUnit == nil or unitOwner:IsDead() or self.arUnit2Nameplate[unitOwner:GetId()].wndNameplate == nil) then
 			self.arUnit2Nameplate[unitOwner:GetId()].uLastTarget = nil
 			self.arUnit2Nameplate[unitOwner:GetId()].uLastDisposition = nil		
 		end
