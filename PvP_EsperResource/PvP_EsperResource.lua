@@ -157,8 +157,6 @@ function EsperResource:OnEnteredCombat(unit, bInCombat)
 			Apollo.StartTimer("EsperResource_FadeTimer")
 			Apollo.StartTimer("CombatTimer")
 	
-			
-			
 			self.nFadeLevel = 1
 			for idx, wndCurr in pairs(self.tComboPieces) do
 				wndCurr:SetBGColor(CColor.new(1, 1, 1, 1 - (0.165 * self.nFadeLevel)))
@@ -171,7 +169,7 @@ function EsperResource:OnCombatTimer()
 self.wndMain:FindChild("CombatTimerText"):SetText(self.nCombatTimer)
 self.nCombatTimer = self.nCombatTimer - 0.1
 	if (self.nCombatTimer > 0) then
-		Apollo.CreateTimer("CombatTimer", 0.1, false)
+		Apollo.StartTimer("CombatTimer", 0.1, false)
 	else
 		self.wndMain:FindChild("CombatTimerText"):SetText("0.0")
 	end
