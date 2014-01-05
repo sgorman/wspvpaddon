@@ -72,6 +72,7 @@ local unitPlayer = GameLib.GetPlayerUnit()
 	
 	self.nFadeLevel = 0
 	self.nCombatTimer = 0.0
+	
     self.wndMain = Apollo.LoadForm("PvP_Engineer.xml", "PvP_EngineerForm", "FixedHudStratum", self)
 	self.wndMain:FindChild("BaseProgressSliderText"):SetData(0)
 	self.wndMain:FindChild("StanceMenuOpenerBtn"):AttachWindow(self.wndMain:FindChild("StanceMenuBG"))
@@ -243,7 +244,7 @@ end
 function PvP_Engineer:OnCombatTimer()
 	self.wndMain:FindChild("CombatTimerText"):SetText(self.nCombatTimer)
 	self.nCombatTimer = self.nCombatTimer - 0.1
-		if (self.nCombatTimer > 0) then
+	if (self.nCombatTimer > 0) then
 		Apollo.CreateTimer("CombatTimer", 0.1, false)
 	else 
 		self.wndMain:FindChild("CombatTimerText"):SetText("0.0")

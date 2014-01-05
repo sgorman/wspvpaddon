@@ -40,10 +40,13 @@ function EsperResource:OnCharacterCreated()
 	Apollo.RegisterEventHandler("VarChange_FrameCount", "OnFrameUpdate", self)
 	Apollo.RegisterEventHandler("UnitEnteredCombat", 	"OnEnteredCombat", self)
 	Apollo.RegisterTimerHandler("EsperResource_FadeTimer", "OnFadeTimer", self)
+	Apollo.RegisterTimerHandler("CombatTimer", "OnCombatTimer", self)
 	
 	Apollo.CreateTimer("EsperResource_FadeTimer", 2.000, false)
+	Apollo.CreateTimer("CombatTimer", 0.1, false)
 	
 	self.nFadeLevel = 0
+	self.nCombatTimer = 0.0
 
     self.wndMain = Apollo.LoadForm("PvP_EsperResource.xml", "EsperResourceForm", "FixedHudStratum", self)
 	self.tComboPieces =
@@ -96,6 +99,16 @@ function EsperResource:OnFrameUpdate()
 		end
 	end
 	
+	-- Combo Points
+	self.wndMain:FindChild("ComboSolid1"):Show(nComboCurrent >= 1)
+	self.wndMain:FindChild("ComboSolid2"):Show(nComboCurrent >= 2)
+	self.wndMain:FindChild("ComboSolid3"):Show(nComboCurrent >= 3)
+	self.wndMain:FindChild("ComboSolid4"):Show(nComboCurrent >= 4)
+	self.wndMain:FindChild("ComboSolid5"):Show(nComboCurrent >= 5)
+	self.wndMain:FindChild("ComboNumber"):SetSprite("CRB_Esper:sprEsperResource_Number"..nComboCurrent)
+	self.wndMain:FindChild("ComboBG"):SetSprite(nComboCurrent == 0 and "CRB_Esper:sprEsperResource_BG0" or "CRB_Esper:sprEsperResource_BG1")
+
+	
 	if nComboCurrent == 5 then
 		self.wndMain:FindChild("EsperResource"):SetTextColor("green")
 		self.wndMain:FindChild("EsperResource"):SetText("5")
@@ -116,36 +129,51 @@ function EsperResource:OnFrameUpdate()
 		self.wndMain:FindChild("EsperResource"):SetText("0")
 	end
 	
-	-- Combo Points
-	self.wndMain:FindChild("ComboSolid1"):Show(nComboCurrent >= 1)
-	self.wndMain:FindChild("ComboSolid2"):Show(nComboCurrent >= 2)
-	self.wndMain:FindChild("ComboSolid3"):Show(nComboCurrent >= 3)
-	self.wndMain:FindChild("ComboSolid4"):Show(nComboCurrent >= 4)
-	self.wndMain:FindChild("ComboSolid5"):Show(nComboCurrent >= 5)
-	self.wndMain:FindChild("ComboNumber"):SetSprite("CRB_Esper:sprEsperResource_Number"..nComboCurrent)
-	self.wndMain:FindChild("ComboBG"):SetSprite(nComboCurrent == 0 and "CRB_Esper:sprEsperResource_BG0" or "CRB_Esper:sprEsperResource_BG1")
 end
 
+
+
+
 function EsperResource:OnEnteredCombat(unit, bInCombat)
-	if self.wndMain and self.wndMain:IsValid() and unit == GameLib.GetPlayerUnit() then
+	--if self.wndMain and self.wndMain:IsValid() and unit == GameLib.GetPlayerUnit() then
 		self.wndMain:FindChild("CombatIndicatorL"):Show(bInCombat)
 		self.wndMain:FindChild("CombatIndicatorR"):Show(bInCombat)
-
+		
+		self.bInCombat = bInCombat
+		
 		if bInCombat then
-			Apollo.StopTimer("EsperResource_FadeTimer")
-			
+			self.nCombatTimer = 8.0
 			self.nFadeLevel = 0
+			
+			Apollo.StopTimer("EsperResource_FadeTimer")
+			Apollo.StopTimer("CombatTimer")
+			
+			self.wndMain:FindChild("CombatTimerText")SetText("10.0")
+			
 			for idx, wndCurr in pairs(self.tComboPieces) do
 				wndCurr:SetBGColor(CColor.new(1, 1, 1, 1))
 			end
 		else
 			Apollo.StartTimer("EsperResource_FadeTimer")
+			Apollo.StartTimer("CombatTimer")
+			--self.wndMain:FindChild("CombatTimerText")SetText("10.0")
+			
 			
 			self.nFadeLevel = 1
 			for idx, wndCurr in pairs(self.tComboPieces) do
 				wndCurr:SetBGColor(CColor.new(1, 1, 1, 1 - (0.165 * self.nFadeLevel)))
 			end
 		end
+	--end
+end
+
+function EsperResource:OnCombatTimer()
+self.wndMain:FindChild("CombatTimerText"):SetText(self.nCombatTimer)
+self.nCombatTimer = self.nCombatTimer - 0.1
+	if (self.nCombatTimer > 0) then
+		Apollo.CreateTimer("CombatTimer", 0.1, false)
+	else
+		self.wndMain:FindChild("CombatTimerText")SetText("10.0")
 	end
 end
 
