@@ -215,18 +215,15 @@ function PvP_Engineer:OnEnteredCombat(unitPlayer, bInCombat)
 		self.nCombatTimer = 4.5
 		Apollo.StopTimer("OutOfCombatFade")
 		Apollo.StopTimer("CombatTimer")
-		self.wndMain:FindChild("CombatTimerText"):SetText("4.6")
+		self.wndMain:FindChild("CombatTimerText"):SetText("4.5")
 		--self.wndMain:FindChild("CombatTimer"):SetTextColor(ApolloColor.new(1, 1, 1 - nResourcePercent, 1 - (0.25 * self.nFadeLevel)))
 	else
-		self.wndMain:FindChild("CombatTimerText"):SetText("5.0")
+		self.wndMain:FindChild("CombatTimerText"):SetText("4.5")
 
 		Apollo.StartTimer("OutOfCombatFade")
-		Apollo.StartTimer("CombatTimer")
-		
+		Apollo.StartTimer("CombatTimer")	
 
-		self.wndMain:FindChild("CombatTimerText"):SetText(CombatTimer)
-		
-
+		--self.wndMain:FindChild("CombatTimerText"):SetText(CombatTimer)
 
 	end
 end

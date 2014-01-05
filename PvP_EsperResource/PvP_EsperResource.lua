@@ -56,7 +56,7 @@ function EsperResource:OnCharacterCreated()
 	}
 	
 	self.wndMain:FindChild("ComboNumber"):SetTooltip(string.format("<T Font=\"CRB_InterfaceSmall\">%s</T>", Apollo.GetString("CRB_EsperResource")))
-	
+	self.wndMain:FindChild("EsperResource"):SetTooltip(string.format("<T Font=\"CRB_InterfaceSmall\">%s</T>", Apollo.GetString("CRB_EsperResource")))
 end
 
 function EsperResource:OnFrameUpdate()
@@ -95,7 +95,27 @@ function EsperResource:OnFrameUpdate()
 			break
 		end
 	end
-
+	
+	if nComboCurrent == 5 then
+		self.wndMain:FindChild("EsperResource"):SetTextColor("green")
+		self.wndMain:FindChild("EsperResource"):SetText("5")
+	elseif nComboCurrent == 4 then
+		self.wndMain:FindChild("EsperResource"):SetTextColor("green")
+		self.wndMain:FindChild("EsperResource"):SetText("4")
+	elseif nComboCurrent == 3 then
+		self.wndMain:FindChild("EsperResource"):SetTextColor("green")
+		self.wndMain:FindChild("EsperResource"):SetText("3")
+	elseif nComboCurrent == 2 then
+		self.wndMain:FindChild("EsperResource"):SetTextColor("green")
+		self.wndMain:FindChild("EsperResource"):SetText("2")
+	elseif nComboCurrent == 1 then
+		self.wndMain:FindChild("EsperResource"):SetTextColor("green")
+		self.wndMain:FindChild("EsperResource"):SetText("1")
+	elseif nComboCurrent == 0 then
+		self.wndMain:FindChild("EsperResource"):SetTextColor("red")
+		self.wndMain:FindChild("EsperResource"):SetText("0")
+	end
+	
 	-- Combo Points
 	self.wndMain:FindChild("ComboSolid1"):Show(nComboCurrent >= 1)
 	self.wndMain:FindChild("ComboSolid2"):Show(nComboCurrent >= 2)
