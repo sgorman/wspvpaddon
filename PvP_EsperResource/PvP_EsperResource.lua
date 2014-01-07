@@ -135,7 +135,7 @@ end
 
 
 function EsperResource:OnEnteredCombat(unit, bInCombat)
-	--if self.wndMain and self.wndMain:IsValid() and unit == GameLib.GetPlayerUnit() then
+	if self.wndMain and self.wndMain:IsValid() and unit == GameLib.GetPlayerUnit() then
 		self.wndMain:FindChild("CombatIndicatorL"):Show(bInCombat)
 		self.wndMain:FindChild("CombatIndicatorR"):Show(bInCombat)
 		
@@ -162,7 +162,7 @@ function EsperResource:OnEnteredCombat(unit, bInCombat)
 				wndCurr:SetBGColor(CColor.new(1, 1, 1, 1 - (0.165 * self.nFadeLevel)))
 			end
 		end
-	--end
+	end
 end
 
 function EsperResource:OnCombatTimer()

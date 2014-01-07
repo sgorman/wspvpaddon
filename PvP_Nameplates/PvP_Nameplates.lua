@@ -121,6 +121,7 @@ local kcrDefaultGuildmemberTextColor 	= ApolloColor.new("DispositionFriendly")
 local kcrAggressiveEnemyTextColor 		= ApolloColor.new("DispositionHostile")
 local kcrNeutralEnemyTextColor 			= "FFFF6A6A"
 local kcrDefaultUnflaggedAllyTextColor 	= "FFFFFFFF"
+local hostileColor                      = "Red"
 --local kcrFlaggedFriendlyTextColor = ApolloColor.new("crayPurpleHeart")
 --local kcrAggressiveEnemyTextColor = ApolloColor.new("crayOrange")
 --local kcrNeutralEnemyTextColor = ApolloColor.new("DispositionNeutral")
@@ -979,6 +980,8 @@ function Nameplates:OnUnitPvpFlagsChanged(unitUpdated, tNameplate)
 		else
 			local bIsUnitFlagged = unitController:IsPvpFlagged()
 			local bAmIFlagged = GameLib.IsPvpFlagged()
+			--if strUnitType == ""
+			--	crColorToUse = hostileColor
 			if not bAmIFlagged and not bIsUnitFlagged then
 				crColorToUse = kcrNeutralEnemyTextColor
 			elseif (bAmIFlagged and not bIsUnitFlagged) or (not bAmIFlagged and bIsUnitFlagged) then
@@ -997,6 +1000,12 @@ function Nameplates:OnUnitPvpFlagsChanged(unitUpdated, tNameplate)
 
 	tNameplate.wndNameplate:FindChild("Name"):SetTextColor(crColorToUse)
 	tNameplate.wndNameplate:FindChild("GuildContainer"):SetTextColor(crColorToUse)
+	
+	if tNameplate.unitOwner:GetDispositionTo(GameLib.GetPlayerUnit()) == 0 and strUnitType == "Player" then
+		tNameplate.wndNameplate:FindChild("Name"):SetTextColor("Red")
+		tNameplate.wndNameplate:FindChild("GuildContainer"):SetTextColor("Red")
+	end
+
 end
 
 function Nameplates:OnUnitNameChanged(unitUpdated, strNewName)
@@ -1574,6 +1583,7 @@ function Nameplates:HelperDoHealthShieldBar(wndHealth, unitOwner, eDisposition)
 		wndHealth:FindChild("MaxHealth"):SetBGColor(npClassColors[unitOwner:GetClassId()])
 		wndHealth:FindChild("ShieldLabel"):Show(true)
 		wndHealth:FindChild("WhiteSeperator"):Show(true)
+		--self.wndNameplate:FindChild("Name"):SetTextColor("FFbed497")
 		if unitOwner:GetType() == "Pet" then --nested if
 			wndHealth:FindChild("MaxHealth"):SetBGColor("FFbed497")
 		end
