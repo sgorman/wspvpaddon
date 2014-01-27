@@ -703,7 +703,7 @@ function PvP_MatchMaker:RefreshStatus()
 		self.wndJoinAsGroup:Show(false)
 
 		if bIsGameFinished then
-			self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("MatchMaker_NotQueued"))
+			self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("Matchmaker_NotQueued"))
 			self.wndQueueInfo:FindChild("QueueStatus"):SetTextColor(kcrInactiveColor)
 			if bLeader then
 				self.wndAltLeaveGame:Show(true)
@@ -777,7 +777,7 @@ function PvP_MatchMaker:RefreshStatus()
 			end
 		end
 	elseif not bInGame then
-		self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("MatchMaker_NotQueued"))
+		self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("Matchmaker_NotQueued"))
 	end
 
 	self.wndQueueInfo:FindChild("LeaveQueueFraming"):Show(self.wndQueueInfo:FindChild("LeaveQueueBtn"):IsEnabled())
