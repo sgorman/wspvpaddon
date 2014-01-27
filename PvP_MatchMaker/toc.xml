@@ -1,4 +1,4 @@
-<Addon Name="PvP_MatchMaker" APIVersion="3" Author="okaygo" Version="0.01" Description="Changes to the match maker.">
+<Addon Name="PvP_MatchMaker" APIVersion="4" Author="okaygo" Version="1" Description="Adds a sound when the match begins. Brought to you by http://coalesceforce.com">
     <Script Name="PvP_MatchMaker.lua"/>
     <Form Name="PvP_MatchMaker.xml"/>
     <ReplaceAddon Name="MatchMaker"/>

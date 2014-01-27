@@ -1,0 +1,5 @@
+<Addon Name="PvP_PublicEventStats" Author="okaygo" APIVersion="4" Version="" Description="Fixes the scoreboard. Brought to you by http://coalesceforce.com">
+    <Script Name="PvP_PublicEventStats.lua"/>
+    <Form Name="PvP_PublicEventStats.xml"/>
+    <ReplaceAddon Name="PublicEventStats"/>
+</Addon>

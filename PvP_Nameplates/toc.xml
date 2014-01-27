@@ -1,4 +1,4 @@
-<Addon Author="Aust3n, okaygo" APIVersion="3" Name="PvP_Nameplates" Description="PvP_Nameplates is a cleaner more functional nameplate addon">
+<Addon Author="Aust3n, okaygo" APIVersion="4" Name="PvP_Nameplates" Description="PvP Nameplates is a cleaner more functional nameplate addon. Brought to you by http://coalesceforce.com">
     <Script Name="PvP_Nameplates.lua"/>
     <Form Name="PvP_Nameplates.xml"/>
 	<ReplaceAddon Name="Nameplates"/>

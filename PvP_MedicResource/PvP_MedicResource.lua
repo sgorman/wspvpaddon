@@ -84,7 +84,7 @@ function Medic:OnFrame()
 	end
 
 	local nLeft, nTop, nRight, nBottom = self.wndMain:GetRect() -- legacy code
-	Apollo.SetGlobalAnchor("CastingBarBottom", 0.0, nTop - 15, true)
+	Apollo.SetGlobalAnchor("CastingBarBottom", 0.0, nTop + 50, true)
 
 	self:DrawCores(unitPlayer) -- right id, draw core info
 

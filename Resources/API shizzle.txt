@@ -14,6 +14,7 @@ GeminiConsole:
 	inspect GameLib.GetTargetUnit():GetBuffs()
 	inspect GameLib.GetTargetUnit():GetAlternateTarget()
 	inspect GameLib.GetTargetUnit():IsCasting()
+    /g
 
 <table n='CodeEnumSpellMechanic'>
 				<number n='SpellSurge' v='4'/>

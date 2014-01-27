@@ -2,7 +2,7 @@
 -- Client Lua Script for PvP_MatchMaker
 -- Copyright (c) NCsoft. All rights reserved
 -----------------------------------------------------------------------------------------------
- 
+
 require "Window"
 require "MatchingGame"
 require "GameLib"
@@ -10,13 +10,13 @@ require "Unit"
 require "GuildLib"
 require "GuildTypeLib"
 require "GroupLib"
- 
+
 -----------------------------------------------------------------------------------------------
 -- PvP_MatchMaker Module Definition
 -----------------------------------------------------------------------------------------------
 local PvP_MatchMaker = {}
- 
-local kcrActiveColor 			= CColor.new(1, 172/255, 0, 1) 
+
+local kcrActiveColor 			= CColor.new(1, 172/255, 0, 1)
 local kcrInactiveColor 			= CColor.new(47/2551, 148/255, 172/255, 1)
 local kstrConsoleRealmFilter	= "matching.realmOnly"
 -----------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ local kstrConsoleRealmFilter	= "matching.realmOnly"
 function PvP_MatchMaker:new(o)
     o = o or {}
     setmetatable(o, self)
-    self.__index = self 
+    self.__index = self
 
     -- initialize variables here
 	--o.matchSelectedType = nil
@@ -38,44 +38,44 @@ function PvP_MatchMaker:new(o)
 	--o.myTeam = 0
 	--o.myWarparty = 0
 	o.eSelectedTab 		= MatchingGame.MatchType.RatedBattleground
+	o.eQueuedTab		= MatchingGame.MatchType.RatedBattleground
 	--o.matchQueued		= nil
-	
+
 	o.matchesSelected 	= {}
 	o.matchesQueued		= {}
-	
+
     return o
 end
 
 function PvP_MatchMaker:Init()
     Apollo.RegisterAddon(self)
 end
- 
+
 
 -----------------------------------------------------------------------------------------------
 -- PvP_MatchMaker OnLoad
 -----------------------------------------------------------------------------------------------
 function PvP_MatchMaker:OnLoad()
-	
     Apollo.RegisterSlashCommand("checkrating", 							"OnCheckRating", self)
-	Apollo.RegisterEventHandler("ToggleGroupFinder", 					"OnToggleMatchMaker", self)
-	Apollo.RegisterEventHandler("MatchingJoinQueue", 					"RefreshStatus", self)	
+	Apollo.RegisterEventHandler("ToggleGroupFinder", 					"OnTogglePvP_MatchMaker", self)
+	Apollo.RegisterEventHandler("MatchingJoinQueue", 					"RefreshStatus", self)
 	Apollo.RegisterEventHandler("MatchingLeaveQueue", 					"OnLeaveQueue", self)
 	Apollo.RegisterEventHandler("MatchingGameReady", 					"OnGameReady", self)
 	Apollo.RegisterEventHandler("MatchingGamePendingUpdate", 			"DisplayPendingInfo", self)
 	Apollo.RegisterEventHandler("MatchingCancelPendingGame", 			"RefreshStatus", self)
 	Apollo.RegisterEventHandler("MatchingAverageWaitTimeUpdated", 		"RefreshStatus", self)
 	Apollo.RegisterEventHandler("MatchEntered", 						"OnMatchEntered", self)
-	Apollo.RegisterEventHandler("MatchJoined", 							"RefreshStatus", self)	
-	Apollo.RegisterEventHandler("MatchFinished", 						"RefreshStatus", self)	
+	Apollo.RegisterEventHandler("MatchJoined", 							"RefreshStatus", self)
+	Apollo.RegisterEventHandler("MatchFinished", 						"RefreshStatus", self)
 	Apollo.RegisterEventHandler("PVPMatchFinished", 					"RefreshStatus", self)
 	Apollo.RegisterEventHandler("MatchExited", 							"OnMatchExited", self)
-	Apollo.RegisterEventHandler("MatchLeft", 							"RefreshStatus", self)	
-	Apollo.RegisterEventHandler("MatchingEligibilityChanged", 			"ReloadMaps", self)	
+	Apollo.RegisterEventHandler("MatchLeft", 							"RefreshStatus", self)
+	Apollo.RegisterEventHandler("MatchingEligibilityChanged", 			"ReloadMaps", self)
 	Apollo.RegisterEventHandler("Group_Add", 							"RefreshStatus", self)
 	Apollo.RegisterEventHandler("Group_Join", 							"RefreshStatus", self)
-	Apollo.RegisterEventHandler("Group_Remove", 						"RefreshStatus", self)	
+	Apollo.RegisterEventHandler("Group_Remove", 						"RefreshStatus", self)
 	Apollo.RegisterEventHandler("Group_Left", 							"RefreshStatus", self)
-	Apollo.RegisterEventHandler("Group_MemberConnect", 					"RefreshStatus", self)	
+	Apollo.RegisterEventHandler("Group_MemberConnect", 					"RefreshStatus", self)
 	Apollo.RegisterEventHandler("Group_MemberPromoted", 				"RefreshStatus", self)
 	Apollo.RegisterEventHandler("Group_Updated", 						"RefreshStatus", self)
 	Apollo.RegisterEventHandler("GuildQueueStateChanged", 				"RefreshStatus", self)
@@ -104,8 +104,8 @@ function PvP_MatchMaker:OnLoad()
 	Apollo.RegisterEventHandler("DuelLeftArea",							"OnDuelLeftArea", self)
 	Apollo.RegisterEventHandler("DuelCancelWarning",					"OnDuelCancelWarning", self)
 	Apollo.RegisterEventHandler("PvpRatingUpdated",						"ReloadMaps", self)
-	Apollo.RegisterEventHandler("UnitEnteredCombat", 					"OnEnteredCombat", self)	
-	
+	Apollo.RegisterEventHandler("UnitEnteredCombat", 					"OnEnteredCombat", self)
+
 	--Apollo.RegisterTimerHandler("MatchTimer", 							"OnMatchTimer", self)
 	--Apollo.RegisterTimerHandler("MatchPrecisionTimer", 					"StartMatchTimer", self)
     Apollo.RegisterTimerHandler("QueueTimer", 							"OnQueueTimer", self)
@@ -114,27 +114,27 @@ function PvP_MatchMaker:OnLoad()
 	Apollo.RegisterTimerHandler("WarpartyUpdateTimer",					"OnWarpartyAddedOrDisbanded", self)
 	Apollo.RegisterTimerHandler("DuelCountdownTimer", 					"OnDuelCountdownTimer", self)
 	Apollo.RegisterTimerHandler("DuelWarningTimer", 					"OnDuelWarningTimer", self)
-	
-	
+
+
     -- load our forms
     self.wndMain 					= Apollo.LoadForm("PvP_MatchMaker.xml", "MatchMakerFrame", nil, self)
 	self.wndModeList 				= self.wndMain:FindChild("ModeToggleList")
 	self.wndModeListToggle 			= self.wndMain:FindChild("ModeToggle")
-	
-	
+
+
 	self.wndModeListToggle:AttachWindow(self.wndModeList)
-	
+
 	self.wndModeContent 			= self.wndMain:FindChild("ModeContent")
 	self.wndListParent 				= self.wndModeContent:FindChild("MatchListFrame")
-	self.wndList 					= self.wndListParent:FindChild("MatchList")	
+	self.wndList 					= self.wndListParent:FindChild("MatchList")
 	self.wndRole 					= self.wndModeContent:FindChild("RoleFrame")
 	self.wndRealmFilterContainer	= self.wndModeContent:FindChild("RealmFrame")
 	self.wndRealmFilter				= self.wndRealmFilterContainer:FindChild("RealmFilterBtn")
 	self.wndArenaTeams 				= self.wndModeContent:FindChild("ArenaTeamFrame")
-	
-	
+
+
 	self.wndJoin 					= self.wndMain:FindChild("JoinBtn")
-	self.wndJoinAsGroup 			= self.wndMain:FindChild("JoinAsGroupBtn")	
+	self.wndJoinAsGroup 			= self.wndMain:FindChild("JoinAsGroupBtn")
 	self.wndLeaveGame 				= self.wndMain:FindChild("LeaveMatchBtn")
 	self.wndTeleportIntoGame 		= self.wndMain:FindChild("TeleportIntoMatchBtn")
 	self.wndFindReplacements 		= self.wndMain:FindChild("FindReplacementsBtn")
@@ -154,14 +154,14 @@ function PvP_MatchMaker:OnLoad()
 	self.wndAllyEnemyConfirm 		= Apollo.LoadForm("PvP_MatchMaker.xml", "WaitingOnAlliesAndEnemies", nil, self)
 	self.wndVoteKick 				= Apollo.LoadForm("PvP_MatchMaker.xml", "VoteKick", nil, self)
 	self.wndVoteSurrender			= Apollo.LoadForm("PvP_MatchMaker.xml", "VoteSurrender", nil, self)
-	self.wndDuelRequest				= Apollo.LoadForm("PvP_MatchMaker.xml", "DuelRequest", nil, self)	
-	self.wndDuelWarning				= Apollo.LoadForm("PvP_MatchMaker.xml", "DuelWarning", nil, self)	
+	self.wndDuelRequest				= Apollo.LoadForm("PvP_MatchMaker.xml", "DuelRequest", nil, self)
+	self.wndDuelWarning				= Apollo.LoadForm("PvP_MatchMaker.xml", "DuelWarning", nil, self)
 	self.wndRoleBlocker				= self.wndRole:FindChild("RoleBlocker")
 	self.wndRealmFilterBlocker		= self.wndRealmFilterContainer:FindChild("RealmBlocker")
-		
+
 	self.wndMyRating 				= self.wndMain:FindChild("RatingWindow")
 	self.wndMyRating:Show(false)
-	
+
 	self.wndMain:Show(false)
 	self.wndJoinGame:Show(false)
 	--self.wndQueueInfo:Show(false)
@@ -172,83 +172,76 @@ function PvP_MatchMaker:OnLoad()
 	self.wndRoleBlocker:Show(false)
 	self.wndRealmFilterBlocker:Show(false)
 	self.bInCombat = false
-	
-	self.tWarparty = 
-	{	
+
+	self.tWarparty =
+	{
 		{
-			strLabel 	= Apollo.GetString("MatchMaker_40v40"),	
-			bHasTeam 	= false, 		
-			bIsLeader 	= false, 		
-			strName 	= "", 	
+			strLabel 	= Apollo.GetString("MatchMaker_40v40"),
+			bHasTeam 	= false,
+			bIsLeader 	= false,
+			strName 	= "",
 			eGuildType 	= GuildLib.GuildType_WarParty,
 			eRatingType = MatchingGame.RatingType.Warplot,
 			strRating	= "0"
 		}
 	}
-	
-	self.tArenaTeams = 
-	{	
+
+	self.tArenaTeams =
+	{
 		{
-			strLabel 	= Apollo.GetString("ArenaRoster_2v2"),		
-			bHasTeam 	= false,		
-			bIsLeader 	= false,		
-			strName 	= "",		
-			eGuildType	= GuildLib.GuildType_ArenaTeam_2v2,	
-			eRatingType = MatchingGame.RatingType.Arena2v2, 	
+			strLabel 	= Apollo.GetString("ArenaRoster_2v2"),
+			bHasTeam 	= false,
+			bIsLeader 	= false,
+			strName 	= "",
+			eGuildType	= GuildLib.GuildType_ArenaTeam_2v2,
+			eRatingType = MatchingGame.RatingType.Arena2v2,
 			strRating 	= "0"
 		},
 		{
-			strLabel 	= Apollo.GetString("ArenaRoster_3v3"), 	
-			bHasTeam 	= false, 		
-			bIsLeader 	= false, 		
-			strName 	= "", 	
-			eGuildType 	= GuildLib.GuildType_ArenaTeam_3v3, 	
-			eRatingType = MatchingGame.RatingType.Arena3v3, 	
+			strLabel 	= Apollo.GetString("ArenaRoster_3v3"),
+			bHasTeam 	= false,
+			bIsLeader 	= false,
+			strName 	= "",
+			eGuildType 	= GuildLib.GuildType_ArenaTeam_3v3,
+			eRatingType = MatchingGame.RatingType.Arena3v3,
 			strRating 	= "0"
 		},
 		{
-			strLabel 	= Apollo.GetString("ArenaRoster_5v5"), 	
-			bHasTeam 	= false, 		
-			bIsLeader 	= false, 		
-			strName 	= "", 	
-			eGuildType 	= GuildLib.GuildType_ArenaTeam_5v5, 	
-			eRatingType = MatchingGame.RatingType.Arena5v5, 	
+			strLabel 	= Apollo.GetString("ArenaRoster_5v5"),
+			bHasTeam 	= false,
+			bIsLeader 	= false,
+			strName 	= "",
+			eGuildType 	= GuildLib.GuildType_ArenaTeam_5v5,
+			eRatingType = MatchingGame.RatingType.Arena5v5,
 			strRating 	= "0"
 		}
 	}
-	
-	
+
+
 	self.tGroupFinderRoleButtons =
 	{
 		[MatchingGame.Roles.Tank] 	= self.wndRole:FindChild("TankBtn"),
 		[MatchingGame.Roles.Healer] = self.wndRole:FindChild("HealerBtn"),
 		[MatchingGame.Roles.DPS] 	= self.wndRole:FindChild("DPSBtn"),
 	}
-	
+
 	self.tRoleCheckRoleButtons =
 	{
 		[MatchingGame.Roles.Tank] 	= self.wndConfirmRole:FindChild("TankBtn"),
 		[MatchingGame.Roles.Healer] = self.wndConfirmRole:FindChild("HealerBtn"),
 		[MatchingGame.Roles.DPS] 	= self.wndConfirmRole:FindChild("DPSBtn"),
 	}
-	
-	-- TODO: demo stuff that needs to be pulled out
-	if IsDemo() then
-		self.wndModeContent:Show(false)
-		self.wndModeListToggle:Show(false)
-		self.wndMain:FindChild("DemoWarning"):Show(true)
-	end
-	
+
 	if MatchingGame.IsInMatchingGame() == true then
 		self.wndJoin:SetText(Apollo.GetString("MatchMaker_LeaveGame"))
 	end
-	
+
 	if MatchingGame.IsGamePending() == true then
 		self:OnGameReady()
 	else
 		self:DisplayPendingInfo()
 	end
-	
+
 	if MatchingGame.IsRoleCheckActive() == true then
 		self:OnRoleCheckStarted()
 	end
@@ -258,7 +251,7 @@ end
 -- PvP_MatchMaker Functions
 -----------------------------------------------------------------------------------------------
 
-function PvP_MatchMaker:OnToggleMatchMaker()
+function PvP_MatchMaker:OnTogglePvP_MatchMaker()
 	if self.wndMain:IsShown() then
 		self.wndMain:Show(false)
 		Event_FireGenericEvent("LFGWindowHasBeenClosed")
@@ -285,16 +278,16 @@ end
 
 function PvP_MatchMaker:OnPvP_MatchMakerOn()
 	self.wndList:DestroyChildren()
-	self.wndMain:Show(true)	
+	self.wndMain:Show(true)
 	self.wndModeList:Show(false)
-	
+
 	local tGames = MatchingGame.GetAvailableMatchingGames(self.eSelectedTab)
 	if tGames == nil then
 		return
 	end
 
 	self:SetFlagToggleButton()
-	
+
 	if self.eSelectedTab == MatchingGame.MatchType.Battleground then
 		local strMode = Apollo.GetString("MatchMaker_PracticeGrounds")
 		self.wndModeListToggle:SetText(strMode)
@@ -304,7 +297,7 @@ function PvP_MatchMaker:OnPvP_MatchMakerOn()
 	elseif self.eSelectedTab == MatchingGame.MatchType.Arena then
 		self.wndModeListToggle:SetText(Apollo.GetString("MatchMaker_Arenas"))
 		self.wndModeList:FindChild("ArenaBtn"):SetCheck(true)
-		self:HelperConfigureListAndTeams(self.tArenaTeams) 
+		self:HelperConfigureListAndTeams(self.tArenaTeams)
 		self.wndListParent:FindChild("HeaderLabel"):SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_AvailableArena")))
 	elseif self.eSelectedTab == MatchingGame.MatchType.Dungeon then
 		local strMode = Apollo.GetString("CRB_Dungeons")
@@ -320,34 +313,34 @@ function PvP_MatchMaker:OnPvP_MatchMakerOn()
 		self.wndListParent:FindChild("HeaderLabel"):SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_CurrentPrepend"), strMode))
 	elseif self.eSelectedTab == MatchingGame.MatchType.Warplot then
 		self.wndModeListToggle:SetText(Apollo.GetString("MatchMaker_Warplots"))
-		self.wndModeList:FindChild("WarplotsBtn"):SetCheck(true)	
-		self:HelperConfigureListAndTeams(self.tWarparty) 
-		self.wndListParent:FindChild("HeaderLabel"):SetText(Apollo.GetString("MatchMaker_AvailableWarplots"))		
+		self.wndModeList:FindChild("WarplotsBtn"):SetCheck(true)
+		self:HelperConfigureListAndTeams(self.tWarparty)
+		self.wndListParent:FindChild("HeaderLabel"):SetText(Apollo.GetString("MatchMaker_AvailableWarplots"))
 	elseif self.eSelectedTab == MatchingGame.MatchType.RatedBattleground then
 		local strMode = Apollo.GetString("CRB_Battlegrounds")
 		self.wndModeListToggle:SetText(strMode)
 		self.wndModeList:FindChild("RatedBattlegroundBtn"):SetCheck(true)
 		self:HelperConfigureListAndRating()
-		self.wndListParent:FindChild("HeaderLabel"):SetText(Apollo.GetString("MatchMaker_AvailableBGs"))	
+		self.wndListParent:FindChild("HeaderLabel"):SetText(Apollo.GetString("MatchMaker_AvailableBGs"))
 	elseif self.eSelectedTab == MatchingGame.MatchType.OpenArena then
 		self.wndModeListToggle:SetText(Apollo.GetString("MatchMaker_OpenArenas"))
 		self.wndModeList:FindChild("OpenArenaBtn"):SetCheck(true)
 		self:HelperConfigureListOnly()
-		self.wndListParent:FindChild("HeaderLabel"):SetText(Apollo.GetString("MatchMaker_AvailableOpenArenas"))		
+		self.wndListParent:FindChild("HeaderLabel"):SetText(Apollo.GetString("MatchMaker_AvailableOpenArenas"))
 	end
-	
+
 	if self.wndRole:IsShown() then
 		for idx, wndRoleBtn in pairs(self.tGroupFinderRoleButtons) do
 			self.tGroupFinderRoleButtons[idx]:Enable(false)
 		end
-	
+
 		local tEligibleRoles = MatchingGame.GetEligibleRoles()
 		if tEligibleRoles ~= nil then
 			for idx, eRole in ipairs(tEligibleRoles) do
 				self.tGroupFinderRoleButtons[eRole]:Enable(true)
 			end
 		end
-		
+
 		local tSelectedRoles = MatchingGame.GetSelectedRoles()
 		if tSelectedRoles ~= nil then
 			for idx, eRole in ipairs(tSelectedRoles) do
@@ -355,7 +348,7 @@ function PvP_MatchMaker:OnPvP_MatchMakerOn()
 			end
 		end
 	end
-	
+
 	for idx, matchGame in ipairs(tGames) do
 		local wndEntry = Apollo.LoadForm("PvP_MatchMaker.xml", "GameEntry", self.wndList, self)
 		wndEntry:FindChild("MatchingGameSelectBtn"):SetText("      " .. matchGame:GetName())
@@ -364,31 +357,39 @@ function PvP_MatchMaker:OnPvP_MatchMakerOn()
 		wndEntry:FindChild("MatchingGameSelectBtn"):SetTooltip(matchGame:GetDescription())
 		wndEntry:FindChild("EntryInfoBtn"):SetData(matchGame:GetDescription())
 	end
-	
+
 	self:RefreshStatus()
 	self.wndList:ArrangeChildrenVert()
 end
 
 function PvP_MatchMaker:HelperConfigureListOnly()
 	local nLeft, nTop, nRight, nBottom = self.wndListParent:GetAnchorOffsets()
-	self.wndListParent:SetAnchorOffsets(nLeft, 0, nRight, 0)
-	
+	local nLeft2, nTop2, nRight2, nBottom2 = self.wndMyRating:GetAnchorOffsets()
+	self.wndListParent:SetAnchorOffsets(nLeft, 0, nRight, nTop2)
+
+	local tRating = MatchingGame.GetPvpRating(MatchingGame.RatingType.RatedBattleground)
+	if tRating then
+		self.wndMyRating:FindChild("RatingValue"):SetText(math.floor(GameLib.GetGearScore()) or 0)
+		self.wndMyRating:FindChild("RatingLabel"):SetText(Apollo.GetString("MatchMaker_GearScoreLabel"))
+	end
+
 	self.wndArenaTeams:Show(false)
 	self.wndRole:Show(false)
 	self.wndRealmFilterContainer:Show(false)
-	self.wndMyRating:Show(false)	
+	self.wndMyRating:Show(true)
 end
 
 function PvP_MatchMaker:HelperConfigureListAndRating()
 	local nLeft, nTop, nRight, nBottom = self.wndListParent:GetAnchorOffsets()
 	local nLeft2, nTop2, nRight2, nBottom2 = self.wndMyRating:GetAnchorOffsets()
 	self.wndListParent:SetAnchorOffsets(nLeft, 0, nRight, nTop2)
-	
+
 	local tRating = MatchingGame.GetPvpRating(MatchingGame.RatingType.RatedBattleground)
-	if tRating ~= nil then
-		self.wndMyRating:FindChild("RatingValue"):SetText(tRating.rating or "0")
+	if tRating then
+		self.wndMyRating:FindChild("RatingValue"):SetText(tRating.nRating or "0")
+		self.wndMyRating:FindChild("RatingLabel"):SetText(Apollo.GetString("MatchMaker_RatingLabelDefault"))
 	end
-	
+
 	self.wndArenaTeams:Show(false)
 	self.wndRole:Show(false)
 	self.wndRealmFilterContainer:Show(false)
@@ -401,44 +402,44 @@ function PvP_MatchMaker:HelperConfigureListAndRole() --dungeons & adventures
 	local nLeftRealm, nTopRealm, nRightRealm, nBottomRealm = self.wndRealmFilterContainer:GetAnchorOffsets()
 
 	self.wndListParent:SetAnchorOffsets(nLeft, nBottomRealm, nRight,0)
-	
+
 	self.wndArenaTeams:Show(false)
 	self.wndRole:Show(true)
 	self.wndRealmFilterContainer:Show(true)
-	self.wndMyRating:Show(false)	
+	self.wndMyRating:Show(false)
 end
 
 function PvP_MatchMaker:HelperConfigureListAndTeams(tTeam)
 	local nLeft, nTop, nRight, nBottom = self.wndListParent:GetAnchorOffsets()
 	local nLeft2, nTop2, nRight2, nBottom2 = self.wndArenaTeams:GetAnchorOffsets()
 	self.wndListParent:SetAnchorOffsets(nLeft, nBottom2, nRight,0)
-	
+
 	self.wndArenaTeams:Show(true)
 	self.wndRole:Show(false)
 	self.wndRealmFilterContainer:Show(false)
-	self.wndMyRating:Show(false)	
+	self.wndMyRating:Show(false)
 
 	self.wndArenaTeams:FindChild("ArenaHeaderLabel"):SetText(Apollo.GetString("MatchMaker_MyArenaTeam"))
-	
+
 	-- teams
 	self.wndArenaTeams:FindChild("TeamList"):DestroyChildren()
-	
+
 	for idx, tInfo in pairs(tTeam) do
 		local bFound = false
-		
+
 		for key, tCurrGuild in pairs(GuildLib.GetGuilds()) do
 			if tCurrGuild:GetType() == tTeam[idx].eGuildType then
 				tTeam[idx].bHasTeam = true
 				tTeam[idx].bIsLeader = tCurrGuild:GetMyRank() == 1
 				tTeam[idx].strName = tCurrGuild:GetName()
-				
+
 				local tRatings = tCurrGuild:GetPvpRatings()
-				tTeam[idx].nRating = tRatings.rating or 0	
-				
+				tTeam[idx].nRating = tRatings.nRating or 0
+
 				bFound = true
-			end	
+			end
 		end
-		
+
 		if not bFound then
 			tTeam[idx].bHasTeam = false
 			tTeam[idx].bIsLeader = false
@@ -450,11 +451,11 @@ function PvP_MatchMaker:HelperConfigureListAndTeams(tTeam)
 		wndEntry:FindChild("TeamRosterBtn"):SetData(tTeam[idx])
 		wndEntry:FindChild("TypeLabel"):SetText(tTeam[idx].strLabel)
 		wndEntry:FindChild("ArrowMark"):Show(true)
-		
+
 		local tRating = MatchingGame.GetPvpRating(tTeam[idx].eRatingType)
 		wndEntry:FindChild("MyRatingLabel"):SetText(Apollo.GetString("MatchMaker_MyRating"))
-		wndEntry:FindChild("MyRatingValue"):SetText(tRating.rating or 0)
-	
+		wndEntry:FindChild("MyRatingValue"):SetText(tRating.nRating or 0)
+
 		if tTeam[idx].bIsLeader == true then -- leader (we can assume has)
 			wndEntry:FindChild("LeaderMark"):Show(true)
 			wndEntry:FindChild("TeamLabel"):SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_TeamRating"), tTeam[idx].strName, tTeam[idx].nRating))
@@ -468,22 +469,22 @@ function PvP_MatchMaker:HelperConfigureListAndTeams(tTeam)
 	end
 
 	self.wndArenaTeams:FindChild("TeamList"):ArrangeChildrenVert()
-end	
+end
 
 function PvP_MatchMaker:OnClose()
 	Event_FireGenericEvent("LFGWindowHasBeenClosed")
 end
 
 function PvP_MatchMaker:OnEnteredCombat(unitPlayer, bInCombat)
-	if unitPlayer ~= GameLib.GetPlayerUnit() then 
-		return false 
+	if unitPlayer ~= GameLib.GetPlayerUnit() then
+		return false
 	end
-	
+
 	self.bInCombat = bInCombat
-	
+
 	if self.wndMain:IsShown() then
 		self:SetFlagToggleButton()
-	end	
+	end
 end
 
 function PvP_MatchMaker:OnPlayerChanged()
@@ -495,7 +496,7 @@ function PvP_MatchMaker:OnPlayerChanged()
 	if tGames == nil then
 		return
 	end
-	
+
 	self:RefreshStatus()
 end
 
@@ -522,7 +523,7 @@ function PvP_MatchMaker:OnGuildResult(guildUpdated, strName, nRank, eResult)
 		Apollo.CreateTimer("TeamUpdateTimer", 0.001, false)
 		--self:OnArenaTeamAddedOrDisbanded()
 	end
-	
+
 	if guildUpdated:GetType() == GuildLib.GuildType_WarParty then
 		Apollo.CreateTimer("WarpartyUpdateTimer", 0.001, false)
 		--self:OnWarpartyAddedOrDisbanded()
@@ -534,15 +535,15 @@ function PvP_MatchMaker:RefreshStatus()
 	if self.wndAllyConfirm:IsShown() or self.wndAllyEnemyConfirm:IsShown() then
 		self:DisplayPendingInfo()
 	end
-	
+
 	if self.wndJoinGame:IsShown() and not MatchingGame.IsGamePending() then
 		self.wndJoinGame:Show(false)
 	end
-	
+
 	if not MatchingGame.IsVoteSurrenderActive() then
 		self.wndVoteSurrender:Show(false)
 	end
-	
+
 	if not MatchingGame.IsVoteKickActive() then
 		self.wndVoteKick:Show(false)
 	end
@@ -555,14 +556,14 @@ function PvP_MatchMaker:RefreshStatus()
 	if tChildren == nil then
 		return
 	end
-	
+
 	for idx, wndEntry in ipairs(tChildren) do
 		local matchGame = wndEntry:FindChild("MatchingGameSelectBtn"):GetData()
 
 		if matchGame ~= nil then
 			wndEntry:FindChild("QueueLabel"):Show(matchGame:IsQueued())
 			wndEntry:FindChild("MatchingGameSelectBtn"):Enable(not bQueued)
-			
+
 			wndEntry:FindChild("MatchingGameSelectBtn"):SetCheck(false)
 			for strMatchName, oMatch in pairs(self.matchesSelected) do
 				if oMatch == matchGame then
@@ -570,13 +571,13 @@ function PvP_MatchMaker:RefreshStatus()
 					break
 				end
 			end
-			
+
 			--wndEntry:SetCheck(self.matchSelectedDesc == matchGame)
 		end
-	end	
-		
+	end
+
 	Apollo.StopTimer("QueueTimer")
-	
+
 	local bIsQueued = MatchingGame.IsQueuedForMatching()
 	self.wndTimeInQueue:SetText("")
 	self.wndAverageWaitTime:SetText("")
@@ -588,9 +589,9 @@ function PvP_MatchMaker:RefreshStatus()
 	self.wndQueueInfo:FindChild("LabelTime"):Show(false)
 	self.wndQueueInfo:FindChild("LabelWaitTime"):Show(false)
 
-	self.wndJoin:Show(true) 
-	self.wndJoinAsGroup:Show(true) 
-	self.wndLeaveGame:Show(false)	
+	self.wndJoin:Show(true)
+	self.wndJoinAsGroup:Show(true)
+	self.wndLeaveGame:Show(false)
 	self.wndTeleportIntoGame:Show(false)
 	self.wndFindReplacements:Show(false)
 	self.wndVoteDisband:Show(false)
@@ -600,42 +601,42 @@ function PvP_MatchMaker:RefreshStatus()
 	self.wndModeListToggle:Enable(true)
 
 	self.wndRealmFilter:SetCheck(Apollo.GetConsoleVariable(kstrConsoleRealmFilter) or false)
-	
+
 	local bWaitingForWarParty = false
 	local bQueuedGuild = false
-	
+
 	if next(self.matchesQueued) == nil and bIsQueued then -- queued, but we don't know what for
-		local tAllTypes = 
+		local tAllTypes =
 		{
-			MatchingGame.MatchType.Battleground, 
-			MatchingGame.MatchType.Arena, 
-			MatchingGame.MatchType.Dungeon, 
-			MatchingGame.MatchType.Adventure, 
-			MatchingGame.MatchType.Warplot, 
-			MatchingGame.MatchType.RatedBattleground, 
+			MatchingGame.MatchType.Battleground,
+			MatchingGame.MatchType.Arena,
+			MatchingGame.MatchType.Dungeon,
+			MatchingGame.MatchType.Adventure,
+			MatchingGame.MatchType.Warplot,
+			MatchingGame.MatchType.RatedBattleground,
 			MatchingGame.MatchType.OpenArena
 		}
-		
+
 		for key, nType in pairs(tAllTypes) do
 			local tGames = MatchingGame.GetAvailableMatchingGames(nType)
 			for key, matchGame in pairs(tGames) do
 				if matchGame:IsQueued() == true then
 					self.matchesQueued[matchGame:GetName()] = matchGame
-					
+
 					if matchGame:GetType() == MatchingGame.MatchType.Warplot then
 						bWaitingForWarParty = not MatchingGame.IsWarpartyQueued()
 						bQueuedGuild = MatchingGame.DoesRequestWarplotInit()
 					end
 				end
 			end
-		end	
+		end
 	end
-		
+
 	if bIsQueued then
 		self.wndQueueInfo:FindChild("LabelType"):Show(true)
 		self.wndQueueInfo:FindChild("LabelTime"):Show(true)
 		self.wndQueueInfo:FindChild("LabelWaitTime"):Show(true)
-	
+
 		local nAverageWaitTime = MatchingGame.GetAverageWaitTime()
 		local strWaitText = ""
 		if nAverageWaitTime == 0 then
@@ -644,23 +645,23 @@ function PvP_MatchMaker:RefreshStatus()
 			strWaitText = self:GetTimeString(MatchingGame.GetAverageWaitTime())
 		end
 		self.wndAverageWaitTime:SetText(strWaitText)
-		self.fTimeInQueue = MatchingGame.GetTimeInQueue()	
+		self.fTimeInQueue = MatchingGame.GetTimeInQueue()
 		self.wndTimeInQueue:SetText(self:GetTimeString(self.fTimeInQueue))
 		self:StartQueueTimer()
-		
+
 		--See if we have more then one element in the table or just one element in the table
 		local oFirstQueuedKey = next(self.matchesQueued)
-		if oFirstQueuedKey ~= nil and next(self.matchesQueued, oFirstQueuedKey) ~= nil then 
+		if oFirstQueuedKey ~= nil and next(self.matchesQueued, oFirstQueuedKey) ~= nil then
 			self.wndQueueInfo:FindChild("QueueType"):SetText(Apollo.GetString("MatchMaker_QueuedForSeveral"))
 		elseif next(self.matchesQueued) ~= nil then
 			self.wndQueueInfo:FindChild("QueueType"):SetText(self.matchesQueued[oFirstQueuedKey]:GetName())
 		end
-		
+
 		self.wndRole:FindChild("RoleHeaderLabel"):SetText(Apollo.GetString("MatchMaker_QueuedAs"))
 	else
 		self.wndRole:FindChild("RoleHeaderLabel"):SetText(Apollo.GetString("MatchMaker_SetRole"))
 	end
-	
+
 	local tSelectedRoles = MatchingGame.GetSelectedRoles()
 	if tSelectedRoles then
 		for idx, eRole in ipairs(tSelectedRoles) do
@@ -669,8 +670,8 @@ function PvP_MatchMaker:RefreshStatus()
 			--self.tGroupFinderRoleButtons[eRole]:Enable(bIsQueued == false)
 		end
 	end
-	
-	
+
+
 	--if MatchingGame.CanLeaveQueueAsGroup() then
 		--self.wndJoinAsGroup:Enable(true)
 	if next(self.matchesSelected) ~= nil then
@@ -678,40 +679,40 @@ function PvP_MatchMaker:RefreshStatus()
 		for strMatchName, oMatch in pairs(self.matchesSelected) do
 			bDoesGroupMeetRequirements = bDoesGroupMeetRequirements and oMatch:DoesGroupMeetRequirements()
 		end
-	
+
 		self.wndJoinAsGroup:Enable(bDoesGroupMeetRequirements and MatchingGame.CanQueueAsGroup() and not MatchingGame.IsRoleCheckActive())
 	else
 		self.wndJoinAsGroup:Enable(false)
 	end
-	
+
 	self.wndModeListToggle:Enable(true)
-	self.wndListBlocker:Show(false)	
-	
+	self.wndListBlocker:Show(false)
+
 	local bQueuedSolo = bIsQueued and not MatchingGame.IsQueuedAsGroup()
 	local bQueuedGroup = bIsQueued and MatchingGame.IsQueuedAsGroup()
 	local bInGame = MatchingGame.IsInMatchingGame()
 	local bInInstance = MatchingGame.IsInMatchingInstance()
 	local bLeader = GroupLib.AmILeader()
 	local bIsGameFinished = MatchingGame.IsMatchingGameFinished()
-			
+
 	if bInGame then
 		--self.wndJoin:ChangeArt("CRB_Basekit:kitBtn_Metal_LargeRed")
 		self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("MatchMaker_InGame"))
 		self.wndQueueInfo:FindChild("QueueStatus"):SetTextColor(kcrActiveColor)
 		self.wndJoin:Show(false)
 		self.wndJoinAsGroup:Show(false)
-		
+
 		if bIsGameFinished then
-			self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("Matchmaker_NotQueued"))
-			self.wndQueueInfo:FindChild("QueueStatus"):SetTextColor(kcrInactiveColor) 
+			self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("MatchMaker_NotQueued"))
+			self.wndQueueInfo:FindChild("QueueStatus"):SetTextColor(kcrInactiveColor)
 			if bLeader then
 				self.wndAltLeaveGame:Show(true)
 				self.wndJoinAsGroup:Show(true)
-				self.wndModeListToggle:Enable(true)	
-				self.wndListBlocker:Show(false)				
+				self.wndModeListToggle:Enable(true)
+				self.wndListBlocker:Show(false)
 			else
 				self.wndLeaveGame:Show(true)
-			end	
+			end
 		else
 			self.wndModeListToggle:Enable(false)
 			self.wndListBlocker:Show(true)
@@ -733,7 +734,7 @@ function PvP_MatchMaker:RefreshStatus()
 					self.wndFindReplacements:Show(true)
 				elseif bLeader and MatchingGame.IsLookingForReplacements() then
 					self.wndAltLeaveGame:Show(true)
-					self.wndCancelReplacements:Show(true)		
+					self.wndCancelReplacements:Show(true)
 				else
 					self.wndVoteDisband:Show(true)
 					self.wndAltLeaveGame:Show(true)
@@ -741,7 +742,7 @@ function PvP_MatchMaker:RefreshStatus()
 			end
 		end
 	end
-		
+
 	-- we can be queued while in a game, so this needs to be a separate if-else block
 	if bQueuedSolo then
 		--self.wndJoin:SetText(Apollo.GetString("CRB_LeaveQueue"))
@@ -758,48 +759,48 @@ function PvP_MatchMaker:RefreshStatus()
 		else
 			self.wndQueueInfo:FindChild("LeaveQueueBtn"):SetText(Apollo.GetString("MatchMaker_LeaveQueue"))
 		end
-		self.wndQueueInfo:FindChild("QueueStatus"):SetTextColor(kcrActiveColor)		
+		self.wndQueueInfo:FindChild("QueueStatus"):SetTextColor(kcrActiveColor)
 	elseif bQueuedGroup then
 		if bWaitingForWarParty then
-			self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("Matchmaker_GroupAppend"), PvP_MatchMaker_WaitingWarparty)
+			self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("MatchMaker_GroupAppend"), PvP_MatchMaker_WaitingWarparty)
 		else
-			self.wndQueueInfo:FindChild("QueueStatus"):SetText(String_GetWeaselString(Apollo.GetString("Matchmaker_GroupAppend"), Apollo.GetString("MatchMaker_InQueue")))
+			self.wndQueueInfo:FindChild("QueueStatus"):SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_GroupAppend"), Apollo.GetString("MatchMaker_InQueue")))
 		end
-		self.wndQueueInfo:FindChild("QueueStatus"):SetTextColor(kcrActiveColor)	
+		self.wndQueueInfo:FindChild("QueueStatus"):SetTextColor(kcrActiveColor)
 		if MatchingGame.CanLeaveQueueAsGroup() then
 			self.wndQueueInfo:FindChild("LeaveQueueBtn"):Show(true)
 			self.wndQueueInfo:FindChild("LeaveQueueBtn"):Enable(true)
 			if bQueuedGuild then
-				self.wndQueueInfo:FindChild("LeaveQueueBtn"):SetText(Apollo.GetString("MatchMaker_LeaveGuildQueue"))	
+				self.wndQueueInfo:FindChild("LeaveQueueBtn"):SetText(Apollo.GetString("MatchMaker_LeaveGuildQueue"))
 			else
-				self.wndQueueInfo:FindChild("LeaveQueueBtn"):SetText(Apollo.GetString("MatchMaker_LeaveGroupQueue"))	
+				self.wndQueueInfo:FindChild("LeaveQueueBtn"):SetText(Apollo.GetString("MatchMaker_LeaveGroupQueue"))
 			end
 		end
 	elseif not bInGame then
-		self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("Matchmaker_NotQueued"))
+		self.wndQueueInfo:FindChild("QueueStatus"):SetText(Apollo.GetString("MatchMaker_NotQueued"))
 	end
-	
+
 	self.wndQueueInfo:FindChild("LeaveQueueFraming"):Show(self.wndQueueInfo:FindChild("LeaveQueueBtn"):IsEnabled())
-	
-	self.wndJoin:Enable((not MatchingGame.IsQueuedAsGroup() and self.eSelectedTab ~= MatchingGame.MatchType.Arena 
+
+	self.wndJoin:Enable((not MatchingGame.IsQueuedAsGroup() and self.eSelectedTab ~= MatchingGame.MatchType.Arena
 		and not bIsQueued and next(self.matchesSelected) ~= nil and not MatchingGame.IsRoleCheckActive()) or bInGame )
 end
 
 function PvP_MatchMaker:OnGameReady(bInProgress)
 	local strMessage = ""
-	
+
 	if next(self.matchesQueued) == nil then -- queued, but we don't know what for
-		local tAllTypes = 
+		local tAllTypes =
 		{
-			MatchingGame.MatchType.Battleground, 
-			MatchingGame.MatchType.Arena, 
-			MatchingGame.MatchType.Dungeon, 
-			MatchingGame.MatchType.Adventure, 
-			MatchingGame.MatchType.Warplot, 
-			MatchingGame.MatchType.RatedBattleground, 
+			MatchingGame.MatchType.Battleground,
+			MatchingGame.MatchType.Arena,
+			MatchingGame.MatchType.Dungeon,
+			MatchingGame.MatchType.Adventure,
+			MatchingGame.MatchType.Warplot,
+			MatchingGame.MatchType.RatedBattleground,
 			MatchingGame.MatchType.OpenArena
 		}
-		
+
 		for key, nType in pairs(tAllTypes) do
 			local tGames = MatchingGame.GetAvailableMatchingGames(nType)
 			for key, matchGame in pairs(tGames) do
@@ -809,26 +810,26 @@ function PvP_MatchMaker:OnGameReady(bInProgress)
 			end
 		end
 	end
-	
+
 	local strFirstMatchName = next(self.matchesQueued)
 	if strFirstMatchName ~= nil and (self.matchesQueued[strFirstMatchName]:GetType() == MatchingGame.MatchType.Adventure or self.matchesQueued[strFirstMatchName]:GetType() == MatchingGame.MatchType.Dungeon) then
 		strMessage = Apollo.GetString("MatchMaker_Group")
 	else
 		strMessage = Apollo.GetString("MatchMaker_Match")
 	end
-	
+
 	if bInProgress then
 		strMessage = String_GetWeaselString(Apollo.GetString("MatchMaker_InProgress"), strMessage)
 	end
-	
+
 	if strFirstMatchName ~= nil then
 		strMessage = String_GetWeaselString(Apollo.GetString("MatchMaker_FoundSpecific"), strFirstMatchName, strMessage)
 	else
 		strMessage = String_GetWeaselString(Apollo.GetString("MatchMaker_Found"), strMessage)
 	end
-	
+
 	self.wndJoinGame:FindChild("Title"):SetText(strMessage)
-	
+
 	self.wndJoinGame:Show(true)
 	self.wndJoinGame:ToFront()
 	Sound.Play(166)
@@ -898,14 +899,14 @@ function PvP_MatchMaker:OnRoleCheckStarted()
 	for idx, wndRoleBtn in pairs(self.tRoleCheckRoleButtons) do
 		self.tRoleCheckRoleButtons[idx]:Enable(false)
 	end
-	
+
 	local tEligibleRoles = MatchingGame.GetEligibleRoles()
 	if tEligibleRoles ~= nil then
 		for idx, eRole in ipairs(tEligibleRoles) do
 			self.tRoleCheckRoleButtons[eRole]:Enable(true)
 		end
 	end
-	
+
 	local tSelectedRoles = MatchingGame.GetSelectedRoles()
 	if tSelectedRoles ~= nil then
 		for idx, eRole in ipairs(tSelectedRoles) do
@@ -934,7 +935,7 @@ function PvP_MatchMaker:OnAcceptRole()
 	if tSelectedRoles == nil then
 		return
 	end
-	
+
 	MatchingGame.ConfirmRole()
 end
 
@@ -951,23 +952,23 @@ function PvP_MatchMaker:OnModeBtnCheck()
 end
 
 function PvP_MatchMaker:OnTeamRosterBtn(wndHandler, wndControl)
-	
+
 	local tTeam = wndControl:GetData()
-	
+
 	if tTeam ~= nil then
 		-- Position
 		local tScreen = Apollo.GetDisplaySize()
 		local tPointer = Apollo.GetMouse()
 		local nLeft, nTop, nRight, nBottom = self.wndMain:GetAnchorOffsets()
 		local nMidpoint = (nRight - nLeft) / 2
-		
-		local tPos = 
+
+		local tPos =
 		{
 			nX 			= nRight,
 			nY 			= nTop,
 			bDrawOnLeft = false
 		}
-		
+
 		if nMidpoint + nLeft > (tScreen.nWidth / 2) then
 			tPos.nX = nLeft
 			tPos.bDrawOnLeft = true
@@ -994,11 +995,11 @@ function PvP_MatchMaker:OnEntryInfoCheck(wndHandler, wndControl)
 	if self.wndInfoPanel ~= nil and self.wndInfoPanel:IsShown() then
 		self:OnEntryInfoUncheck()
 	end
-	
-	if wndControl:GetData() == nil then 
-		return 
+
+	if wndControl:GetData() == nil then
+		return
 	end
-	
+
 	local wndInfo = Apollo.LoadForm("PvP_MatchMaker.xml", "MoreInfoPanel", nil, self)
 	local nLeft, nTop, nRight, nBottom = wndInfo:GetAnchorOffsets()
 	local nDescLeft, nDescTop, nDescRight, nDescBottom = wndInfo:FindChild("Description"):GetAnchorOffsets()
@@ -1007,7 +1008,7 @@ function PvP_MatchMaker:OnEntryInfoCheck(wndHandler, wndControl)
 	wndControl:AttachWindow(wndInfo)
 	wndInfo:FindChild("Description"):SetText(wndControl:GetData())
 	wndInfo:FindChild("Description"):SetHeightToContentHeight()
-	
+
 	local nDescLeft2, nDescTop2, nDescRight2, nDescBottom2 = wndInfo:FindChild("Description"):GetAnchorOffsets()
 	nBottom = math.max(nBottom, nDescBottom2 + (nBottom - nDescBottom)) -- biggest; default or or what's used
 	wndInfo:SetAnchorOffsets(nLeft, nTop, nRight, nBottom)
@@ -1042,7 +1043,7 @@ end
 -- PvP_MatchMakerForm Functions
 -----------------------------------------------------------------------------------------------
 
-function PvP_MatchMaker:OnJoin()	
+function PvP_MatchMaker:OnJoin()
 --[[	local bInGame = MatchingGame.IsInMatchingGame()
 	if bInGame then
 		MatchingGame.LeaveMatchingGame()
@@ -1054,19 +1055,22 @@ function PvP_MatchMaker:OnJoin()
 		MatchingGame.LeaveMatchingQueue()
 		return
 	end	--]]
-	
+
 	if next(self.matchesSelected) == nil then
 		return
 	end
-	
+
+	self.matchesQueued = {}
 	for strMatchName, oMatch in pairs(self.matchesSelected) do
 		self.matchesQueued[strMatchName] = oMatch
 	end
 	
+	self.eQueuedTab = self.eSelectedTab
+
 	MatchingGame.Queue(self.matchesSelected)
 end
 
-function PvP_MatchMaker:OnJoinAsGroup()	
+function PvP_MatchMaker:OnJoinAsGroup()
 --[[	if MatchingGame.CanLeaveQueueAsGroup() then
 		MatchingGame.LeaveMatchingQueueAsGroup()
 		return
@@ -1076,16 +1080,18 @@ function PvP_MatchMaker:OnJoinAsGroup()
 		return
 	end
 
+	self.matchesQueued = {}
 	for strMatchName, oMatch in pairs(self.matchesSelected) do
 		self.matchesQueued[strMatchName] = oMatch
 	end
-	
+
 	if MatchingGame.CanQueueAsGroup() then
 		MatchingGame.QueueAsGroup(self.matchesSelected)
+		self.eQueuedTab = self.eSelectedTab
 		return
 	end
-	
-	
+
+
 end
 
 function PvP_MatchMaker:OnLeaveQueueBtn(wndHandler, wndControl)
@@ -1093,7 +1099,7 @@ function PvP_MatchMaker:OnLeaveQueueBtn(wndHandler, wndControl)
 		MatchingGame.LeaveMatchingQueueAsGroup()
 	elseif 	MatchingGame.IsQueuedForMatching() then
 		MatchingGame.LeaveMatchingQueue()
-	end	
+	end
 end
 
 function PvP_MatchMaker:OnLeaveMatchBtn(wndHandler, wndControl)
@@ -1123,7 +1129,7 @@ end
 function PvP_MatchMaker:OnMatchingGameSelect(wndHandler, wndControl)
 	--local parent = wnd:GetParent()
 	local matchGame = wndControl:GetData()
-	
+
 	if matchGame:IsRandom() then --If a random type match is selected, select no others
 		self.matchesSelected = {}
 	else --If a non random type match is selected, clear any random selections
@@ -1134,14 +1140,14 @@ function PvP_MatchMaker:OnMatchingGameSelect(wndHandler, wndControl)
 		end
 	end
 	self.matchesSelected[matchGame:GetName()] = matchGame
-	
+
 	self:RefreshStatus()
 	--self:OnMatchingGameOption(parent)
 end
 
 function PvP_MatchMaker:OnMatchingGameUnSelect(wndHandler, wndControl, eMouseButton)
 	local matchGame = wndControl:GetData()
-	
+
 	self.matchesSelected[matchGame:GetName()] = nil
 	self:RefreshStatus()
 end
@@ -1154,6 +1160,8 @@ end--]]
 
 function PvP_MatchMaker:OnYes(wndHandler, wndControl)
 	MatchingGame.RespondToPendingGame(true)
+	self.eSelectedTab = self.eQueuedTab
+	self:OnPvP_MatchMakerOn()
 	self.wndJoinGame:Show(false)
 end
 
@@ -1197,9 +1205,9 @@ function PvP_MatchMaker:OnSelectBattlegrounds(wndHandler, wndControl)
 	if self.eSelectedTab == MatchingGame.MatchType.Battleground then
 		return
 	end
-	
+
 	self.matchesSelected = {}
-	
+
 	self.eSelectedTab = MatchingGame.MatchType.Battleground
 	self:OnPvP_MatchMakerOn()
 end
@@ -1208,9 +1216,9 @@ function PvP_MatchMaker:OnSelectArenas(wndHandler, wndControl)
 	if self.eSelectedTab == MatchingGame.MatchType.Arena then
 		return
 	end
-	
+
 	self.matchesSelected = {}
-	
+
 	self.eSelectedTab = MatchingGame.MatchType.Arena
 	self:OnPvP_MatchMakerOn()
 end
@@ -1219,9 +1227,9 @@ function PvP_MatchMaker:OnSelectDungeons(wndHandler, wndControl)
 	if self.eSelectedTab == MatchingGame.MatchType.Dungeon then
 		return
 	end
-	
+
 	self.matchesSelected = {}
-	
+
 	self.eSelectedTab = MatchingGame.MatchType.Dungeon
 	self:OnPvP_MatchMakerOn()
 end
@@ -1230,9 +1238,9 @@ function PvP_MatchMaker:OnSelectAdventures(wndHandler, wndControl)
 	if self.eSelectedTab == MatchingGame.MatchType.Adventure then
 		return
 	end
-	
+
 	self.matchesSelected = {}
-	
+
 	self.eSelectedTab = MatchingGame.MatchType.Adventure
 	self:OnPvP_MatchMakerOn()
 end
@@ -1241,9 +1249,9 @@ function PvP_MatchMaker:OnSelectWarplots(wndHandler, wndControl)
 	if self.eSelectedTab == MatchingGame.MatchType.Warplot then
 		return
 	end
-	
+
 	self.matchesSelected = {}
-	
+
 	self.eSelectedTab = MatchingGame.MatchType.Warplot
 	self:OnPvP_MatchMakerOn()
 end
@@ -1252,9 +1260,9 @@ function PvP_MatchMaker:OnSelectRatedBattlegrounds(wndHandler, wndControl)
 	if self.eSelectedTab == MatchingGame.MatchType.RatedBattleground then
 		return
 	end
-	
+
 	self.matchesSelected = {}
-	
+
 	self.eSelectedTab = MatchingGame.MatchType.RatedBattleground
 	self:OnPvP_MatchMakerOn()
 end
@@ -1263,9 +1271,9 @@ function PvP_MatchMaker:OnSelectOpenArenas(wndHandler, wndControl)
 	if self.eSelectedTab == MatchingGame.MatchType.OpenArena then
 		return
 	end
-	
+
 	self.matchesSelected = {}
-	
+
 	self.eSelectedTab = MatchingGame.MatchType.OpenArena
 	self:OnPvP_MatchMakerOn()
 end
@@ -1281,11 +1289,11 @@ end
 function PvP_MatchMaker:OnTankChecked(wndHandler, wndControl)
 	if wndHandler == self.tRoleCheckRoleButtons[MatchingGame.Roles.Tank] or wndHandler == self.tGroupFinderRoleButtons[MatchingGame.Roles.Tank] then
 		self.tGroupFinderRoleButtons[MatchingGame.Roles.Tank]:SetCheck(true)
-		self.tRoleCheckRoleButtons[MatchingGame.Roles.Tank]:SetCheck(true)	
+		self.tRoleCheckRoleButtons[MatchingGame.Roles.Tank]:SetCheck(true)
 	end
 
 	MatchingGame.SelectRole(MatchingGame.Roles.Tank, true)
-	
+
 	local tSelectedRoles = MatchingGame.GetSelectedRoles()
 	self.wndConfirmRole:FindChild("AcceptButton"):Enable(#tSelectedRoles > 0)
 end
@@ -1293,11 +1301,11 @@ end
 function PvP_MatchMaker:OnTankUnchecked(wndHandler, wndControl)
 	if wndHandler == self.tRoleCheckRoleButtons[MatchingGame.Roles.Tank] or wndHandler == self.tGroupFinderRoleButtons[MatchingGame.Roles.Tank] then
 		self.tGroupFinderRoleButtons[MatchingGame.Roles.Tank]:SetCheck(false)
-		self.tRoleCheckRoleButtons[MatchingGame.Roles.Tank]:SetCheck(false)	
+		self.tRoleCheckRoleButtons[MatchingGame.Roles.Tank]:SetCheck(false)
 	end
 
 	MatchingGame.SelectRole(MatchingGame.Roles.Tank, false)
-	
+
 	local tSelectedRoles = MatchingGame.GetSelectedRoles()
 	self.wndConfirmRole:FindChild("AcceptButton"):Enable(#tSelectedRoles > 0)
 end
@@ -1305,11 +1313,11 @@ end
 function PvP_MatchMaker:OnHealerChecked(wndHandler, wndControl)
 	if wndHandler == self.tRoleCheckRoleButtons[MatchingGame.Roles.Healer] or wndHandler == self.tGroupFinderRoleButtons[MatchingGame.Roles.Healer] then
 		self.tGroupFinderRoleButtons[MatchingGame.Roles.Healer]:SetCheck(true)
-		self.tRoleCheckRoleButtons[MatchingGame.Roles.Healer]:SetCheck(true)	
+		self.tRoleCheckRoleButtons[MatchingGame.Roles.Healer]:SetCheck(true)
 	end
 
 	MatchingGame.SelectRole(MatchingGame.Roles.Healer, true)
-	
+
 	local tSelectedRoles = MatchingGame.GetSelectedRoles()
 	self.wndConfirmRole:FindChild("AcceptButton"):Enable(#tSelectedRoles > 0)
 end
@@ -1317,11 +1325,11 @@ end
 function PvP_MatchMaker:OnHealerUnchecked(wndHandler, wndControl)
 	if wndHandler == self.tRoleCheckRoleButtons[MatchingGame.Roles.Healer] or wndHandler == self.tGroupFinderRoleButtons[MatchingGame.Roles.Healer] then
 		self.tGroupFinderRoleButtons[MatchingGame.Roles.Healer]:SetCheck(false)
-		self.tRoleCheckRoleButtons[MatchingGame.Roles.Healer]:SetCheck(false)	
+		self.tRoleCheckRoleButtons[MatchingGame.Roles.Healer]:SetCheck(false)
 	end
-	
+
 	MatchingGame.SelectRole(MatchingGame.Roles.Healer, false)
-	
+
 	local tSelectedRoles = MatchingGame.GetSelectedRoles()
 	self.wndConfirmRole:FindChild("AcceptButton"):Enable(#tSelectedRoles > 0)
 end
@@ -1329,11 +1337,11 @@ end
 function PvP_MatchMaker:OnDPSChecked(wndHandler, wndControl)
 	if wndHandler == self.tRoleCheckRoleButtons[MatchingGame.Roles.DPS] or wndHandler == self.tGroupFinderRoleButtons[MatchingGame.Roles.DPS] then
 		self.tGroupFinderRoleButtons[MatchingGame.Roles.DPS]:SetCheck(true)
-		self.tRoleCheckRoleButtons[MatchingGame.Roles.DPS]:SetCheck(true)	
+		self.tRoleCheckRoleButtons[MatchingGame.Roles.DPS]:SetCheck(true)
 	end
 
 	MatchingGame.SelectRole(MatchingGame.Roles.DPS, true)
-	
+
 	local tSelectedRoles = MatchingGame.GetSelectedRoles()
 	self.wndConfirmRole:FindChild("AcceptButton"):Enable(#tSelectedRoles > 0)
 end
@@ -1341,11 +1349,11 @@ end
 function PvP_MatchMaker:OnDPSUnchecked(wndHandler, wndControl)
 	if wndHandler == self.tRoleCheckRoleButtons[MatchingGame.Roles.DPS] or wndHandler == self.tGroupFinderRoleButtons[MatchingGame.Roles.DPS] then
 		self.tGroupFinderRoleButtons[MatchingGame.Roles.DPS]:SetCheck(false)
-		self.tRoleCheckRoleButtons[MatchingGame.Roles.DPS]:SetCheck(false)	
+		self.tRoleCheckRoleButtons[MatchingGame.Roles.DPS]:SetCheck(false)
 	end
 
 	MatchingGame.SelectRole(MatchingGame.Roles.DPS, false)
-	
+
 	local tSelectedRoles = MatchingGame.GetSelectedRoles()
 	self.wndConfirmRole:FindChild("AcceptButton"):Enable(#tSelectedRoles > 0)
 end
@@ -1365,7 +1373,7 @@ function PvP_MatchMaker:GetTimeString(fTimeInSeconds)
 	if nSeconds < 10 then
 		return nMinutes .. ":0" .. nSeconds
 	end
-	
+
 	return nMinutes .. ":" .. nSeconds
 end
 
@@ -1403,23 +1411,23 @@ function PvP_MatchMaker:SetFlagToggleButton()
 	if self.wndFlagToggle == nil then
 		return
 	end
-	
+
 	Apollo.StopTimer("CooldownTimer")
 	local wndTxt = self.wndFlagInfo:FindChild("PvPStatus")
-	
+
 	local tFlagInfo = GameLib.GetPvpFlagInfo()
-	if tFlagInfo.isFlagged then
-		self.fCooldownTime = tFlagInfo.cooldown
-		if tFlagInfo.isForced then
+	if tFlagInfo.bIsFlagged then
+		self.fCooldownTime = tFlagInfo.nCooldown
+		if tFlagInfo.bIsForced then
 			if GameLib.GetCurrentZonePvpRules() == GameLib.CodeEnumZonePvpRules.Sanctuary and GameLib.IsPvpServer() ~= true then
 				wndTxt:SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_PvPFlag"), Apollo.GetString("MatchMaker_FlagOn")))
 			else
 				wndTxt:SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_PvPFlag"), Apollo.GetString("MatchMaker_FlagOff")))
 			end
-		
-			wndTxt:SetTextColor(kcrInactiveColor)		
-			self.wndFlagToggle:SetText(Apollo.GetString("Matchmaker_Locked"))		
-		elseif tFlagInfo.cooldown > 0 then
+
+			wndTxt:SetTextColor(kcrInactiveColor)
+			self.wndFlagToggle:SetText(Apollo.GetString("MatchMaker_Locked"))
+		elseif tFlagInfo.nCooldown > 0 then
 			local strFlagTimer = String_GetWeaselString(Apollo.GetString("MatchMaker_PvPFlag"), Apollo.GetString("MatchMaker_FlagOn"))
 			wndTxt:SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_FlagTimeRemaining"), strFlagTimer, self:GetTimeString(self.fCooldownTime)))
 			wndTxt:SetTextColor(kcrActiveColor)
@@ -1428,21 +1436,21 @@ function PvP_MatchMaker:SetFlagToggleButton()
 			Apollo.StartTimer("CooldownTimer")
 		else
 			wndTxt:SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_PvPFlag"), Apollo.GetString("MatchMaker_FlagOn")))
-			wndTxt:SetTextColor(kcrActiveColor)			
+			wndTxt:SetTextColor(kcrActiveColor)
 			self.wndFlagToggle:SetText(Apollo.GetString("MatchMaker_TurnPvPOff"))
 		end
-	elseif tFlagInfo.isForced then
+	elseif tFlagInfo.bIsForced then
 		wndTxt:SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_PvPFlag"), Apollo.GetString("MatchMaker_FlagOff")))
-		wndTxt:SetTextColor(kcrInactiveColor)		
-		self.wndFlagToggle:SetText(Apollo.GetString("Matchmaker_Locked"))		
+		wndTxt:SetTextColor(kcrInactiveColor)
+		self.wndFlagToggle:SetText(Apollo.GetString("MatchMaker_Locked"))
 	else
 		wndTxt:SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_PvPFlag"), Apollo.GetString("MatchMaker_FlagOff")))
-		wndTxt:SetTextColor(kcrInactiveColor)		
+		wndTxt:SetTextColor(kcrInactiveColor)
 		self.wndFlagToggle:SetText(Apollo.GetString("MatchMaker_TurnPvPOn"))
 	end
 
-	self.wndFlagToggle:Enable(not tFlagInfo.isForced)
-	
+	self.wndFlagToggle:Enable(not tFlagInfo.bIsForced)
+
 	-- disabling for combat
 	if self.bInCombat == true then
 		self.wndFlagToggle:Enable(false)
@@ -1454,7 +1462,7 @@ function PvP_MatchMaker:OnUnitPvpFlagsChanged(unitChanged)
 	if not unitChanged:IsThePlayer() then
 		return
 	end
-	
+
 	self:SetFlagToggleButton()
 end
 
@@ -1464,17 +1472,17 @@ function PvP_MatchMaker:OnCooldownTimer()
 	end
 
 	self.fCooldownTime = self.fCooldownTime - 1
-	
+
 	local strFlagTimer = String_GetWeaselString(Apollo.GetString("MatchMaker_PvPFlag"), Apollo.GetString("MatchMaker_FlagOn"))
 	self.wndFlagInfo:FindChild("PvPStatus"):SetText(String_GetWeaselString(Apollo.GetString("MatchMaker_FlagTimeRemaining"), strFlagTimer, self:GetTimeString(self.fCooldownTime)))
 	self.wndFlagInfo:FindChild("PvPStatus"):SetTextColor(kcrActiveColor)
-	
+
 	if self.bInCombat == true then
-		self.wndFlagToggle:SetText(Apollo.GetString("MatchMaker_PvPCombatLocked")) 
+		self.wndFlagToggle:SetText(Apollo.GetString("MatchMaker_PvPCombatLocked"))
 	else
 		self.wndFlagToggle:SetText(Apollo.GetString("CRB_Cancel"))
 	end
-	
+
 	if self.fCooldownTime <= 0 then
 		Apollo.StopTimer("CooldownTimer")
 	end
@@ -1487,7 +1495,7 @@ end
 
 function PvP_MatchMaker:OnDuelCountdownTimer()
 	if self.fDuelCountdown <= 0 then
-		Print(Apollo.GetString("Matchmaker_DuelBegin"))
+		Print(Apollo.GetString("MatchMaker_DuelBegin"))
 	else
 		Print(self.fDuelCountdown .. "...")
 		self.fDuelCountdown = self.fDuelCountdown - 1;
@@ -1516,13 +1524,13 @@ function PvP_MatchMaker:DisplayPendingInfo()
 	end
 
 	local tPendingInfo = MatchingGame.GetPendingInfo()
-	
-	if tPendingInfo.pendingEnemies > 0 then
-		self.wndAllyEnemyConfirm:FindChild("AllyCount"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Progress"), tPendingInfo.acceptedAllies, tPendingInfo.pendingAllies))
-		self.wndAllyEnemyConfirm:FindChild("EnemyCount"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Progress"), tPendingInfo.acceptedEnemies, tPendingInfo.pendingEnemies))
+
+	if tPendingInfo.nPendingEnemies and tPendingInfo.nPendingEnemies > 0 then
+		self.wndAllyEnemyConfirm:FindChild("AllyCount"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Progress"), tPendingInfo.nAcceptedAllies, tPendingInfo.nPendingAllies))
+		self.wndAllyEnemyConfirm:FindChild("EnemyCount"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Progress"), tPendingInfo.nAcceptedEnemies, tPendingInfo.nPendingEnemies))
 		self.wndAllyEnemyConfirm:Show(true)
-	elseif tPendingInfo.pendingAllies > 0 then
-		self.wndAllyConfirm:FindChild("AllyCount"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Progress"), tPendingInfo.acceptedAllies, tPendingInfo.pendingAllies))
+	elseif tPendingInfo.nPendingAllies and tPendingInfo.nPendingAllies > 0 then
+		self.wndAllyConfirm:FindChild("AllyCount"):SetText(String_GetWeaselString(Apollo.GetString("CRB_Progress"), tPendingInfo.nAcceptedAllies, tPendingInfo.nPendingAllies))
 		self.wndAllyConfirm:Show(true)
 	else
 		self.wndAllyConfirm:Show(false)
@@ -1533,19 +1541,19 @@ end
 function PvP_MatchMaker:OnCheckRating(strCommand, strRatingType)
 	strRatingType = string.lower(strRatingType)
 	local tRating = nil
-	
+
 	if strRatingType == Apollo.GetString("ArenaRoster_2v2") then
 		tRating = MatchingGame.GetPvpRating(MatchingGame.RatingType.Arena2v2)
 	elseif strRatingType == Apollo.GetString("ArenaRoster_3v3") then
-		tRating = MatchingGame.GetPvpRating(MatchingGame.RatingType.Arena3v3)	
+		tRating = MatchingGame.GetPvpRating(MatchingGame.RatingType.Arena3v3)
 	elseif strRatingType == Apollo.GetString("ArenaRoster_5v5") then
-		local tRating = MatchingGame.GetPvpRating(MatchingGame.RatingType.Arena5v5)	
+		local tRating = MatchingGame.GetPvpRating(MatchingGame.RatingType.Arena5v5)
 	elseif strRatingType == Apollo.GetString("MatchMaker_Battleground") then
 		local tRating = MatchingGame.GetPvpRating(MatchingGame.RatingType.RatedBattleground)
 	end
-	
+
 	if tRating ~= nil then
-		Print(String_GetWeaselString(Apollo.GetString("Matchmaker_PersonalArenaRating"), strRatingType, tRating.rating))
+		Print(String_GetWeaselString(Apollo.GetString("MatchMaker_PersonalArenaRating"), strRatingType, tRating.nRating))
 	end
 end
 
